@@ -1,4 +1,3 @@
-# app.py - Streamlit UI
 import streamlit as st
 from syntax_checker import detect_all
 st.set_page_config(page_title="Syntax Error Checker", layout="centered")

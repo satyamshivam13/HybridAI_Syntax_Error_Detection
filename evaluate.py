@@ -1,4 +1,3 @@
-# evaluate.py - Evaluate the deterministic checker on the dataset
 import csv, argparse, json
 from syntax_checker import detect_all
 

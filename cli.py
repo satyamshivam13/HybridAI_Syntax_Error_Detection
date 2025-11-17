@@ -1,4 +1,3 @@
-# cli.py - simple command line tester
 from syntax_checker import detect_all
 import sys, json
 

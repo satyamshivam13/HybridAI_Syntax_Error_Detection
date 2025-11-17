@@ -1,4 +1,4 @@
-# LLM_Syntax_Error_Checker (Student Project)
+# LLM_Syntax_Error_Checker
 
 This project is a student-level MVP that detects four common Python syntax error types:
 - `MissingColon`
