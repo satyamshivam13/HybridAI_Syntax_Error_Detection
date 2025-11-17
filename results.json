@@ -1,0 +1,33 @@
+{
+  "per_type": {
+    "MissingColon": {
+      "total": 105,
+      "true_positive": 105,
+      "false_positive": 0,
+      "recall": 1.0,
+      "precision": 1.0
+    },
+    "UnmatchedBracket": {
+      "total": 105,
+      "true_positive": 105,
+      "false_positive": 0,
+      "recall": 1.0,
+      "precision": 1.0
+    },
+    "IndentationError": {
+      "total": 105,
+      "true_positive": 105,
+      "false_positive": 0,
+      "recall": 1.0,
+      "precision": 1.0
+    },
+    "UnclosedQuotes": {
+      "total": 105,
+      "true_positive": 105,
+      "false_positive": 117,
+      "recall": 1.0,
+      "precision": 0.473
+    }
+  },
+  "overall_recall": 1.0
+}

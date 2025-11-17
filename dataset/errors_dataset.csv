@@ -1,0 +1,1980 @@
+id,error_type,buggy_code,fixed_code,notes
+1,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+2,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+3,MissingColon,"if x == 1
+    pass
+","if x == 1:
+    pass
+",Missing colon at end of block
+4,MissingColon,"with open('f') as f
+    pass
+","with open('f') as f:
+    pass
+",Missing colon at end of block
+5,MissingColon,"for i in range(3)
+    pass
+","for i in range(3):
+    pass
+",Missing colon at end of block
+6,MissingColon,"try
+    pass
+","try:
+    pass
+",Missing colon at end of block
+7,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+8,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+9,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+10,MissingColon,"else
+    pass
+","else:
+    pass
+",Missing colon at end of block
+11,MissingColon,"else
+    pass
+","else:
+    pass
+",Missing colon at end of block
+12,MissingColon,"else
+    pass
+","else:
+    pass
+",Missing colon at end of block
+13,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+14,MissingColon,"with open('f') as f
+    pass
+","with open('f') as f:
+    pass
+",Missing colon at end of block
+15,MissingColon,"elif x == 2
+    pass
+","elif x == 2:
+    pass
+",Missing colon at end of block
+16,MissingColon,"elif x == 2
+    pass
+","elif x == 2:
+    pass
+",Missing colon at end of block
+17,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+18,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+19,MissingColon,"try
+    pass
+","try:
+    pass
+",Missing colon at end of block
+20,MissingColon,"elif x == 2
+    pass
+","elif x == 2:
+    pass
+",Missing colon at end of block
+21,MissingColon,"for i in range(3)
+    pass
+","for i in range(3):
+    pass
+",Missing colon at end of block
+22,MissingColon,"while True
+    pass
+","while True:
+    pass
+",Missing colon at end of block
+23,MissingColon,"with open('f') as f
+    pass
+","with open('f') as f:
+    pass
+",Missing colon at end of block
+24,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+25,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+26,MissingColon,"for i in range(3)
+    pass
+","for i in range(3):
+    pass
+",Missing colon at end of block
+27,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+28,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+29,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+30,MissingColon,"else
+    pass
+","else:
+    pass
+",Missing colon at end of block
+31,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+32,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+33,MissingColon,"else
+    pass
+","else:
+    pass
+",Missing colon at end of block
+34,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+35,MissingColon,"if x == 1
+    pass
+","if x == 1:
+    pass
+",Missing colon at end of block
+36,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+37,MissingColon,"try
+    pass
+","try:
+    pass
+",Missing colon at end of block
+38,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+39,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+40,MissingColon,"elif x == 2
+    pass
+","elif x == 2:
+    pass
+",Missing colon at end of block
+41,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+42,MissingColon,"elif x == 2
+    pass
+","elif x == 2:
+    pass
+",Missing colon at end of block
+43,MissingColon,"try
+    pass
+","try:
+    pass
+",Missing colon at end of block
+44,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+45,MissingColon,"while True
+    pass
+","while True:
+    pass
+",Missing colon at end of block
+46,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+47,MissingColon,"else
+    pass
+","else:
+    pass
+",Missing colon at end of block
+48,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+49,MissingColon,"else
+    pass
+","else:
+    pass
+",Missing colon at end of block
+50,MissingColon,"elif x == 2
+    pass
+","elif x == 2:
+    pass
+",Missing colon at end of block
+51,MissingColon,"try
+    pass
+","try:
+    pass
+",Missing colon at end of block
+52,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+53,MissingColon,"if x == 1
+    pass
+","if x == 1:
+    pass
+",Missing colon at end of block
+54,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+55,MissingColon,"while True
+    pass
+","while True:
+    pass
+",Missing colon at end of block
+56,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+57,MissingColon,"with open('f') as f
+    pass
+","with open('f') as f:
+    pass
+",Missing colon at end of block
+58,MissingColon,"if x == 1
+    pass
+","if x == 1:
+    pass
+",Missing colon at end of block
+59,MissingColon,"for i in range(3)
+    pass
+","for i in range(3):
+    pass
+",Missing colon at end of block
+60,MissingColon,"if x == 1
+    pass
+","if x == 1:
+    pass
+",Missing colon at end of block
+61,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+62,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+63,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+64,MissingColon,"elif x == 2
+    pass
+","elif x == 2:
+    pass
+",Missing colon at end of block
+65,MissingColon,"for i in range(3)
+    pass
+","for i in range(3):
+    pass
+",Missing colon at end of block
+66,MissingColon,"for i in range(3)
+    pass
+","for i in range(3):
+    pass
+",Missing colon at end of block
+67,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+68,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+69,MissingColon,"try
+    pass
+","try:
+    pass
+",Missing colon at end of block
+70,MissingColon,"if x == 1
+    pass
+","if x == 1:
+    pass
+",Missing colon at end of block
+71,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+72,MissingColon,"try
+    pass
+","try:
+    pass
+",Missing colon at end of block
+73,MissingColon,"with open('f') as f
+    pass
+","with open('f') as f:
+    pass
+",Missing colon at end of block
+74,MissingColon,"try
+    pass
+","try:
+    pass
+",Missing colon at end of block
+75,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+76,MissingColon,"elif x == 2
+    pass
+","elif x == 2:
+    pass
+",Missing colon at end of block
+77,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+78,MissingColon,"else
+    pass
+","else:
+    pass
+",Missing colon at end of block
+79,MissingColon,"else
+    pass
+","else:
+    pass
+",Missing colon at end of block
+80,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+81,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+82,MissingColon,"try
+    pass
+","try:
+    pass
+",Missing colon at end of block
+83,MissingColon,"elif x == 2
+    pass
+","elif x == 2:
+    pass
+",Missing colon at end of block
+84,MissingColon,"if x == 1
+    pass
+","if x == 1:
+    pass
+",Missing colon at end of block
+85,MissingColon,"else
+    pass
+","else:
+    pass
+",Missing colon at end of block
+86,MissingColon,"while True
+    pass
+","while True:
+    pass
+",Missing colon at end of block
+87,MissingColon,"with open('f') as f
+    pass
+","with open('f') as f:
+    pass
+",Missing colon at end of block
+88,MissingColon,"try
+    pass
+","try:
+    pass
+",Missing colon at end of block
+89,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+90,MissingColon,"for i in range(3)
+    pass
+","for i in range(3):
+    pass
+",Missing colon at end of block
+91,MissingColon,"for i in range(3)
+    pass
+","for i in range(3):
+    pass
+",Missing colon at end of block
+92,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+93,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+94,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+95,MissingColon,"elif x == 2
+    pass
+","elif x == 2:
+    pass
+",Missing colon at end of block
+96,MissingColon,"class C()
+    pass
+","class C:
+    pass
+",Missing colon at end of block
+97,MissingColon,"except Exception as e
+    pass
+","except Exception as e:
+    pass
+",Missing colon at end of block
+98,MissingColon,"else
+    pass
+","else:
+    pass
+",Missing colon at end of block
+99,MissingColon,"for i in range(3)
+    pass
+","for i in range(3):
+    pass
+",Missing colon at end of block
+100,MissingColon,"while True
+    pass
+","while True:
+    pass
+",Missing colon at end of block
+101,MissingColon,"if x == 1
+    pass
+","if x == 1:
+    pass
+",Missing colon at end of block
+102,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+103,MissingColon,"try
+    pass
+","try:
+    pass
+",Missing colon at end of block
+104,MissingColon,"def func()
+    pass
+","def func():
+    pass
+",Missing colon at end of block
+105,MissingColon,"for i in range(3)
+    pass
+","for i in range(3):
+    pass
+",Missing colon at end of block
+106,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+107,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+108,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+109,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+110,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+111,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+112,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+113,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+114,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+115,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+116,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+117,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+118,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+119,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+120,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+121,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+122,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+123,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+124,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+125,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+126,UnmatchedBracket,"a = (1,2,3
+","a = (1,2,3)
+",Bracket mismatch or missing/extra bracket
+127,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+128,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+129,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+130,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+131,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+132,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+133,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+134,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+135,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+136,UnmatchedBracket,"a = (1,2,3
+","a = (1,2,3)
+",Bracket mismatch or missing/extra bracket
+137,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+138,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+139,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+140,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+141,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+142,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+143,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+144,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+145,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+146,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+147,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+148,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+149,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+150,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+151,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+152,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+153,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+154,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+155,UnmatchedBracket,"a = (1,2,3
+","a = (1,2,3)
+",Bracket mismatch or missing/extra bracket
+156,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+157,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+158,UnmatchedBracket,"a = (1,2,3
+","a = (1,2,3)
+",Bracket mismatch or missing/extra bracket
+159,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+160,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+161,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+162,UnmatchedBracket,"a = (1,2,3
+","a = (1,2,3)
+",Bracket mismatch or missing/extra bracket
+163,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+164,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+165,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+166,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+167,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+168,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+169,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+170,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+171,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+172,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+173,UnmatchedBracket,"a = (1,2,3
+","a = (1,2,3)
+",Bracket mismatch or missing/extra bracket
+174,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+175,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+176,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+177,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+178,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+179,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+180,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+181,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+182,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+183,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+184,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+185,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+186,UnmatchedBracket,"a = (1,2,3
+","a = (1,2,3)
+",Bracket mismatch or missing/extra bracket
+187,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+188,UnmatchedBracket,"a = (1,2,3
+","a = (1,2,3)
+",Bracket mismatch or missing/extra bracket
+189,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+190,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+191,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+192,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+193,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+194,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+195,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+196,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+197,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+198,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+199,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+200,UnmatchedBracket,"data = {'x': [1,2,3}
+","data = {'x': [1,2,3]}
+",Bracket mismatch or missing/extra bracket
+201,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+202,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+203,UnmatchedBracket,"print('hello'
+","print('hello')
+",Bracket mismatch or missing/extra bracket
+204,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+205,UnmatchedBracket,"a = (1,2,3
+","a = (1,2,3)
+",Bracket mismatch or missing/extra bracket
+206,UnmatchedBracket,"d = {'a':1)
+","d = {'a':1}
+",Bracket mismatch or missing/extra bracket
+207,UnmatchedBracket,"a = (1,2,3
+","a = (1,2,3)
+",Bracket mismatch or missing/extra bracket
+208,UnmatchedBracket,"call(1,2,3))
+","call(1,2,3)
+",Bracket mismatch or missing/extra bracket
+209,UnmatchedBracket,"arr = [1,2,3]]
+","arr = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+210,UnmatchedBracket,"lst = [1,2,3
+","lst = [1,2,3]
+",Bracket mismatch or missing/extra bracket
+211,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+212,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+213,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+214,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+215,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+216,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+217,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+218,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+219,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+220,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+221,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+222,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+223,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+224,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+225,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+226,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+227,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+228,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+229,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+230,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+231,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+232,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+233,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+234,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+235,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+236,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+237,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+238,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+239,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+240,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+241,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+242,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+243,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+244,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+245,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+246,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+247,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+248,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+249,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+250,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+251,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+252,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+253,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+254,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+255,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+256,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+257,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+258,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+259,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+260,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+261,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+262,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+263,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+264,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+265,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+266,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+267,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+268,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+269,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+270,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+271,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+272,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+273,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+274,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+275,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+276,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+277,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+278,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+279,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+280,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+281,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+282,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+283,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+284,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+285,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+286,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+287,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+288,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+289,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+290,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+291,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+292,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+293,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+294,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+295,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+296,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+297,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+298,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+299,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+300,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+301,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+302,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+303,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+304,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+305,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+306,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+307,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+308,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+309,IndentationError,"class A:
+def __init__(self):
+        pass
+","class A:
+    def __init__(self):
+        pass
+",Wrong/unexpected indentation
+310,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+311,IndentationError,"def g():
+    a=1
+      b=2
+","def g():
+    a=1
+    b=2
+",Wrong/unexpected indentation
+312,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+313,IndentationError,"if True:
+  x=1
+ y=2
+","if True:
+    x=1
+    y=2
+",Wrong/unexpected indentation
+314,IndentationError,"def f():
+print('hi')
+","def f():
+    print('hi')
+",Wrong/unexpected indentation
+315,IndentationError,"for i in range(2):
+print(i)
+","for i in range(2):
+    print(i)
+",Wrong/unexpected indentation
+316,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+317,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+318,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+319,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+320,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+321,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+322,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+323,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+324,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+325,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+326,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+327,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+328,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+329,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+330,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+331,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+332,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+333,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+334,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+335,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+336,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+337,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+338,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+339,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+340,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+341,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+342,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+343,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+344,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+345,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+346,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+347,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+348,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+349,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+350,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+351,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+352,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+353,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+354,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+355,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+356,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+357,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+358,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+359,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+360,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+361,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+362,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+363,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+364,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+365,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+366,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+367,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+368,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+369,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+370,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+371,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+372,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+373,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+374,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+375,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+376,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+377,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+378,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+379,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+380,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+381,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+382,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+383,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+384,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+385,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+386,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+387,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+388,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+389,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+390,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+391,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+392,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+393,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+394,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+395,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+396,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+397,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+398,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+399,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+400,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+401,UnclosedQuotes,"s = ""hello
+print(s)
+","s = ""hello""
+print(s)
+",Unclosed or malformed string literal
+402,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+403,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+404,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+405,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+406,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+407,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+408,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+409,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+410,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+411,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+412,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
+413,UnclosedQuotes,"a = 'abc
+b='c'
+","a = 'abc'
+",Unclosed or malformed string literal
+414,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+415,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+416,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+417,UnclosedQuotes,"text = '''multi
+line
+","text = '''multi
+line
+'''
+",Unclosed or malformed string literal
+418,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+419,UnclosedQuotes,"msg = ""He said ""hi""
+","msg = ""He said \""hi\""""
+",Unclosed or malformed string literal
+420,UnclosedQuotes,"name = 'Satyam
+print(name)
+","name = 'Satyam'
+print(name)
+",Unclosed or malformed string literal
