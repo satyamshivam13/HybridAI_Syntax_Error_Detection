@@ -112,6 +112,113 @@ class AutoFixer:
         
         return code
     
+    def fix_missing_import(self, code: str, language: str = None) -> str:
+        """
+        Suggest common missing imports based on code content
+        """
+        suggestions = []
+        
+        if language == "Python":
+            # Check for common modules
+            if 'np.' in code or 'numpy' in code.lower():
+                suggestions.append("import numpy as np")
+            if 'pd.' in code or 'pandas' in code.lower():
+                suggestions.append("import pandas as pd")
+            if 'plt.' in code or 'pyplot' in code.lower():
+                suggestions.append("import matplotlib.pyplot as plt")
+            if 'math.' in code:
+                suggestions.append("import math")
+            if 'os.' in code:
+                suggestions.append("import os")
+            if 'sys.' in code:
+                suggestions.append("import sys")
+                
+        elif language == "Java":
+            if 'Scanner' in code:
+                suggestions.append("import java.util.Scanner;")
+            if 'ArrayList' in code or 'List' in code:
+                suggestions.append("import java.util.ArrayList;")
+            if 'HashMap' in code or 'Map' in code:
+                suggestions.append("import java.util.HashMap;")
+        
+        if suggestions:
+            imports = '\n'.join(suggestions)
+            code = imports + '\n\n' + code
+            self.fixes_applied.append(f"Added suggested imports: {', '.join(suggestions)}")
+        
+        return code
+    
+    def fix_missing_include(self, code: str, language: str = None) -> str:
+        """
+        Suggest common missing includes for C/C++
+        """
+        suggestions = []
+        
+        if language in ["C", "C++"]:
+            if 'printf' in code or 'scanf' in code:
+                suggestions.append("#include <stdio.h>")
+            if 'malloc' in code or 'free' in code:
+                suggestions.append("#include <stdlib.h>")
+            if 'strlen' in code or 'strcpy' in code:
+                suggestions.append("#include <string.h>")
+            if 'cout' in code or 'cin' in code:
+                suggestions.append("#include <iostream>")
+            if 'vector' in code:
+                suggestions.append("#include <vector>")
+            if 'string' in code and language == "C++":
+                suggestions.append("#include <string>")
+        
+        if suggestions:
+            includes = '\n'.join(suggestions)
+            code = includes + '\n\n' + code
+            self.fixes_applied.append(f"Added suggested includes: {', '.join(suggestions)}")
+        
+        return code
+    
+    def fix_unused_variable(self, code: str) -> str:
+        """
+        Add comment suggesting variable removal (conservative approach)
+        """
+        self.fixes_applied.append("Suggestion: Remove unused variables to clean up code")
+        return code  # Don't auto-remove, just suggest
+    
+    def fix_unreachable_code(self, code: str) -> str:
+        """
+        Add comment about unreachable code (conservative approach)
+        """
+        self.fixes_applied.append("Suggestion: Remove unreachable code after return/break statements")
+        return code  # Don't auto-remove, just suggest
+    
+    def fix_wildcard_import(self, code: str) -> str:
+        """
+        Suggest replacing wildcard imports
+        """
+        lines = code.split('\n')
+        for i, line in enumerate(lines):
+            if 'from' in line and 'import *' in line:
+                # Extract module name
+                parts = line.split()
+                if len(parts) >= 4 and parts[0] == 'from' and parts[2] == 'import':
+                    module = parts[1]
+                    lines[i] = f"# TODO: Replace with specific imports from {module}"
+                    self.fixes_applied.append(f"Marked wildcard import for replacement: {module}")
+        
+        return '\n'.join(lines)
+    
+    def fix_duplicate_definition(self, code: str) -> str:
+        """
+        Detect and comment duplicate definitions
+        """
+        self.fixes_applied.append("Suggestion: Rename or remove duplicate definitions")
+        return code  # Detection only, manual fix required
+    
+    def fix_invalid_assignment(self, code: str) -> str:
+        """
+        Suggest fixing invalid assignments
+        """
+        self.fixes_applied.append("Suggestion: Ensure you're assigning to valid variables, not literals or constants")
+        return code  # Manual fix required
+    
     def apply_fixes(self, code: str, error_type: str, line_num: int = None, language: str = None) -> dict:
         """
         Apply appropriate fix based on error type and language
@@ -155,6 +262,28 @@ class AutoFixer:
             
             elif error_type in ["UnclosedQuotes", "UnclosedString"]:
                 fixed_code = self.fix_unclosed_quotes(code)
+            
+            # New auto-fix support
+            elif error_type == "MissingImport":
+                fixed_code = self.fix_missing_import(code, language)
+            
+            elif error_type == "MissingInclude":
+                fixed_code = self.fix_missing_include(code, language)
+            
+            elif error_type == "UnusedVariable":
+                fixed_code = self.fix_unused_variable(code)
+            
+            elif error_type == "UnreachableCode":
+                fixed_code = self.fix_unreachable_code(code)
+            
+            elif error_type == "WildcardImport":
+                fixed_code = self.fix_wildcard_import(code)
+            
+            elif error_type == "DuplicateDefinition":
+                fixed_code = self.fix_duplicate_definition(code)
+            
+            elif error_type == "InvalidAssignment":
+                fixed_code = self.fix_invalid_assignment(code)
             
             return {
                 'fixed_code': fixed_code,

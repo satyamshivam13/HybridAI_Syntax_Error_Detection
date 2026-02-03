@@ -29,6 +29,17 @@ def detect_errors(code: str, filename: str | None = None):
                 },
                 "rule_based_issues": []
             }
+        
+        # If issues found, return the first detected error type
+        primary_error = rule_based_issues[0].get('type', 'SyntaxError')
+        tutor_help = explain_error(primary_error)
+        return {
+            "language": language,
+            "predicted_error": primary_error,
+            "confidence": 1.0,
+            "tutor": tutor_help,
+            "rule_based_issues": rule_based_issues
+        }
 
     # ------------------------------------------------
     # 2. ML-based prediction
@@ -41,34 +52,65 @@ def detect_errors(code: str, filename: str | None = None):
     if language in ["Java", "C", "C++"]:
         lines = [l.strip() for l in code.splitlines() if l.strip()]
 
-        semicolon_ok = all(
-            l.endswith(";") or l.endswith("{") or l.endswith("}")
-            for l in lines
-        )
+        # More sophisticated semicolon check
+        semicolon_required_lines = []
+        import re
+        # Patterns for simple statements that require semicolons
+        simple_statements = [
+            r'^return\s+.+$',                # return statements
+            r'^cout\s*<<.*$',                # C++ cout
+            r'^cin\s*>>.*$',                 # C++ cin
+            r'^printf\s*\(.*\)$',          # C printf
+            r'^fprintf\s*\(.*\)$',         # C fprintf
+            r'^puts\s*\(.*\)$',            # C puts
+            r'^std::cout\s*<<.*$',           # C++ std::cout
+            r'^std::cin\s*>>.*$',            # C++ std::cin
+        ]
+        for l in lines:
+            # Skip comments, preprocessor directives, and control structures
+            if (l.startswith('//') or l.startswith('/*') or l.startswith('*') or 
+                l.startswith('#') or l.endswith('{') or l.endswith('}') or
+                l.startswith('import') or l.startswith('package') or
+                l.startswith('using') or l.startswith('namespace') or
+                l.startswith('public class') or l.startswith('class ') or
+                l.startswith('private class') or l.startswith('protected class')):
+                continue
+            # Check if line looks like it needs a semicolon but doesn't have one
+            is_control = any(keyword in l for keyword in [
+                'if (', 'if(', 'for (', 'for(', 'while (', 'while(', 'else', 'try', 'catch', 
+                'switch (', 'switch(', 'case ', 'default:', 'do ', 'do{'
+            ])
+            if not is_control and not l.endswith(';') and not l.endswith('{') and not l.endswith('}'):
+                # Check for simple statement patterns
+                if any(re.match(pat, l) for pat in simple_statements):
+                    semicolon_required_lines.append(l)
+                # Also check for assignment or function call
+                elif ('=' in l or ('(' in l and ')' in l)) and not l.startswith('}'):
+                    semicolon_required_lines.append(l)
 
         # ❌ Missing semicolon is ALWAYS an error
-        if not semicolon_ok:
+        if semicolon_required_lines:
             tutor_help = explain_error("MissingDelimiter")
             return {
                 "language": language,
                 "predicted_error": "MissingDelimiter",
-                "confidence": confidence,
+                "confidence": 1.0,
                 "tutor": tutor_help,
                 "rule_based_issues": []
             }
 
-        # ✅ Semicolons OK → allow NoError
-        if confidence < CONFIDENCE_THRESHOLD:
-            return {
-                "language": language,
-                "predicted_error": "NoError",
-                "confidence": confidence,
-                "tutor": {
-                    "why": "The code follows valid syntax rules for this language.",
-                    "fix": "No changes are required."
-                },
-                "rule_based_issues": []
-            }
+        # ✅ Semicolons OK → Code is valid (rule-based check passed)
+        # For Java/C/C++, rule-based check is authoritative for semicolons
+        return {
+            "language": language,
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+                "why": "The code follows valid syntax rules for this language.",
+                "fix": "No changes are required."
+            },
+            "rule_based_issues": []
+        }
 
     # ------------------------------------------------
     # 4. Fallback (non-Java languages only)

@@ -5,6 +5,12 @@ Strategy: Better feature engineering + hyperparameter tuning
 """
 import pandas as pd
 import numpy as np
+import random
+
+# Set random seeds for reproducibility
+RANDOM_SEED = 42
+np.random.seed(RANDOM_SEED)
+random.seed(RANDOM_SEED)
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -214,19 +220,36 @@ def main():
             lang_accuracy = accuracy_score(y_test[lang_mask], y_pred[lang_mask])
             print(f"{lang}: {lang_accuracy*100:.2f}%")
     
-    # Save models
-    print("\n💾 Saving optimized models...")
-    joblib.dump(best_model, 'models/syntax_error_model.pkl')
-    joblib.dump(vectorizer, 'models/tfidf_vectorizer.pkl')
-    joblib.dump(label_encoder, 'models/label_encoder.pkl')
+    # Calculate final accuracy
+    final_accuracy = accuracy_score(y_test, y_pred)
     
-    # Save numerical feature names for future use
-    joblib.dump(X_numerical.columns.tolist(), 'models/numerical_features.pkl')
+    # Validate model quality before saving
+    ACCURACY_THRESHOLD = 0.95
+    print(f"\n🔍 Model Validation:")
+    print(f"   Accuracy: {final_accuracy*100:.2f}%")
+    print(f"   Threshold: {ACCURACY_THRESHOLD*100:.2f}%")
+    
+    if final_accuracy < ACCURACY_THRESHOLD:
+        print(f"\n⚠️  WARNING: Accuracy {final_accuracy*100:.2f}% below threshold!")
+        print(f"   Saving as FAILED model for debugging...")
+        joblib.dump(best_model, 'models/FAILED_model_debug.pkl')
+        joblib.dump(vectorizer, 'models/FAILED_vectorizer_debug.pkl')
+        print(f"   Debug models saved. Review training data and hyperparameters.")
+    else:
+        # Save models
+        print(f"\n✅ Model meets quality threshold - saving...")
+        joblib.dump(best_model, 'models/syntax_error_model.pkl')
+        joblib.dump(vectorizer, 'models/tfidf_vectorizer.pkl')
+        joblib.dump(label_encoder, 'models/label_encoder.pkl')
+        
+        # Save numerical feature names for future use
+        joblib.dump(X_numerical.columns.tolist(), 'models/numerical_features.pkl')
+        
+        print(f"💾 Models saved to /models directory")
     
     print(f"\n✅ Optimization complete!")
-    print(f"🎯 Final Accuracy: {accuracy_score(y_test, y_pred)*100:.2f}%")
+    print(f"🎯 Final Accuracy: {final_accuracy*100:.2f}%")
     print(f"🏆 Model: {best_name}")
-    print(f"💾 Models saved to /models directory")
     
     # Save results
     results_df = pd.DataFrame({

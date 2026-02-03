@@ -7,6 +7,7 @@ import streamlit as st
 from src.error_engine import detect_errors
 from src.auto_fix import AutoFixer
 from src.quality_analyzer import CodeQualityAnalyzer
+from src.multi_error_detector import detect_all_errors
 
 # ------------------------------------------------------------
 # Page Configuration
@@ -38,6 +39,9 @@ This tool acts as an **AI tutor** and detects issues **automatically as you past
 if "code" not in st.session_state:
     st.session_state.code = ""
 
+if "show_all_errors" not in st.session_state:
+    st.session_state.show_all_errors = False
+
 # ------------------------------------------------------------
 # Code Input
 # ------------------------------------------------------------
@@ -49,17 +53,29 @@ code_input = st.text_area(
     placeholder="Paste Python / Java / C / C++ code here..."
 )
 
-uploaded = st.file_uploader(
-    "Or upload a code file",
-    type=["py", "java", "c", "cpp"]
-)
+col_upload, col_toggle = st.columns([3, 1])
 
-if uploaded:
-    try:
-        st.session_state.code = uploaded.read().decode("utf-8")
-        code_input = st.session_state.code
-    except Exception:
-        st.error("❌ Unable to read uploaded file.")
+with col_upload:
+    uploaded = st.file_uploader(
+        "Or upload a code file",
+        type=["py", "java", "c", "cpp"]
+    )
+    
+    if uploaded:
+        try:
+            st.session_state.code = uploaded.read().decode("utf-8")
+            code_input = st.session_state.code
+        except Exception:
+            st.error("❌ Unable to read uploaded file.")
+
+with col_toggle:
+    st.write("")  # Spacing
+    show_all = st.checkbox(
+        "🔍 Show All Errors",
+        value=st.session_state.show_all_errors,
+        help="Enable to detect and display all errors in the code (not just the first one)"
+    )
+    st.session_state.show_all_errors = show_all
 
 # ------------------------------------------------------------
 # LIVE DETECTION (NO BUTTON)
@@ -68,84 +84,127 @@ if uploaded:
 if code_input.strip():
     # Pass filename if file is uploaded (important for Java/C/C++)
     filename = uploaded.name if uploaded else None
-    result = detect_errors(code_input, filename=filename)
-
-
+    
     # --------------------------------------------------------
-    # Language
+    # Multi-Error Detection Mode
     # --------------------------------------------------------
-
-    st.success(f"🗂 Detected Language: **{result['language']}**")
-
-    # --------------------------------------------------------
-    # NO ERROR CASE (AUTHORITATIVE)
-    # --------------------------------------------------------
-
-    if result["predicted_error"] == "NoError":
-        st.success("✅ No syntax errors detected")
-
-        st.subheader("🧠 AI Tutor Feedback")
-        st.write("✔ Your code is syntactically correct.")
-        st.write("✔ No corrections are required.")
-
-        error_lines = set()
-
-    # --------------------------------------------------------
-    # ERROR CASE
-    # --------------------------------------------------------
-
-    else:
-        st.error(f"❌ Detected Error Type: **{result['predicted_error']}**")
-
-        st.subheader("🧠 AI Tutor Explanation")
-        st.write(f"**Why this happened:** {result['tutor']['why']}")
-        st.write(f"**How to fix it:** {result['tutor']['fix']}")
+    
+    if st.session_state.show_all_errors:
+        all_errors = detect_all_errors(code_input, filename)
+        
+        st.success(f"🗂 Detected Language: **{all_errors['language']}**")
         
         # --------------------------------------------------------
-        # AUTO-FIX SUGGESTION
+        # NO ERROR CASE (AUTHORITATIVE)
         # --------------------------------------------------------
-        st.subheader("🔧 Auto-Fix Suggestion")
-        fixer = AutoFixer()
         
-        # Get line number from rule-based issues if available
-        line_num = 0
-        if result.get('rule_based_issues'):
-            for issue in result['rule_based_issues']:
-                if issue.get('line'):
-                    line_num = issue['line'] - 1
-                    break
-        
-        fix_result = fixer.apply_fixes(code_input, result['predicted_error'], line_num, result['language'])
-        
-        if fix_result['success']:
-            st.success("✅ Automatic fix applied!")
-            st.code(fix_result['fixed_code'], language=result['language'].lower())
+        if all_errors['total_errors'] == 0:
+            st.success("✅ No syntax errors detected")
+            st.subheader("🧠 AI Tutor Feedback")
+            st.write("✔ Your code is syntactically correct.")
+            st.write("✔ No corrections are required.")
+            error_lines = set()
+        else:
+            st.error(f"❌ Found **{all_errors['total_errors']} errors** across **{len(all_errors['errors_by_type'])} types**")
             
-            with st.expander("📋 View Changes"):
-                for change in fix_result['changes']:
-                    st.write(f"• {change}")
+            # Display errors grouped by type
+            st.subheader("🔍 All Detected Errors")
+            
+            for error_type, errors in all_errors['errors_by_type'].items():
+                with st.expander(f"❌ {error_type} ({len(errors)} occurrence{'s' if len(errors) > 1 else ''})", expanded=True):
+                    for idx, error in enumerate(errors, 1):
+                        st.error(f"**{idx}. Line {error['line']}**: {error['message']}")
+                        if error.get('snippet'):
+                            st.code(error['snippet'], language=all_errors['language'].lower())
+            
+            error_lines = set()
+            for errors in all_errors['errors_by_type'].values():
+                for error in errors:
+                    if error.get('line'):
+                        error_lines.add(error['line'])
+    
+    # --------------------------------------------------------
+    # Single Error Detection Mode (Original)
+    # --------------------------------------------------------
+    
+    else:
+        result = detect_errors(code_input, filename=filename)
+
+        # --------------------------------------------------------
+        # Language
+        # --------------------------------------------------------
+
+        st.success(f"🗂 Detected Language: **{result['language']}**")
+
+        # --------------------------------------------------------
+        # NO ERROR CASE (AUTHORITATIVE)
+        # --------------------------------------------------------
+
+        if result["predicted_error"] == "NoError":
+            st.success("✅ No syntax errors detected")
+
+            st.subheader("🧠 AI Tutor Feedback")
+            st.write("✔ Your code is syntactically correct.")
+            st.write("✔ No corrections are required.")
+
+            error_lines = set()
+
+        # --------------------------------------------------------
+        # ERROR CASE
+        # --------------------------------------------------------
+
         else:
-            st.info("ℹ️ Manual correction recommended for this error type.")
+            st.error(f"❌ Detected Error Type: **{result['predicted_error']}**")
 
-        # ----------------------------------------------------
-        # Rule-Based Issues (Python)
-        # ----------------------------------------------------
+            st.subheader("🧠 AI Tutor Explanation")
+            st.write(f"**Why this happened:** {result['tutor']['why']}")
+            st.write(f"**How to fix it:** {result['tutor']['fix']}")
+            
+            # --------------------------------------------------------
+            # AUTO-FIX SUGGESTION
+            # --------------------------------------------------------
+            st.subheader("🔧 Auto-Fix Suggestion")
+            fixer = AutoFixer()
+            
+            # Get line number from rule-based issues if available
+            line_num = 0
+            if result.get('rule_based_issues'):
+                for issue in result['rule_based_issues']:
+                    if issue.get('line'):
+                        line_num = issue['line'] - 1
+                        break
+            
+            fix_result = fixer.apply_fixes(code_input, result['predicted_error'], line_num, result['language'])
+            
+            if fix_result['success']:
+                st.success("✅ Automatic fix applied!")
+                st.code(fix_result['fixed_code'], language=result['language'].lower())
+                
+                with st.expander("📋 View Changes"):
+                    for change in fix_result['changes']:
+                        st.write(f"• {change}")
+            else:
+                st.info("ℹ️ Manual correction recommended for this error type.")
 
-        issues = result.get("rule_based_issues", [])
-        error_lines = set()
+            # ----------------------------------------------------
+            # Rule-Based Issues (Python)
+            # ----------------------------------------------------
 
-        if issues:
-            st.subheader("⚠️ Detailed Syntax Issues (Python)")
-            for i, iss in enumerate(issues, start=1):
-                st.error(f"{i}. {iss.get('type')} (Line {iss.get('line')})")
-                st.write(iss.get("message"))
-                if iss.get("suggestion"):
-                    st.info(iss.get("suggestion"))
-                if iss.get("line"):
-                    error_lines.add(iss["line"])
-        else:
-            # Non-Python / ML-only case → highlight entire snippet
-            error_lines = set(range(1, len(code_input.splitlines()) + 1))
+            issues = result.get("rule_based_issues", [])
+            error_lines = set()
+
+            if issues:
+                st.subheader("⚠️ Detailed Syntax Issues (Python)")
+                for i, iss in enumerate(issues, start=1):
+                    st.error(f"{i}. {iss.get('type')} (Line {iss.get('line')})")
+                    st.write(iss.get("message"))
+                    if iss.get("suggestion"):
+                        st.info(iss.get("suggestion"))
+                    if iss.get("line"):
+                        error_lines.add(iss["line"])
+            else:
+                # Non-Python / ML-only case → highlight entire snippet
+                error_lines = set(range(1, len(code_input.splitlines()) + 1))
     
     # --------------------------------------------------------
     # CODE QUALITY ANALYSIS

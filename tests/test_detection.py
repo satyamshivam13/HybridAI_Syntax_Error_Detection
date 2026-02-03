@@ -8,9 +8,9 @@ import os
 # Add parent directory to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from language_detector import detect_language
-from syntax_checker import detect_all, try_ast_parse
-from error_engine import detect_errors
+from src.language_detector import detect_language
+from src.syntax_checker import detect_all, try_ast_parse
+from src.error_engine import detect_errors
 
 class TestLanguageDetector(unittest.TestCase):
     def test_python_detection(self):
@@ -66,6 +66,21 @@ class TestErrorEngine(unittest.TestCase):
         code = "// some code"
         result = detect_errors(code, "Test.java")
         self.assertEqual(result['language'], "Java")
+
+
+# Pytest-style tests
+import pytest
+from src.error_engine import detect_errors as src_detect_errors
+
+def test_missing_colon_python():
+    code = "def test()\n    pass"
+    result = src_detect_errors(code)
+    assert result["predicted_error"] == "MissingColon"
+
+def test_no_error_python():
+    code = "def test():\n    pass"
+    result = src_detect_errors(code)
+    assert result["predicted_error"] == "NoError"
 
 if __name__ == '__main__':
     unittest.main()

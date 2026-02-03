@@ -9,10 +9,17 @@ from sklearn.model_selection import train_test_split
 # Load dataset
 df = pd.read_csv("dataset/merged/all_errors.csv")
 
-# Load trained models
-model = joblib.load("models/error_classifier.pkl")
-vectorizer = joblib.load("models/tfidf.pkl")
-label_encoder = joblib.load("models/label_encoder.pkl")
+# Load trained models (use optimized model names)
+try:
+    model = joblib.load("models/syntax_error_model.pkl")
+    vectorizer = joblib.load("models/tfidf_vectorizer.pkl")
+    label_encoder = joblib.load("models/label_encoder.pkl")
+except FileNotFoundError:
+    # Fallback to old model names
+    print("⚠️ Warning: Using legacy model files. Run optimize_model.py to update.")
+    model = joblib.load("models/error_classifier.pkl")
+    vectorizer = joblib.load("models/tfidf.pkl")
+    label_encoder = joblib.load("models/label_encoder.pkl")
 
 # Prepare features
 X = df["buggy_code"]

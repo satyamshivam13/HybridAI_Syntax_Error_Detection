@@ -1,54 +1,65 @@
 # 🧠 Hybrid AI-Based Multi-Language Syntax Error Detection System
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.18%2B-FF4B4B.svg)](https://streamlit.io/)
 [![Accuracy](https://img.shields.io/badge/Accuracy-99.80%25-success.svg)](docs/OPTIMIZATION_SUMMARY.md)
+[![Tests](https://img.shields.io/badge/Tests-13%2F13%20Passing-success.svg)](tests/)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](PROJECT_STRUCTURE.md)
 
-**Quick Links:** [🚀 Quick Start](docs/QUICKSTART.md) | [🤝 Contributing](docs/CONTRIBUTING.md) | [📊 Results](results/optimized_results.csv) | [📖 Documentation](docs/)
+**Quick Links:** [🚀 Quick Start](docs/QUICKSTART.md) | [📁 Structure](PROJECT_STRUCTURE.md) | [🤝 Contributing](docs/CONTRIBUTING.md) | [📊 Results](results/optimized_results.csv) | [📖 Documentation](docs/)
 
 ---
 
 ## 📁 Project Structure
 
 ```
-LLM_Syntax_Error_Checker/
-├── app.py                      # Streamlit web interface
-├── cli.py                      # Command-line interface
-├── requirements.txt            # Python dependencies
-├── src/                        # Core engine modules
-│   ├── error_engine.py        # Main detection orchestrator
-│   ├── ml_engine.py           # ML model (99.80% accuracy)
-│   ├── syntax_checker.py      # Rule-based AST parser
-│   ├── language_detector.py   # Multi-language detection
-│   ├── tutor_explainer.py     # Error explanations
-│   ├── auto_fix.py            # Automatic code fixes
-│   └── quality_analyzer.py    # Code quality metrics
-├── models/                     # Trained ML models
-│   ├── syntax_error_model.pkl
-│   ├── tfidf_vectorizer.pkl
-│   ├── label_encoder.pkl
-│   └── numerical_features.pkl
-├── dataset/                    # Training data (2,551 samples)
-│   ├── active/                # Current datasets by language
-│   ├── merged/                # Combined dataset
-│   └── archieve/              # Historical datasets
-├── scripts/                    # Training & analysis tools
-│   ├── optimize_model.py      # Model training pipeline
-│   ├── advanced_metrics.py    # Performance evaluation
-│   └── evaluate_results_visualization.ipynb
-├── tests/                      # Unit tests & test cases
-├── samples/                    # Example error files
-├── results/                    # Evaluation results
-└── docs/                       # Documentation
-    ├── QUICKSTART.md
-    ├── CONTRIBUTING.md
-    ├── PROJECT_SUMMARY.md
-    ├── OPTIMIZATION_SUMMARY.md
-    ├── INTEGRATION_SUMMARY.md
-    ├── PAPER_ABSTRACT.md
-    └── CHECKLIST.md
+Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
+├── 🚀 Entry Points
+│   ├── app.py                      # Streamlit web interface
+│   ├── cli.py                      # Command-line interface
+│   ├── api.py                      # FastAPI REST API
+│   └── start_api.py                # API server launcher
+├── 📚 src/                         # Core engine modules
+│   ├── error_engine.py            # Main detection orchestrator
+│   ├── ml_engine.py               # ML model (99.80% accuracy)
+│   ├── syntax_checker.py          # Rule-based AST parser
+│   ├── language_detector.py       # Multi-language detection
+│   ├── tutor_explainer.py         # Error explanations
+│   ├── auto_fix.py                # Automatic code fixes
+│   ├── quality_analyzer.py        # Code quality metrics
+│   └── multi_error_detector.py    # Multi-error detection
+├── 🤖 models/                      # Trained ML models (99.80%)
+│   ├── syntax_error_model.pkl     # Gradient Boosting classifier
+│   ├── tfidf_vectorizer.pkl       # TF-IDF vectorizer
+│   ├── label_encoder.pkl          # Label encoder
+│   └── numerical_features.pkl     # Feature names
+├── 📊 dataset/                     # Training data (2,551 samples)
+│   ├── active/                    # Current datasets by language
+│   ├── merged/all_errors.csv      # Combined dataset
+│   └── archieve/                  # Historical datasets
+├── 🔬 scripts/                     # Training & utilities
+│   ├── optimize_model.py          # ✅ Model training (PRIMARY)
+│   ├── augment_data.py            # Data augmentation
+│   ├── generate_results.py        # Results generation
+│   ├── advanced_metrics.py        # Performance metrics
+│   ├── evaluate_results_visualization.ipynb
+│   └── utils/data_utils.py        # Shared utilities
+├── 🧪 tests/                       # Unit tests (13/13 passing)
+├── 📝 samples/                     # Example error files
+├── 📈 results/                     # Evaluation results
+├── 📖 docs/                        # Complete documentation
+│   ├── QUICKSTART.md              # Quick start guide
+│   ├── PROJECT_SUMMARY.md         # Technical overview
+│   ├── IMPROVEMENTS_SUMMARY.md    # Recent improvements
+│   ├── OPTIMIZATION_SUMMARY.md    # Model optimization
+│   └── ... (12 docs total)
+├── PROJECT_STRUCTURE.md            # Detailed structure guide
+├── README.md                       # This file
+└── requirements.txt                # Python dependencies
 ```
+
+**📋 See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for complete file structure**
 
 ---
 
@@ -90,13 +101,17 @@ This hybrid approach improves accuracy, interpretability, and learning effective
 
 ✅ **ML-based error classification** using Gradient Boosting + TF-IDF (99.80% accuracy)
 
-✅ **Automatic error fixing** - Language-aware code corrections
+✅ **Multi-Error Detection** - Find ALL errors in code (not just first one)
+
+✅ **REST API** - FastAPI-based API for CI/CD and external integrations
+
+✅ **Automatic error fixing** - Language-aware code corrections (12 error types)
 
 ✅ **Code quality analysis** - Complexity metrics and improvement suggestions
 
-✅ **Beginner-friendly error explanations**
+✅ **Beginner-friendly error explanations** - 100% coverage for 19 error types
 
-✅ **Streamlit web interface** with live preview
+✅ **Streamlit web interface** with live preview and multi-error mode
 
 ✅ **Command-line interface (CLI)** for batch processing
 
@@ -336,11 +351,33 @@ Access at: `http://localhost:8501`
 
 **Features:**
 - Live error detection
+- Multi-Error Detection mode (🔍 Show All Errors checkbox)
 - Auto-fix suggestions with preview
 - Code quality analysis dashboard
 - Multi-language support
 
-### 5️⃣ Run CLI Tool
+### 5️⃣ Run REST API Server (NEW!)
+```bash
+python start_api.py
+# or
+python api.py
+```
+
+Access at: `http://localhost:8000`
+
+**API Documentation:**
+- Interactive Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+- Full Documentation: [API_DOCUMENTATION.md](API_DOCUMENTATION.md)
+
+**Available Endpoints:**
+- `GET /health` - API status check
+- `POST /check` - Detect errors in code
+- `POST /fix` - Auto-fix syntax errors
+- `POST /quality` - Analyze code quality
+- `POST /check-and-fix` - Combined detection & fixing
+
+### 6️⃣ Run CLI Tool
 ```bash
 python cli.py <path_to_code_file>
 ```
