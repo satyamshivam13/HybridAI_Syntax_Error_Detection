@@ -1,28 +1,52 @@
+# ============================================
+# Requirements.txt - FIXED VERSION
+# Phase 1: Critical Fixes Applied
+# ============================================
+
 # Web Framework
-streamlit>=1.18.0
+streamlit>=1.18.0,<2.0.0
 
 # REST API
-fastapi>=0.104.0
-uvicorn>=0.24.0
-pydantic>=2.0.0
+fastapi>=0.104.0,<1.0.0
+uvicorn[standard]>=0.24.0,<1.0.0
+pydantic>=2.0.0,<3.0.0
+slowapi>=0.1.9  # ✅ ADDED - Critical for rate limiting
+python-multipart>=0.0.6  # For file uploads
 
 # Data Science & Machine Learning
-pandas>=1.5.0
-numpy>=1.23.0
-scikit-learn==1.7.2
-joblib>=1.2.0
+pandas>=1.5.0,<3.0.0
+numpy>=1.23.0,<2.0.0
+scikit-learn==1.7.2  # Exact version - DO NOT CHANGE
+joblib>=1.2.0,<2.0.0
 
 # Visualization
-matplotlib>=3.6.0
-seaborn>=0.12.0
-plotly>=5.11.0
+matplotlib>=3.6.0,<4.0.0
+seaborn>=0.12.0,<1.0.0
+plotly>=5.11.0,<6.0.0
 
 # Notebook Support
 jupyter>=1.0.0
 ipykernel>=6.19.0
-
-# Code Analysis
-ast-comments>=1.1.0
+notebook>=6.5.0
 
 # Utilities
-python-dotenv>=0.21.0
+python-dotenv>=0.21.0,<2.0.0
+
+# Testing 
+pytest>=7.0.0,<8.0.0
+pytest-asyncio>=0.21.0
+httpx>=0.24.0
+pytest-cov>=4.0.0
+
+# Security 
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+
+# Performance
+redis>=4.5.0
+aioredis>=2.0.0
+
+# Code Quality Tools
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0
