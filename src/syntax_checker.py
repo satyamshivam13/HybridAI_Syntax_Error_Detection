@@ -23,12 +23,26 @@ def detect_unclosed_quotes(code: str) -> List[Dict[str, Any]]:
         try:
             # Try tokenizing — any bad indentation or string will raise an error
             _ = list(tokenize.generate_tokens(io.StringIO(code).readline))
-        except (tokenize.TokenError, IndentationError, SyntaxError) as e:
-            msg = str(e)
+        except tokenize.TokenError as e:
             issues.append({
                 "type": "UnclosedQuotes",
-                "message": msg if msg else "Tokenizer failed — possible unterminated string or indentation issue.",
+                "message": str(e),
                 "line": None,
+                "suggestion": "Check for missing or mismatched quotes."
+            })
+        except IndentationError as e:
+            # IndentationError must NOT be reported as UnclosedQuotes
+            issues.append({
+                "type": "IndentationError",
+                "message": str(e),
+                "line": getattr(e, 'lineno', None),
+                "suggestion": "Check for inconsistent indentation (use 4 spaces per level, avoid mixing tabs and spaces)."
+            })
+        except SyntaxError as e:
+            issues.append({
+                "type": "UnclosedQuotes",
+                "message": str(e) if str(e) else "Tokenizer failed — possible unterminated string.",
+                "line": getattr(e, 'lineno', None),
                 "suggestion": "Check for missing quotes or inconsistent indentation."
             })
         except Exception as e:
@@ -172,12 +186,20 @@ def detect_all(code: str) -> List[Dict[str, Any]]:
     ok, exc = try_ast_parse(code)
     if not ok and exc is not None:
         sp = classify_syntax_error(exc)
-        # Avoid duplicates
+        # Avoid duplicates by message
         if all(sp.get("message") != i.get("message") for i in issues):
             issues.append(sp)
 
+    # ── FIX: Deduplicate by (type, line) pair, not just message ──────────────
+    # This prevents the same error appearing twice when both the rule-based
+    # detector and the AST classifier catch the same issue on the same line.
+    seen = set()
     normalized = []
     for it in issues:
+        key = (it.get("type"), it.get("line"))
+        if key in seen:
+            continue
+        seen.add(key)
         normalized.append({
             "type": it.get("type"),
             "message": it.get("message"),

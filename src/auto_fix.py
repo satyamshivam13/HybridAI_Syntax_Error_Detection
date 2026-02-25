@@ -325,4 +325,4 @@ if __name__ == "__main__":
     print("Fixed Code:")
     print(result['fixed_code'])
     print("\nFixes Applied:")
-    print(result['fixes_applied'])
+    print(result['changes'])

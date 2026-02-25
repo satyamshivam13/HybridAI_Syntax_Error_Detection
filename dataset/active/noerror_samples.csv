@@ -1,0 +1,84 @@
+buggy_code,error_type,language
+x = 10,NoError,Python
+y = 20,NoError,Python
+name = 'Alice',NoError,Python
+"message = ""Hello World""",NoError,Python
+result = 42,NoError,Python
+pi = 3.14159,NoError,Python
+is_valid = True,NoError,Python
+items = None,NoError,Python
+total = a + b,NoError,Python
+product = x * y,NoError,Python
+quotient = x / y,NoError,Python
+remainder = x % y,NoError,Python
+power = x ** 2,NoError,Python
+result = (a + b) * c,NoError,Python
+average = sum(numbers) / len(numbers),NoError,Python
+full_name = first + ' ' + last,NoError,Python
+greeting = f'Hello {name}',NoError,Python
+text = 'line1\nline2\nline3',NoError,Python
+upper = text.upper(),NoError,Python
+length = len(message),NoError,Python
+"numbers = [1, 2, 3, 4, 5]",NoError,Python
+"names = ['Alice', 'Bob', 'Charlie']",NoError,Python
+"mixed = [1, 'two', 3.0, True]",NoError,Python
+empty = [],NoError,Python
+"matrix = [[1, 2], [3, 4]]",NoError,Python
+squares = [x**2 for x in range(10)],NoError,Python
+"person = {'name': 'Alice', 'age': 30}",NoError,Python
+"scores = {'math': 95, 'english': 87}",NoError,Python
+empty_dict = {},NoError,Python
+"data = dict(a=1, b=2, c=3)",NoError,Python
+"unique = {1, 2, 3, 4, 5}",NoError,Python
+"coordinates = (10, 20)",NoError,Python
+"triple = (1, 2, 3)",NoError,Python
+def hello():\n    print('Hello'),NoError,Python
+"def add(a, b):\n    return a + b",NoError,Python
+def greet(name):\n    return f'Hello {name}',NoError,Python
+def square(x):\n    return x * x,NoError,Python
+def is_positive(n):\n    return n > 0,NoError,Python
+if x > 0:\n    print('positive'),NoError,Python
+if x > 0:\n    print('pos')\nelse:\n    print('neg'),NoError,Python
+for i in range(10):\n    print(i),NoError,Python
+for item in items:\n    process(item),NoError,Python
+while x < 10:\n    x += 1,NoError,Python
+"for i, val in enumerate(data):\n    print(i, val)",NoError,Python
+class Dog:\n    pass,NoError,Python
+class Cat:\n    def meow(self):\n        print('Meow'),NoError,Python
+"class Person:\n    def __init__(self, name):\n        self.name = name",NoError,Python
+import os,NoError,Python
+import sys,NoError,Python
+import math,NoError,Python
+from os import path,NoError,Python
+"from math import pi, sqrt",NoError,Python
+import numpy as np,NoError,Python
+"with open('file.txt', 'r') as f:\n    data = f.read()",NoError,Python
+try:\n    x = int(input())\nexcept ValueError:\n    x = 0,NoError,Python
+square = lambda x: x**2,NoError,Python
+"add = lambda a, b: a + b",NoError,Python
+"def add(a: int, b: int) -> int:\n    return a + b",NoError,Python
+"def main():\n    print('Hello, World!')\n\nif __name__ == '__main__':\n    main()",NoError,Python
+import os\n\ndef get_path():\n    return os.getcwd()\n\nprint(get_path()),NoError,Python
+"public class Main {\n    public static void main(String[] args) {\n        System.out.println(""Hello"");\n    }\n}",NoError,Java
+public class Main {\n    public static void main(String[] args) {\n        int x = 10;\n        int y = 20;\n        System.out.println(x + y);\n    }\n},NoError,Java
+"public class Main {\n    public static void main(String[] args) {\n        String name = ""Alice"";\n        System.out.println(""Hello "" + name);\n    }\n}",NoError,Java
+"public class Main {\n    public static int add(int a, int b) {\n        return a + b;\n    }\n    public static void main(String[] args) {\n        System.out.println(add(5, 3));\n    }\n}",NoError,Java
+public class Main {\n    public static void main(String[] args) {\n        for (int i = 0; i < 10; i++) {\n            System.out.println(i);\n        }\n    }\n},NoError,Java
+public class Main {\n    public static void main(String[] args) {\n        int i = 0;\n        while (i < 5) {\n            System.out.println(i);\n            i++;\n        }\n    }\n},NoError,Java
+"public class Main {\n    public static void main(String[] args) {\n        int x = 10;\n        if (x > 5) {\n            System.out.println(""Greater"");\n        }\n    }\n}",NoError,Java
+"public class Main {\n    public static void main(String[] args) {\n        int[] numbers = {1, 2, 3, 4, 5};\n        System.out.println(numbers[0]);\n    }\n}",NoError,Java
+"class Dog {\n    String name;\n    void bark() {\n        System.out.println(""Woof"");\n    }\n}",NoError,Java
+"#include <stdio.h>\nint main() {\n    printf(""Hello, World!\\n"");\n    return 0;\n}",NoError,C
+"#include <stdio.h>\nint main() {\n    int x = 10;\n    int y = 20;\n    printf(""%d\\n"", x + y);\n    return 0;\n}",NoError,C
+"#include <stdio.h>\nint add(int a, int b) {\n    return a + b;\n}\nint main() {\n    printf(""%d\\n"", add(5, 3));\n    return 0;\n}",NoError,C
+"#include <stdio.h>\nint main() {\n    for (int i = 0; i < 10; i++) {\n        printf(""%d\\n"", i);\n    }\n    return 0;\n}",NoError,C
+"#include <stdio.h>\nint main() {\n    int x = 10;\n    if (x > 5) {\n        printf(""Greater\\n"");\n    }\n    return 0;\n}",NoError,C
+"#include <stdio.h>\nint main() {\n    int arr[5] = {1, 2, 3, 4, 5};\n    printf(""%d\\n"", arr[0]);\n    return 0;\n}",NoError,C
+"#include <stdio.h>\nint main() {\n    int x = 42;\n    int *p = &x;\n    printf(""%d\\n"", *p);\n    return 0;\n}",NoError,C
+"#include <iostream>\nusing namespace std;\nint main() {\n    cout << ""Hello, World!"" << endl;\n    return 0;\n}",NoError,C++
+#include <iostream>\nusing namespace std;\nint main() {\n    int x = 10;\n    int y = 20;\n    cout << x + y << endl;\n    return 0;\n},NoError,C++
+"#include <iostream>\nusing namespace std;\nint add(int a, int b) {\n    return a + b;\n}\nint main() {\n    cout << add(5, 3) << endl;\n    return 0;\n}",NoError,C++
+#include <iostream>\nusing namespace std;\nint main() {\n    for (int i = 0; i < 10; i++) {\n        cout << i << endl;\n    }\n    return 0;\n},NoError,C++
+"#include <iostream>\nusing namespace std;\nclass Dog {\npublic:\n    void bark() {\n        cout << ""Woof!"" << endl;\n    }\n};\nint main() {\n    Dog d;\n    d.bark();\n    return 0;\n}",NoError,C++
+"#include <iostream>\n#include <vector>\nusing namespace std;\nint main() {\n    vector<int> v = {1, 2, 3};\n    cout << v[0] << endl;\n    return 0;\n}",NoError,C++
+"#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string name = ""Alice"";\n    cout << ""Hello "" << name << endl;\n    return 0;\n}",NoError,C++

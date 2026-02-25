@@ -1,24 +1,155 @@
+"""
+error_engine.py
+===============
+Hybrid rule-based + ML error detection engine.
+
+Two-layer design:
+  Layer 1 — Structural validator (is there an error at all?)
+    • Python:       ast.parse()  — perfect syntax validator
+    • Java/C/C++:   brace balance + semicolon check
+
+  Layer 2 — ML classifier (what kind of error is it?)
+    • Only consulted when Layer 1 finds a problem, OR
+    • After Layer 1 passes, to catch SEMANTIC errors (DivisionByZero,
+      TypeMismatch, ImportError, etc.) which are syntactically valid.
+
+Key insight:
+  Semantic error types (DivisionByZero, TypeMismatch, ...) are in
+  syntactically valid code — ast.parse() passes them. After a structural
+  pass, ML is consulted at a high confidence threshold, but ONLY for
+  semantic error types. Syntax error types (MissingColon, etc.) are
+  NEVER reported when the structural validator passes — they would be
+  false positives.
+"""
+
+import ast as _ast
+
 from .language_detector import detect_language
 from .ml_engine import detect_error_ml
 from .syntax_checker import detect_all
 from .tutor_explainer import explain_error
 
-CONFIDENCE_THRESHOLD = 0.65
+# Confidence thresholds
+SYNTAX_ERROR_THRESHOLD  = 0.65   # ML classifying a known syntax error
+SEMANTIC_ERROR_THRESHOLD = 0.995  # ML classifying a semantic/runtime error
+                                  # (VERY high bar — these appear in valid-AST code)
+MIN_CODE_LINES_FOR_SEMANTIC = 10  # Minimum lines to consider semantic errors
+
+# Rule-based types that are always authoritative
+RULE_BASED_AUTHORITATIVE = {"MissingColon", "IndentationError"}
+
+# All types the rule-based detector covers
+RULE_BASED_TYPES = {
+    "MissingColon", "IndentationError", "UnmatchedBracket",
+    "UnclosedQuotes", "UnclosedString", "MissingDelimiter",
+}
+
+# Semantic/runtime error types — syntactically valid code can have these.
+# After AST/structural pass, ML is consulted for these types only.
+SEMANTIC_ERROR_TYPES = {
+    "DivisionByZero", "TypeMismatch", "ImportError", "MissingImport",
+    "MissingInclude", "InfiniteLoop", "InvalidAssignment", "LineTooLong",
+    "DuplicateDefinition", "MutableDefault", "NameError",
+    "UndeclaredIdentifier", "UnreachableCode", "UnusedVariable",
+    "WildcardImport",
+}
+
+LABEL_ALIASES = {"UnclosedQuotes": "UnclosedString"}
+
+def _normalize(label):
+    return LABEL_ALIASES.get(label, label)
+
+def _braces_balanced(code):
+    stack = []
+    pairs = {')': '(', ']': '[', '}': '{'}
+    for ch in code:
+        if ch in "([{":
+            stack.append(ch)
+        elif ch in ")]}":
+            if not stack or stack[-1] != pairs[ch]:
+                return False
+            stack.pop()
+    return len(stack) == 0
+
+def _has_missing_semicolons(code):
+    import re
+    simple_statements = [
+        r'^return\s+.+$', r'^cout\s*<<.*$', r'^cin\s*>>.*$',
+        r'^printf\s*\(.*\)$', r'^fprintf\s*\(.*\)$', r'^puts\s*\(.*\)$',
+        r'^std::cout\s*<<.*$', r'^std::cin\s*>>.*$',
+    ]
+    for l in [l.strip() for l in code.splitlines() if l.strip()]:
+        if (l.startswith('//') or l.startswith('/*') or l.startswith('*') or
+            l.startswith('#') or l.endswith('{') or l.endswith('}') or
+            l.startswith('import') or l.startswith('package') or
+            l.startswith('using') or l.startswith('namespace') or
+            'class ' in l[:20]):
+            continue
+        is_control = any(kw in l for kw in [
+            'if (', 'if(', 'for (', 'for(', 'while (', 'while(',
+            'else', 'try', 'catch', 'switch', 'case ', 'default:', 'do '
+        ])
+        if not is_control and not l.endswith(';') and not l.endswith('{') and not l.endswith('}'):
+            if any(re.match(pat, l) for pat in simple_statements):
+                return True
+            elif ('=' in l or ('(' in l and ')' in l)) and not l.startswith('}'):
+                return True
+    return False
+
+def _ml_semantic_check(code, language, rule_based_issues):
+    """
+    After a structural pass, ask ML if there's a semantic/runtime error.
+    Only returns an error if ML is highly confident AND the type is semantic
+    AND the code is long enough to warrant semantic analysis.
+    Returns a result dict or None if no semantic error found.
+    """
+    # Don't check semantic errors on very short code snippets
+    code_lines = len([l for l in code.splitlines() if l.strip()])
+    if code_lines < MIN_CODE_LINES_FOR_SEMANTIC:
+        return None
+    
+    ml_error, confidence = detect_error_ml(code)
+    ml_error = _normalize(ml_error)
+
+    if (ml_error in SEMANTIC_ERROR_TYPES
+            and confidence >= SEMANTIC_ERROR_THRESHOLD):
+        return {
+            "language": language,
+            "predicted_error": ml_error,
+            "confidence": confidence,
+            "tutor": explain_error(ml_error),
+            "rule_based_issues": rule_based_issues
+        }
+    return None
 
 
 def detect_errors(code: str, filename: str | None = None):
-    # 🔑 language detection WITH filename
-    language = detect_language(code, filename)
+    """
+    Detect syntax and semantic errors using a hybrid approach.
+    """
 
-    # ------------------------------------------------
-    # 1. Python: Rule-based detection is FINAL
-    # ------------------------------------------------
+    language = detect_language(code, filename)
     rule_based_issues = []
 
+    # =========================================================================
+    # PYTHON
+    # =========================================================================
     if language == "Python":
-        rule_based_issues = detect_all(code)
 
-        if not rule_based_issues:
+        # Layer 1: AST structural validation
+        try:
+            _ast.parse(code)
+            ast_passed = True
+        except SyntaxError:
+            ast_passed = False
+
+        if ast_passed:
+            # Code is syntactically valid Python.
+            # Still check for semantic/runtime errors via ML.
+            semantic = _ml_semantic_check(code, language, [])
+            if semantic:
+                return semantic
+            # No semantic error detected either
             return {
                 "language": language,
                 "predicted_error": "NoError",
@@ -29,93 +160,149 @@ def detect_errors(code: str, filename: str | None = None):
                 },
                 "rule_based_issues": []
             }
-        
-        # If issues found, return the first detected error type
-        primary_error = rule_based_issues[0].get('type', 'SyntaxError')
-        tutor_help = explain_error(primary_error)
+
+        # AST failed — classify the syntax error
+        rule_based_issues = detect_all(code)
+        for issue in rule_based_issues:
+            if issue.get("type") in LABEL_ALIASES:
+                issue["type"] = LABEL_ALIASES[issue["type"]]
+
+        strong_issues = [i for i in rule_based_issues if i.get("type") in RULE_BASED_TYPES]
+
+        if strong_issues:
+            rb_error = strong_issues[0].get("type", "SyntaxError")
+
+            # Authoritative types never overridden by ML
+            if rb_error in RULE_BASED_AUTHORITATIVE:
+                return {
+                    "language": language,
+                    "predicted_error": rb_error,
+                    "confidence": 1.0,
+                    "tutor": explain_error(rb_error),
+                    "rule_based_issues": rule_based_issues
+                }
+
+            # Other rule-based types — ML can override if very confident
+            ml_error, confidence = detect_error_ml(code)
+            ml_error = _normalize(ml_error)
+            code_lines = len([l for l in code.splitlines() if l.strip()])
+            # Only allow ML override for semantic errors with very high confidence
+            if (ml_error in SEMANTIC_ERROR_TYPES
+                    and confidence >= SEMANTIC_ERROR_THRESHOLD
+                    and ml_error != "NoError"
+                    and ml_error != rb_error
+                    and code_lines >= MIN_CODE_LINES_FOR_SEMANTIC):
+                return {
+                    "language": language,
+                    "predicted_error": ml_error,
+                    "confidence": confidence,
+                    "tutor": explain_error(ml_error),
+                    "rule_based_issues": rule_based_issues
+                }
+
+            return {
+                "language": language,
+                "predicted_error": rb_error,
+                "confidence": 1.0,
+                "tutor": explain_error(rb_error),
+                "rule_based_issues": rule_based_issues
+            }
+
+        # Rule-based didn't classify → use ML for syntax error classification
+        ml_error, confidence = detect_error_ml(code)
+        ml_error = _normalize(ml_error)
+        if confidence < SYNTAX_ERROR_THRESHOLD or ml_error == "NoError":
+            return {
+                "language": language,
+                "predicted_error": "NoError",
+                "confidence": confidence,
+                "tutor": {
+                    "why": "The code structure appears syntactically correct.",
+                    "fix": "No changes are required."
+                },
+                "rule_based_issues": rule_based_issues
+            }
         return {
             "language": language,
-            "predicted_error": primary_error,
-            "confidence": 1.0,
-            "tutor": tutor_help,
+            "predicted_error": ml_error,
+            "confidence": confidence,
+            "tutor": explain_error(ml_error),
             "rule_based_issues": rule_based_issues
         }
 
-    # ------------------------------------------------
-    # 2. ML-based prediction
-    # ------------------------------------------------
-    ml_error, confidence = detect_error_ml(code)
+    # =========================================================================
+    # JAVA / C / C++
+    # =========================================================================
+    elif language in ["Java", "C", "C++"]:
 
-    # ------------------------------------------------
-    # 3. HARD RULES: Java / C / C++
-    # ------------------------------------------------
-    if language in ["Java", "C", "C++"]:
-        lines = [l.strip() for l in code.splitlines() if l.strip()]
-
-        # More sophisticated semicolon check
-        semicolon_required_lines = []
-        import re
-        # Patterns for simple statements that require semicolons
-        simple_statements = [
-            r'^return\s+.+$',                # return statements
-            r'^cout\s*<<.*$',                # C++ cout
-            r'^cin\s*>>.*$',                 # C++ cin
-            r'^printf\s*\(.*\)$',          # C printf
-            r'^fprintf\s*\(.*\)$',         # C fprintf
-            r'^puts\s*\(.*\)$',            # C puts
-            r'^std::cout\s*<<.*$',           # C++ std::cout
-            r'^std::cin\s*>>.*$',            # C++ std::cin
-        ]
-        for l in lines:
-            # Skip comments, preprocessor directives, and control structures
-            if (l.startswith('//') or l.startswith('/*') or l.startswith('*') or 
-                l.startswith('#') or l.endswith('{') or l.endswith('}') or
-                l.startswith('import') or l.startswith('package') or
-                l.startswith('using') or l.startswith('namespace') or
-                l.startswith('public class') or l.startswith('class ') or
-                l.startswith('private class') or l.startswith('protected class')):
+        # Check for unclosed strings first (higher priority than other errors)
+        in_single = False
+        in_double = False
+        escaped = False
+        
+        for char in code:
+            if escaped:
+                escaped = False
                 continue
-            # Check if line looks like it needs a semicolon but doesn't have one
-            is_control = any(keyword in l for keyword in [
-                'if (', 'if(', 'for (', 'for(', 'while (', 'while(', 'else', 'try', 'catch', 
-                'switch (', 'switch(', 'case ', 'default:', 'do ', 'do{'
-            ])
-            if not is_control and not l.endswith(';') and not l.endswith('{') and not l.endswith('}'):
-                # Check for simple statement patterns
-                if any(re.match(pat, l) for pat in simple_statements):
-                    semicolon_required_lines.append(l)
-                # Also check for assignment or function call
-                elif ('=' in l or ('(' in l and ')' in l)) and not l.startswith('}'):
-                    semicolon_required_lines.append(l)
+            if char == '\\':
+                escaped = True
+                continue
+            if char == "'" and not in_double:
+                in_single = not in_single
+            elif char == '"' and not in_single:
+                in_double = not in_double
+        
+        if in_single or in_double:
+            return {
+                "language": language,
+                "predicted_error": "UnclosedString",
+                "confidence": 1.0,
+                "tutor": explain_error("UnclosedString"),
+                "rule_based_issues": []
+            }
 
-        # ❌ Missing semicolon is ALWAYS an error
-        if semicolon_required_lines:
-            tutor_help = explain_error("MissingDelimiter")
+        has_missing_semi = _has_missing_semicolons(code)
+        has_unbalanced   = not _braces_balanced(code)
+
+        if not has_missing_semi and not has_unbalanced:
+            # Structurally valid — check for semantic errors via ML
+            semantic = _ml_semantic_check(code, language, [])
+            if semantic:
+                return semantic
+            return {
+                "language": language,
+                "predicted_error": "NoError",
+                "confidence": 1.0,
+                "tutor": {
+                    "why": "The code follows valid syntax rules for this language.",
+                    "fix": "No changes are required."
+                },
+                "rule_based_issues": []
+            }
+
+        if has_missing_semi:
             return {
                 "language": language,
                 "predicted_error": "MissingDelimiter",
                 "confidence": 1.0,
-                "tutor": tutor_help,
+                "tutor": explain_error("MissingDelimiter"),
                 "rule_based_issues": []
             }
 
-        # ✅ Semicolons OK → Code is valid (rule-based check passed)
-        # For Java/C/C++, rule-based check is authoritative for semicolons
         return {
             "language": language,
-            "predicted_error": "NoError",
+            "predicted_error": "UnmatchedBracket",
             "confidence": 1.0,
-            "tutor": {
-                "why": "The code follows valid syntax rules for this language.",
-                "fix": "No changes are required."
-            },
+            "tutor": explain_error("UnmatchedBracket"),
             "rule_based_issues": []
         }
 
-    # ------------------------------------------------
-    # 4. Fallback (non-Java languages only)
-    # ------------------------------------------------
-    if language not in ["Java", "C", "C++"] and confidence < CONFIDENCE_THRESHOLD:
+    # =========================================================================
+    # UNKNOWN LANGUAGE — ML only
+    # =========================================================================
+    ml_error, confidence = detect_error_ml(code)
+    ml_error = _normalize(ml_error)
+    if confidence < SYNTAX_ERROR_THRESHOLD or ml_error == "NoError":
         return {
             "language": language,
             "predicted_error": "NoError",
@@ -124,18 +311,12 @@ def detect_errors(code: str, filename: str | None = None):
                 "why": "The code structure appears syntactically correct.",
                 "fix": "No changes are required."
             },
-            "rule_based_issues": []
+            "rule_based_issues": rule_based_issues
         }
-
-    # ------------------------------------------------
-    # 5. ERROR CASE
-    # ------------------------------------------------
-    tutor_help = explain_error(ml_error)
-
     return {
         "language": language,
         "predicted_error": ml_error,
         "confidence": confidence,
-        "tutor": tutor_help,
+        "tutor": explain_error(ml_error),
         "rule_based_issues": rule_based_issues
     }

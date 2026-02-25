@@ -84,11 +84,17 @@ with col_toggle:
 if code_input.strip():
     # Pass filename if file is uploaded (important for Java/C/C++)
     filename = uploaded.name if uploaded else None
-    
+
+    # --------------------------------------------------------
+    # Detect language upfront so it's available in both modes
+    # --------------------------------------------------------
+    from src.language_detector import detect_language as _detect_lang
+    detected_language = _detect_lang(code_input, filename)
+
     # --------------------------------------------------------
     # Multi-Error Detection Mode
     # --------------------------------------------------------
-    
+
     if st.session_state.show_all_errors:
         all_errors = detect_all_errors(code_input, filename)
         
@@ -212,7 +218,7 @@ if code_input.strip():
     st.subheader("📊 Code Quality Analysis")
     
     try:
-        quality = CodeQualityAnalyzer(code_input, result['language'])
+        quality = CodeQualityAnalyzer(code_input, detected_language)
         quality_report = quality.analyze()
         
         col1, col2, col3 = st.columns(3)
