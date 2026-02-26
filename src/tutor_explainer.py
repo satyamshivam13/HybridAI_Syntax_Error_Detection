@@ -4,8 +4,8 @@ EXPLANATIONS = {
         "fix": "Add a colon ':' at the end of the statement (e.g., 'def function():' or 'if condition:')."
     },
     "MissingDelimiter": {
-        "why": "Statements in C, C++, and Java must end with a semicolon ';'.",
-        "fix": "Add a semicolon ';' at the end of the statement."
+        "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+        "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
     },
     "IndentationError": {
         "why": "Python uses indentation to define code blocks. Inconsistent indentation causes errors.",

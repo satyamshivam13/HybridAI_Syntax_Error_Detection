@@ -46,51 +46,8 @@ except (FileNotFoundError, ModuleNotFoundError, ImportError) as e:
         model_loaded = False
 
 
-def extract_numerical_features(code: str):
-    """Extract numerical features for enhanced model"""
-    features = []
-    
-    # Feature 1: Code length
-    features.append(len(code))
-    
-    # Feature 2: Number of lines
-    features.append(code.count('\n') + 1)
-    
-    # Feature 3: Has division operator
-    features.append(1 if ('/' in code or '%' in code) else 0)
-    
-    # Feature 4: Has type conversion
-    has_conv = any(kw in code for kw in ['int(', 'float(', 'str(', 'stoi', 'static_cast'])
-    features.append(1 if has_conv else 0)
-    
-    # Feature 5: Missing colon (estimate)
-    has_keywords = any(kw in code for kw in ['def ', 'class ', 'if ', 'for ', 'while '])
-    colon_count = code.count(':')
-    newline_count = code.count('\n')
-    features.append(1 if (has_keywords and colon_count < newline_count) else 0)
-    
-    # Feature 6: Missing semicolon (estimate)
-    semicolon_count = code.count(';')
-    features.append(1 if (semicolon_count < newline_count - 1) else 0)
-    
-    # Feature 7: Has comparison with zero
-    has_zero_comp = any(pattern in code for pattern in ['== 0', '!= 0', '> 0', '< 0', '>= 0', '<= 0'])
-    features.append(1 if has_zero_comp else 0)
-    
-    # Feature 8: Has string operations
-    features.append(1 if ('"' in code or "'" in code) else 0)
-    
-    # Feature 9: Has type declaration
-    has_type = any(t in code for t in ['int ', 'float ', 'double ', 'char ', 'String ', 'bool'])
-    features.append(1 if has_type else 0)
-    
-    # Feature 10: Bracket count difference
-    bracket_diff = abs(code.count('(') - code.count(')')) + \
-                   abs(code.count('[') - code.count(']')) + \
-                   abs(code.count('{') - code.count('}'))
-    features.append(bracket_diff)
-    
-    return features
+from .feature_utils import extract_numerical_features
+
 
 
 def detect_error_ml(code: str):

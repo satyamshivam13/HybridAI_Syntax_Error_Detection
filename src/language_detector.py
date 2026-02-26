@@ -1,6 +1,16 @@
 import os
 
+
 def detect_language(code: str, filename: str | None = None) -> str:
+    """
+    Detect the programming language of the given source code.
+
+    Priority:
+      1. Filename extension (most reliable)
+      2. Score-based keyword matching (content fallback)
+
+    Returns one of: "Python", "Java", "C++", "C", "Unknown"
+    """
     code_lower = code.lower()
 
     # -------------------------
@@ -14,22 +24,58 @@ def detect_language(code: str, filename: str | None = None) -> str:
             return "Java"
         if ext == ".c":
             return "C"
-        if ext == ".cpp":
+        if ext in (".cpp", ".cc", ".cxx", ".hpp"):
             return "C++"
 
     # -------------------------
-    # 2. Content-based fallback
+    # 2. Score-based content detection
     # -------------------------
-    if "def " in code_lower or "print(" in code_lower:
-        return "Python"
+    # Each language gets points for specific keywords.
+    # More-specific patterns score higher to avoid mis-classification
+    # (e.g. C's printf matching Python's print).
+    scores = {"Python": 0, "Java": 0, "C++": 0, "C": 0}
 
-    if "system.out.println" in code_lower or "public class" in code_lower:
-        return "Java"
+    # --- C indicators (check BEFORE Python to avoid printf→print false match) ---
+    if "printf(" in code_lower or "fprintf(" in code_lower or "scanf(" in code_lower:
+        scores["C"] += 2
+    if "#include" in code_lower:
+        scores["C"] += 1
+        scores["C++"] += 1
+        # C-specific headers tip the balance toward C
+        import re
+        if re.search(r'#include\s*<\w+\.h>', code_lower):
+            scores["C"] += 1
+    if "int main" in code_lower:
+        scores["C"] += 1
+        scores["C++"] += 1
 
-    if "cout <<" in code_lower:
-        return "C++"
+    # --- C++ indicators ---
+    if "cout <<" in code_lower or "cin >>" in code_lower:
+        scores["C++"] += 2
+    if "std::" in code_lower:
+        scores["C++"] += 2
+    if "using namespace" in code_lower:
+        scores["C++"] += 2
 
-    if "printf(" in code_lower or "int main" in code_lower:
-        return "C"
+    # --- Java indicators ---
+    if "system.out.println" in code_lower or "system.out.print" in code_lower:
+        scores["Java"] += 2
+    if "public class" in code_lower or "public static void main" in code_lower:
+        scores["Java"] += 2
+    if "import java." in code_lower:
+        scores["Java"] += 2
 
-    return "Unknown"
+    # --- Python indicators ---
+    if "def " in code_lower:
+        scores["Python"] += 2
+    if "import " in code_lower and "#include" not in code_lower and "import java." not in code_lower:
+        scores["Python"] += 1
+    # Only award print( for Python if no C-style printf evidence
+    if "print(" in code_lower and scores["C"] == 0 and scores["C++"] == 0:
+        scores["Python"] += 1
+    if "elif " in code_lower or "except " in code_lower:
+        scores["Python"] += 2
+
+    # Return language with highest score (ties broken by dict order: Python first)
+    best = max(scores, key=scores.get)
+    return best if scores[best] > 0 else "Unknown"

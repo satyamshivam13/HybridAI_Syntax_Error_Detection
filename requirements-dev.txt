@@ -1,0 +1,20 @@
+# ============================================
+# Requirements-dev.txt - Development Dependencies
+# Install with: pip install -r requirements-dev.txt
+# ============================================
+
+# Include production dependencies
+-r requirements.txt
+
+# Notebook Support
+jupyter>=1.0.0
+ipykernel>=6.19.0
+notebook>=6.5.0
+
+# Code Quality Tools
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0
+
+# Rate Limiting (optional, for production API)
+slowapi>=0.1.9

@@ -23,6 +23,7 @@ Key insight:
 """
 
 import ast as _ast
+import re
 
 from .language_detector import detect_language
 from .ml_engine import detect_error_ml
@@ -30,13 +31,32 @@ from .syntax_checker import detect_all
 from .tutor_explainer import explain_error
 
 # Confidence thresholds
-SYNTAX_ERROR_THRESHOLD  = 0.65   # ML classifying a known syntax error
-SEMANTIC_ERROR_THRESHOLD = 0.995  # ML classifying a semantic/runtime error
-                                  # (VERY high bar — these appear in valid-AST code)
-MIN_CODE_LINES_FOR_SEMANTIC = 10  # Minimum lines to consider semantic errors
+SYNTAX_ERROR_THRESHOLD   = 0.65   # ML classifying a known syntax error
+SEMANTIC_ERROR_THRESHOLD = 0.98   # ML classifying a semantic/runtime error
+SHORT_CODE_SEMANTIC_THRESHOLD = 0.985  # Stricter bar for very short snippets
+MIN_CODE_LINES_FOR_SEMANTIC = 4        # Below this, use SHORT_CODE_SEMANTIC_THRESHOLD
+
+# Per-type minimum confidence for semantic errors (reduce false positives)
+SEMANTIC_ERROR_THRESHOLDS = {
+    "DivisionByZero": 0.98,
+    "ImportError": 0.99,
+    "InfiniteLoop": 0.99,
+    "UnreachableCode": 0.99,
+    "InvalidAssignment": 0.99,
+    "DuplicateDefinition": 0.99,
+    "NameError": 0.995,
+    "UndeclaredIdentifier": 0.995,
+    "TypeMismatch": 0.985,
+    "MissingImport": 0.985,
+    "MissingInclude": 0.99,
+    "LineTooLong": 0.99,
+    "WildcardImport": 0.99,
+    "MutableDefault": 0.99,
+    "UnusedVariable": 0.99,
+}
 
 # Rule-based types that are always authoritative
-RULE_BASED_AUTHORITATIVE = {"MissingColon", "IndentationError"}
+RULE_BASED_AUTHORITATIVE = {"MissingColon", "MissingDelimiter", "IndentationError"}
 
 # All types the rule-based detector covers
 RULE_BASED_TYPES = {
@@ -54,7 +74,11 @@ SEMANTIC_ERROR_TYPES = {
     "WildcardImport",
 }
 
-LABEL_ALIASES = {"UnclosedQuotes": "UnclosedString"}
+LABEL_ALIASES = {
+    "UnclosedQuotes": "UnclosedString",
+    # Dataset/model label uses MissingDelimiter for Python missing ':' as well.
+    "MissingColon": "MissingDelimiter",
+}
 
 def _normalize(label):
     return LABEL_ALIASES.get(label, label)
@@ -70,6 +94,124 @@ def _braces_balanced(code):
                 return False
             stack.pop()
     return len(stack) == 0
+
+def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
+    """Light heuristics to avoid obvious semantic false positives."""
+    et = error_type
+
+    if et == "DivisionByZero":
+        evidence = False
+        if re.search(r'(/|%)\s*0(\D|$)', code):
+            evidence = True
+        if re.search(r'/\s*\(\s*0(\.0+)?\s*\)', code):
+            evidence = True
+        if re.search(r'/\s*\(\s*(\d+)\s*-\s*\1\s*\)', code):
+            evidence = True
+        if re.search(r'/\s*\(\s*([A-Za-z_]\w*)\s*-\s*\1\s*\)', code):
+            evidence = True
+        assigns = {}
+        for line in code.splitlines():
+            m = re.match(r'^\s*(?:int|float|double|long|short|char|bool|boolean)?\s*([A-Za-z_]\w*)\s*=\s*([0-9]+(?:\.[0-9]+)?)(?:f)?\s*;?\s*$', line)
+            if m:
+                assigns[m.group(1)] = float(m.group(2))
+                continue
+            m = re.match(r'^\s*(?:int|float|double|long|short|char|bool|boolean)?\s*([A-Za-z_]\w*)\s*=\s*(\d+)\s*-\s*\2\s*;?\s*$', line)
+            if m:
+                assigns[m.group(1)] = 0.0
+                continue
+            m = re.match(r'^\s*(?:int|float|double|long|short|char|bool|boolean)?\s*([A-Za-z_]\w*)\s*=\s*([A-Za-z_]\w*)\s*-\s*\2\s*;?\s*$', line)
+            if m:
+                assigns[m.group(1)] = 0.0
+                continue
+        for v, val in assigns.items():
+            if re.search(r'(//|/|%)\s*' + re.escape(v) + r'\b', code):
+                if val == 0.0:
+                    evidence = True
+                else:
+                    return False
+        if re.search(r'\bdivide\s*\([^)]*,\s*0(\.0+)?\s*\)', code):
+            evidence = True
+        return evidence
+
+    if et == "InvalidAssignment":
+        if re.search(r'^\s*(\d+|[\'\"].*[\'\"]|True|False|None|null|NULL|\(.*\)|\[.*\]|\{.*\})\s*=', code, re.M):
+            return True
+        if re.search(r'^\s*.+\s*[\+\-\*/]\s*.+\s*=', code, re.M):
+            return True
+        if re.search(r'\b(const|final)\b', code):
+            m = re.search(r'\b(const|final)\b\s+\w+\s+(\w+)\s*=', code)
+            if m:
+                name = m.group(2)
+                return len(re.findall(r'\b' + re.escape(name) + r'\s*=', code)) >= 2
+            return False
+        return False
+
+    if et == "DuplicateDefinition":
+        if language == "Python":
+            defs = re.findall(r'^\s*def\s+\w+\s*\(', code, re.M)
+            classes = re.findall(r'^\s*class\s+\w+', code, re.M)
+            return (len(defs) + len(classes)) >= 2
+        classes = re.findall(r'\bclass\s+\w+', code)
+        if len(classes) >= 2:
+            return True
+        decls = re.findall(r'\b(int|float|double|char|long|short|bool|boolean|String|string)\s+(\w+)\s*=', code)
+        names = [name for _, name in decls]
+        if len(names) >= 2 and len(names) != len(set(names)):
+            return True
+        funcs = re.findall(r'\b(\w+)\s*\([^;]*\)\s*\{', code)
+        return len(funcs) >= 2 and len(funcs) != len(set(funcs))
+
+    if et == "UnreachableCode":
+        return bool(re.search(r'\b(return|break|continue|raise|throw)\b[^\n]*\n\s*\S', code))
+
+    if et == "InfiniteLoop":
+        return bool(re.search(r'while\s*\(\s*true\s*\)|while\s+True|while\s*\(\s*1\s*\)|for\s*\(\s*;\s*;\s*\)', code))
+
+    if et == "ImportError":
+        if not re.search(r'^\s*(import|from)\s+', code, re.M):
+            return False
+        # Allow common stdlib imports to pass (avoid false positives)
+        safe_modules = {
+            "math", "os", "sys", "re", "json", "datetime", "time", "random",
+            "itertools", "collections", "functools", "pathlib", "string", "statistics"
+        }
+        safe_symbols = {
+            "path", "Path", "sqrt", "pi", "sin", "cos", "tan", "randint",
+            "choice", "Counter", "defaultdict", "deque"
+        }
+        for line in code.splitlines():
+            line = line.strip()
+            if line.startswith("import "):
+                mods = [m.strip().split()[0] for m in line[7:].split(",")]
+                if any(m in safe_modules for m in mods):
+                    return False
+            if line.startswith("from "):
+                parts = line.split()
+                if len(parts) >= 4 and parts[0] == "from" and parts[2] == "import":
+                    mod = parts[1]
+                    names = [n.strip() for n in " ".join(parts[3:]).split(",")]
+                    if mod in safe_modules and all(n in safe_symbols for n in names):
+                        return False
+        return True
+
+    if et == "MissingImport":
+        if re.search(r'^\s*(import|from)\s+', code, re.M):
+            return False
+        return True
+
+    if et == "TypeMismatch":
+        for line in code.splitlines():
+            if re.match(r'^\s*\w+\s*=\s*(?:[\'"].*[\'"]\s*\+\s*)+[\'"].*[\'"]\s*$', line):
+                return False
+            if re.match(r'^\s*print\(\s*(?:[\'"].*[\'"]\s*\+\s*)+[\'"].*[\'"]\s*\)\s*$', line):
+                return False
+        return True
+
+    if et == "UndeclaredIdentifier" and language in {"C", "C++", "Java"}:
+        if re.search(r'\bfor\s*\(\s*int\s+\w+\s*=', code):
+            return False
+
+    return True
 
 def _has_missing_semicolons(code):
     import re
@@ -99,20 +241,23 @@ def _has_missing_semicolons(code):
 def _ml_semantic_check(code, language, rule_based_issues):
     """
     After a structural pass, ask ML if there's a semantic/runtime error.
-    Only returns an error if ML is highly confident AND the type is semantic
-    AND the code is long enough to warrant semantic analysis.
+    Only returns an error if ML is highly confident AND the type is semantic.
+    Short snippets require a stricter confidence threshold.
     Returns a result dict or None if no semantic error found.
     """
-    # Don't check semantic errors on very short code snippets
     code_lines = len([l for l in code.splitlines() if l.strip()])
-    if code_lines < MIN_CODE_LINES_FOR_SEMANTIC:
-        return None
+    min_conf = (SHORT_CODE_SEMANTIC_THRESHOLD
+                if code_lines < MIN_CODE_LINES_FOR_SEMANTIC
+                else SEMANTIC_ERROR_THRESHOLD)
     
     ml_error, confidence = detect_error_ml(code)
     ml_error = _normalize(ml_error)
+    per_type = SEMANTIC_ERROR_THRESHOLDS.get(ml_error, 0.0)
+    min_conf = max(min_conf, per_type)
 
     if (ml_error in SEMANTIC_ERROR_TYPES
-            and confidence >= SEMANTIC_ERROR_THRESHOLD):
+            and confidence >= min_conf
+            and _semantic_heuristic_ok(ml_error, code, language)):
         return {
             "language": language,
             "predicted_error": ml_error,
@@ -142,6 +287,15 @@ def detect_errors(code: str, filename: str | None = None):
             ast_passed = True
         except SyntaxError:
             ast_passed = False
+        if not ast_passed and "\\n" in code and "\n" not in code:
+            # Handle datasets or inputs that store literal "\n" sequences.
+            normalized = code.replace("\\n", "\n")
+            try:
+                _ast.parse(normalized)
+                code = normalized
+                ast_passed = True
+            except SyntaxError:
+                pass
 
         if ast_passed:
             # Code is syntactically valid Python.
@@ -186,12 +340,17 @@ def detect_errors(code: str, filename: str | None = None):
             ml_error, confidence = detect_error_ml(code)
             ml_error = _normalize(ml_error)
             code_lines = len([l for l in code.splitlines() if l.strip()])
+            min_conf = (SHORT_CODE_SEMANTIC_THRESHOLD
+                        if code_lines < MIN_CODE_LINES_FOR_SEMANTIC
+                        else SEMANTIC_ERROR_THRESHOLD)
+            per_type = SEMANTIC_ERROR_THRESHOLDS.get(ml_error, 0.0)
+            min_conf = max(min_conf, per_type)
             # Only allow ML override for semantic errors with very high confidence
             if (ml_error in SEMANTIC_ERROR_TYPES
-                    and confidence >= SEMANTIC_ERROR_THRESHOLD
+                    and confidence >= min_conf
                     and ml_error != "NoError"
                     and ml_error != rb_error
-                    and code_lines >= MIN_CODE_LINES_FOR_SEMANTIC):
+                    and _semantic_heuristic_ok(ml_error, code, language)):
                 return {
                     "language": language,
                     "predicted_error": ml_error,

@@ -13,9 +13,15 @@ import uvicorn
 from dotenv import load_dotenv
 import os
 import logging
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
+
+# SlowAPI rate limiting — optional dependency
+try:
+    from slowapi import Limiter, _rate_limit_exceeded_handler
+    from slowapi.util import get_remote_address
+    from slowapi.errors import RateLimitExceeded
+    _HAS_SLOWAPI = True
+except ImportError:
+    _HAS_SLOWAPI = False
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -36,15 +42,21 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# Add SlowAPI rate limiter
-limiter = Limiter(key_func=get_remote_address)
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+# Add SlowAPI rate limiter (if available)
+if _HAS_SLOWAPI:
+    limiter = Limiter(key_func=get_remote_address)
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+else:
+    limiter = None
 
-# Add CORS middleware
+# Add CORS middleware — configurable via CORS_ORIGINS env var
+# Default: localhost origins; set CORS_ORIGINS=* for open access
+_cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:8501,http://localhost:8000")
+_allowed_origins = [o.strip() for o in _cors_origins.split(",")]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify exact origins
+    allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -154,7 +166,6 @@ async def health_check():
 
 
 @app.post("/check", response_model=ErrorResponse, tags=["Error Detection"])
-@limiter.limit("100/minute")
 async def check_code(request: CodeCheckRequest):
     # Input validation
     if not request.code or not request.code.strip():

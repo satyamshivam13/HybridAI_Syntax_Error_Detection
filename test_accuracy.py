@@ -288,7 +288,7 @@ def test_rule_based(rows, detect_all, verbose=False):
     print(f"  Missed (no detection) : {false_neg}")
     print(f"  Wrong type detected   : {wrong_type}")
     print(f"  Recall                : {pct_bar(recall)}")
-    print(f"\n  Note: Rule-based only covers MissingColon, IndentationError,")
+    print(f"\n  Note: Rule-based only covers MissingDelimiter, IndentationError,")
     print(f"        UnmatchedBracket, UnclosedQuotes. Other types fall")
     print(f"        through to ML — low recall here is expected.")
 
