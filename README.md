@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.18%2B-FF4B4B.svg)](https://streamlit.io/)
 [![Accuracy](https://img.shields.io/badge/Accuracy-99.80%25-success.svg)](docs/OPTIMIZATION_SUMMARY.md)
-[![Tests](https://img.shields.io/badge/Tests-13%2F13%20Passing-success.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-46%2F46%20Passing-success.svg)](tests/)
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](PROJECT_STRUCTURE.md)
 
 **Quick Links:** [🚀 Quick Start](docs/QUICKSTART.md) | [📁 Structure](PROJECT_STRUCTURE.md) | [🤝 Contributing](docs/CONTRIBUTING.md) | [📊 Results](results/optimized_results.csv) | [📖 Documentation](docs/)
@@ -24,11 +24,12 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 │   ├── error_engine.py            # Main detection orchestrator
 │   ├── ml_engine.py               # ML model (99.80% accuracy)
 │   ├── syntax_checker.py          # Rule-based AST parser
-│   ├── language_detector.py       # Multi-language detection
+│   ├── language_detector.py       # Multi-language detection (score-based)
 │   ├── tutor_explainer.py         # Error explanations
 │   ├── auto_fix.py                # Automatic code fixes
 │   ├── quality_analyzer.py        # Code quality metrics
-│   └── multi_error_detector.py    # Multi-error detection
+│   ├── multi_error_detector.py    # Multi-error detection
+│   └── feature_utils.py           # Shared ML feature extraction
 ├── 🤖 models/                      # Trained ML models (99.80%)
 │   ├── syntax_error_model.pkl     # Gradient Boosting classifier
 │   ├── tfidf_vectorizer.pkl       # TF-IDF vectorizer
@@ -46,7 +47,7 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 │   ├── advanced_metrics.py        # Performance metrics
 │   ├── evaluate_results_visualization.ipynb
 │   └── utils/data_utils.py        # Shared utilities
-├── 🧪 tests/                       # Unit tests (13/13 passing)
+├── 🧪 tests/                       # Unit tests (46/46 passing)
 ├── 📝 samples/                     # Example error files
 ├── 📈 results/                     # Evaluation results
 ├── 📖 docs/                        # Complete documentation
@@ -57,7 +58,8 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 │   └── ... (12 docs total)
 ├── PROJECT_STRUCTURE.md            # Detailed structure guide
 ├── README.md                       # This file
-└── requirements.txt                # Python dependencies
+├── requirements.txt                # Production dependencies
+└── requirements-dev.txt            # Development dependencies
 ```
 
 **📋 See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for complete file structure**
@@ -129,7 +131,7 @@ Language Detection
    ↓
 Rule-Based Analysis (Python)
    ↓
-ML-Based Classification (Random Forest + TF-IDF)
+ML-Based Classification (Gradient Boosting + TF-IDF)
    ↓
 Error Explanation (Tutor Module)
    ↓
@@ -306,7 +308,7 @@ Run the notebook to generate:
 ## ▶️ How to Run the Project
 
 ### Prerequisites
-- **Python**: 3.8 or higher
+- **Python**: 3.10 or higher
 - **pip**: Package installer for Python
 - **Git**: For cloning the repository
 
@@ -398,10 +400,10 @@ python cli.py samples/unmatched_paren.py
 
 ### 6️⃣ Run Tests
 ```bash
-python -m pytest tests/test_detection.py
+python -m pytest tests/test_detection.py -v
 ```
 
-**Expected:** 11 tests passing
+**Expected:** 46 tests passing (language detection, syntax checker, error engine, auto-fix, quality analyzer, multi-error detector, feature utils)
 
 ### 7️⃣ View Evaluation Notebook
 Open `scripts/evaluate_results_visualization.ipynb` in Jupyter or VS Code to see:
@@ -433,9 +435,14 @@ Open `scripts/evaluate_results_visualization.ipynb` in Jupyter or VS Code to see
   - Rust
   - PHP
 
-- [ ] **Multi-label Error Detection**
+- [x] **Multi-Error Detection** _(Completed)_
   - Detect multiple errors in single code snippet
-  - Priority-based error reporting
+  - Grouped by error type with tutor explanations
+
+- [x] **REST API** _(Completed)_
+  - FastAPI-based API with Swagger docs
+  - Endpoints: `/check`, `/fix`, `/quality`, `/check-and-fix`
+  - Configurable CORS, optional rate limiting
 
 - [ ] **Improved Auto-correction**
   - Context-aware fixes
@@ -455,11 +462,6 @@ Open `scripts/evaluate_results_visualization.ipynb` in Jupyter or VS Code to see
   - Interactive tutorials
   - Gamified learning paths
   - Progress tracking for students
-
-- [ ] **API Development**
-  - RESTful API for integration
-  - Batch processing support
-  - Rate limiting and authentication
 
 ---
 
@@ -484,7 +486,7 @@ The project follows standard software engineering and machine learning practices
 - **Quality**: Manually verified, balanced, and optimized for 98%+ accuracy
 
 ### 🛠️ Technical Stack
-- **Backend**: Python 3.8+
+- **Backend**: Python 3.10+
 - **ML Framework**: scikit-learn
 - **Web Framework**: Streamlit
 - **Data Processing**: pandas, numpy
@@ -494,7 +496,7 @@ The project follows standard software engineering and machine learning practices
 ### 🏆 Project Highlights
 ✅ **End-to-end ML pipeline** (data → training → deployment)
 ✅ **Hybrid architecture** (combines symbolic AI + statistical ML)
-✅ **Production-ready** (Web UI + CLI + API-ready)
+✅ **Production-ready** (Web UI + CLI + REST API)
 ✅ **Evaluation-driven** (Comprehensive metrics and visualizations)
 ✅ **Extensible design** (Easy to add new languages/error types)
 ✅ **Explicit NoError class** (robust detection of error-free code)
@@ -522,6 +524,12 @@ The project follows standard software engineering and machine learning practices
 ---
 
 **Recent Updates:**
+- Fixed language detection: score-based approach prevents `printf` misclassification as Python
+- Centralized ML feature extraction into `src/feature_utils.py` (eliminates code duplication)
+- Expanded test suite from 13 to **46 tests** (auto-fix, quality, multi-error, edge cases)
+- Refactored `multi_error_detector.py` to reuse `error_engine` validators
+- Cleaned `requirements.txt`, separated dev dependencies into `requirements-dev.txt`
+- Made CORS configurable via `CORS_ORIGINS` env var in API
 - Added `dataset/active/noerror_samples.csv` (multi-language, error-free code)
 - Merged NoError samples into `dataset/merged/all_errors.csv`
 - Updated scripts and models for improved NoError detection
