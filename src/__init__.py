@@ -6,6 +6,8 @@ from .syntax_checker import detect_all
 from .tutor_explainer import explain_error
 from .auto_fix import AutoFixer
 from .quality_analyzer import CodeQualityAnalyzer
+from .multi_error_detector import detect_all_errors
+from .feature_utils import extract_numerical_features, NUMERICAL_FEATURE_NAMES
 
 __all__ = [
     'detect_errors',
@@ -14,5 +16,9 @@ __all__ = [
     'detect_all',
     'explain_error',
     'AutoFixer',
-    'CodeQualityAnalyzer'
+    'CodeQualityAnalyzer',
+    'detect_all_errors',
+    'extract_numerical_features',
+    'NUMERICAL_FEATURE_NAMES',
 ]
+
