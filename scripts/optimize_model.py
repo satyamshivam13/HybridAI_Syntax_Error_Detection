@@ -149,7 +149,7 @@ def main():
     print("="*60)
     
     # Load dataset
-    df = pd.read_csv("dataset/merged/all_errors.csv")
+    df = pd.read_csv("dataset/merged/all_errors_v2.csv")
     print(f"\n✅ Dataset loaded: {len(df)} samples")
     
     # Create enhanced features
