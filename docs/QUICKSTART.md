@@ -4,9 +4,9 @@
 
 ### 1. Install & Setup
 ```bash
-# Clone repository (if not done)
-git clone <repository-url>
-cd LLM_Syntax_Error_Checker
+# Clone repository
+git clone https://github.com/satyamshivam13/HybridAI_Syntax_Error_Detection.git
+cd Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System
 
 # Create virtual environment
 python -m venv .venv
@@ -22,8 +22,8 @@ pip install -r requirements.txt
 # Use the optimized training script
 python scripts/optimize_model.py
 ```
-**Time**: ~2-3 minutes  
-**Output**: Models saved to `models/` folder with 99.80% accuracy  
+**Time**: ~5-10 minutes  
+**Output**: Models saved to `models/` folder  
 **Note**: Pre-trained models are already included in `models/`
 
 ### 3. Test with Samples
@@ -35,9 +35,15 @@ python cli.py samples/indentation_error.py
 
 ### 4. Launch Web Interface
 ```bash
-streamlit run app.py
+python -m streamlit run app.py
 ```
 Open browser: `http://localhost:8501`
+
+### 5. Launch REST API
+```bash
+python start_api.py
+```
+Open docs: `http://localhost:8000/docs`
 
 ---
 
@@ -54,20 +60,17 @@ python start_api.py
 # Launch Streamlit web UI
 python -m streamlit run app.py
 
-# Run all tests
+# Run all tests (46/46 passing)
 pytest tests/ -v
 
 # Train/optimize model
 python scripts/optimize_model.py
 
+# Retrain model on current dataset
+python retrain_model.py
+
 # Augment training data
-python scripts/augment_data.py
-
-# Generate evaluation results
-python scripts/generate_results.py
-
-# View results in Jupyter
-jupyter notebook evaluate_results_visualization.ipynb
+python augment_dataset.py
 ```
 
 ---
@@ -92,11 +95,14 @@ print("Wrong indentation")
     return 5
 ```
 
-### Python - Unmatched Brackets
-```python
-# File: test_bracket.py
-result = (1 + 2 * 3
-print(result)
+### Java - Missing Semicolon
+```java
+// File: Test.java
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("Hello")
+    }
+}
 ```
 
 ---
@@ -104,7 +110,7 @@ print(result)
 ## 🐛 Troubleshooting
 
 ### Issue: Models not found
-**Solution**: Run `python evaluate.py` to train models
+**Solution**: Run `python scripts/optimize_model.py` to train models
 
 ### Issue: ModuleNotFoundError
 **Solution**: Activate virtual environment and reinstall:
@@ -113,15 +119,11 @@ print(result)
 pip install -r requirements.txt
 ```
 
-### Issue: Streamlit not loading
-**Solution**: Check if port 8501 is available:
-```bash
-netstat -an | findstr :8501  # Windows
-lsof -i :8501  # Linux/Mac
-```
-
 ### Issue: Dataset not found
-**Solution**: Ensure `dataset/merged/all_errors.csv` exists
+**Solution**: Ensure `dataset/merged/all_errors_v2.csv` exists
+
+### Issue: Streamlit not loading
+**Solution**: Check if port 8501 is available
 
 ---
 
@@ -129,44 +131,22 @@ lsof -i :8501  # Linux/Mac
 
 ### CLI Output Example
 ```
-Language Detected: Python
-Error Type: MissingColon
-Confidence: 95%
-Line: 2
+============================================================
+🧠 Multi-Language Syntax Error Checker (CLI)
+============================================================
+📂 File        : test_colon.py
+🗂 Language    : Python
+🤖 ML Error    : MissingDelimiter
 
-Explanation:
-Python functions require a colon (:) after the function definition.
+⚠️ Rule-Based Issues:
+  1. Missing colon after function definition
 
-Suggested Fix:
-def hello():
-    print("Fixed!")
+🔧 AUTO-FIX SUGGESTION
+✅ Automatic fix available!
+
+📊 CODE QUALITY ANALYSIS
+Quality Score  : 45/100
 ```
-
-### Web UI Features
-- ✅ Paste code directly
-- ✅ Upload file
-- ✅ See explanations
-- ✅ View suggested fixes
-- ✅ Download corrected code
-
----
-
-## 📈 Next Steps
-
-1. **Customize Dataset**: Add your own error samples to `dataset/active/`
-2. **Retrain Model**: Run `python evaluate.py` after adding data
-3. **Extend Languages**: Add new language detection patterns
-4. **Improve Explanations**: Edit `tutor_explainer.py`
-5. **Add Error Types**: Update `syntax_checker.py` and `ml_engine.py`
-
----
-
-## 💡 Tips
-
-- **Use samples folder**: Pre-made test cases for quick validation
-- **Check results.json**: See model performance metrics
-- **Run notebook**: Visual analysis of model performance
-- **Try different languages**: Test with Java, C, C++ files
 
 ---
 
@@ -176,12 +156,12 @@ def hello():
 Key Files:
 ├── app.py              → Web UI entry point
 ├── cli.py              → Command-line entry point
-├── error_engine.py     → Main detection logic
-├── evaluate.py         → Model training script
+├── api.py              → REST API
+├── src/error_engine.py → Main detection logic
 └── requirements.txt    → Dependencies
 
 Key Folders:
-├── dataset/merged/     → Training data
+├── dataset/merged/     → Training data (all_errors_v2.csv)
 ├── models/             → Trained ML models
 ├── results/            → Evaluation outputs
 └── samples/            → Test cases
@@ -189,4 +169,4 @@ Key Folders:
 
 ---
 
-**Need help?** Check the main [README.md](README.md) for detailed documentation.
+**Need help?** Check the main [README.md](../README.md) for detailed documentation.

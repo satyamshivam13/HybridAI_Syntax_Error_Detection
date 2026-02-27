@@ -5,9 +5,11 @@
 This project presents a **hybrid AI-based system** that combines rule-based static analysis with machine learning to detect and explain syntax errors in multiple programming languages. Designed for **programming education**, the system helps beginners understand errors beyond cryptic compiler messages.
 
 ### 🎯 Current Status (February 2026)
-- ✅ **Model Accuracy**: 99.80% (Gradient Boosting)
-- ✅ **Tests**: 13/13 passing
+- ✅ **Model Accuracy**: 87.26% (Gradient Boosting, genuine on unique data)
+- ✅ **Tests**: 46/46 passing
 - ✅ **Languages**: Python, Java, C, C++
+- ✅ **Error Types**: 20 categories
+- ✅ **Dataset**: 3,178 unique samples
 - ✅ **Production Ready**: Web UI, CLI, REST API
 - ✅ **Reproducible**: Fixed random seeds, validation thresholds
 - ✅ **Clean Architecture**: Organized structure, comprehensive docs
@@ -79,9 +81,9 @@ This project presents a **hybrid AI-based system** that combines rule-based stat
    - High precision, low false positives
 
 3. **ML Engine** (`ml_engine.py`)
-   - TF-IDF vectorization
-   - Logistic Regression classifier
-   - Handles Java, C, C++
+   - TF-IDF vectorization + Gradient Boosting
+   - Handles all 4 languages
+   - Character-level n-grams for syntax patterns
    - Generalization capability
 
 4. **Error Engine** (`error_engine.py`)
@@ -108,12 +110,12 @@ This project presents a **hybrid AI-based system** that combines rule-based stat
 ## 📊 Dataset
 
 ### Composition
-- **Total Samples**: 900 error cases
+- **Total Samples**: 3,178 unique error cases across 20 error types
 - **Languages**: 
-  - Python: 400 samples (44%)
-  - Java: 250 samples (28%)
-  - C: 150 samples (17%)
-  - C++: 100 samples (11%)
+  - Python: 1,229 samples (39%)
+  - Java: 698 samples (22%)
+  - C: 682 samples (21%)
+  - C++: 569 samples (18%)
 
 ### Error Distribution
 | Error Type | Count | Percentage |
@@ -136,12 +138,12 @@ This project presents a **hybrid AI-based system** that combines rule-based stat
 ## 🤖 Machine Learning Implementation
 
 ### Model Selection
-**Algorithm**: Logistic Regression
+**Algorithm**: Gradient Boosting (200 estimators)
 **Rationale**:
-- Fast training and inference
-- Interpretable coefficients
-- Low computational requirements
-- Sufficient for multi-class classification
+- Strong performance on multi-class classification
+- Handles character-level TF-IDF features well
+- Enhanced with 10 numerical code features
+- 87.26% genuine accuracy on unique data
 
 ### Feature Engineering
 **Method**: TF-IDF (Term Frequency-Inverse Document Frequency)
@@ -152,12 +154,11 @@ This project presents a **hybrid AI-based system** that combines rule-based stat
 
 ### Training Configuration
 ```python
-Train-Test Split: 80% / 20% (720 / 180 samples)
-Cross-Validation: 5-fold
-Hyperparameters:
-  - max_iter: 1000
-  - solver: 'lbfgs'
-  - multi_class: 'auto'
+Train-Test Split: 80% / 20% (2,542 / 636 samples)
+Model: Gradient Boosting (n_estimators=200, max_depth=5)
+TF-IDF: 8K features, char n-grams (1,3)
+Numerical Features: 10 domain-specific features
+Random State: 42 (reproducible)
 ```
 
 ---
@@ -165,9 +166,9 @@ Hyperparameters:
 ## 📈 Performance Results
 
 ### Overall Metrics
-- **Accuracy**: 94-100% (varies by error type)
-- **Recall**: 100% (no errors missed)
-- **Weighted F1-Score**: 0.64-1.00
+- **Accuracy**: 87.26% (genuine, on unique data)
+- **Per-language**: C 93.59%, C++ 92.79%, Java 87.31%, Python 80.43%
+- **Weighted F1-Score**: 0.87
 
 ### Per-Error Performance
 | Error Type | Recall | Precision | F1-Score |
@@ -203,10 +204,11 @@ Hyperparameters:
 - **Output**: Error type, line number, explanation, fix suggestion
 - **Ideal for**: Integration with editors, scripts
 
-### 3. API-Ready Architecture
-- Modular design
-- Easy to wrap as REST API
-- JSON-serializable outputs
+### 3. REST API (FastAPI)
+- **File**: `api.py`
+- **Endpoints**: 6 (check, fix, quality, check-and-fix, health, root)
+- **Access**: `python start_api.py` → http://localhost:8000/docs
+- **Features**: CORS, rate limiting, JSON responses
 
 ---
 
@@ -246,7 +248,7 @@ Hyperparameters:
 - ✅ Code comments and docstrings
 
 ### Data & Models
-- ✅ 900-sample dataset
+- ✅ 3,178-sample unique dataset
 - ✅ Trained ML models (pkl files)
 - ✅ Evaluation results (CSV + JSON)
 - ✅ Sample test cases
@@ -284,7 +286,8 @@ Hyperparameters:
 1. **More Languages**: JavaScript, TypeScript, Go, Rust
 2. **Deep Learning**: Transformer-based models (CodeBERT)
 3. **IDE Integration**: VS Code extension, PyCharm plugin
-4. **Multi-error Detection**: Handle multiple errors per snippet
+4. **CI/CD**: GitHub Actions pipeline
+5. **Docker**: Containerization for deployment
 
 ### Research Directions
 1. **Semantic Error Detection**: Beyond syntax
@@ -355,11 +358,11 @@ Hyperparameters:
 ## 📄 References
 
 ### Technologies Used
-- Python 3.8+
+- Python 3.10+
 - scikit-learn
 - Streamlit
-- pandas, matplotlib, seaborn
-- Jupyter Notebook
+- FastAPI
+- pandas, numpy, scipy, joblib
 
 ### Concepts Applied
 - Machine Learning (Supervised Classification)
@@ -385,9 +388,9 @@ Hyperparameters:
 
 ---
 
-**Last Updated**: January 23, 2026  
-**Version**: 1.0  
-**Status**: Production-Ready Prototype
+**Last Updated**: February 27, 2026  
+**Version**: 2.0  
+**Status**: Production-Ready
 
 ---
 

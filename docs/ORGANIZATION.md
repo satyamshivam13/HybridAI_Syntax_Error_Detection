@@ -32,7 +32,7 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 ├── 🧠 Core Engine (src/)
 │   ├── __init__.py                # Package initialization
 │   ├── error_engine.py            # Main orchestrator
-│   ├── ml_engine.py               # ML inference (99.80%)
+│   ├── ml_engine.py               # ML inference (87.26%)
 │   ├── syntax_checker.py          # Rule-based parser
 │   ├── language_detector.py       # Language detection
 │   ├── tutor_explainer.py         # Error explanations
@@ -41,7 +41,7 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 │   └── multi_error_detector.py    # Multi-error detection
 │
 ├── 🤖 ML Models (models/)
-│   ├── syntax_error_model.pkl     # Gradient Boosting (99.80%)
+│   ├── syntax_error_model.pkl     # Gradient Boosting (87.26%)
 │   ├── tfidf_vectorizer.pkl       # Text features
 │   ├── label_encoder.pkl          # Error type labels
 │   └── numerical_features.pkl     # Feature metadata
@@ -53,7 +53,7 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 │   │   ├── c_errors.csv
 │   │   └── cpp_errors.csv
 │   ├── merged/                    # Combined dataset
-│   │   └── all_errors.csv         # 2,551 samples
+│   │   └── all_errors_v2.csv      # 3,178 unique samples
 │   └── archieve/                  # Historical data
 │       └── comprehensive_errors.jsonl
 │
@@ -61,7 +61,7 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 │   ├── optimize_model.py          # Model training
 │   ├── advanced_metrics.py        # Evaluation metrics
 │   ├── generate_results.py        # Result generation
-│   ├── evaluate.py                # Legacy evaluation
+│   ├── optimize_model.py          # Model training pipeline
 │   └── evaluate_results_visualization.ipynb
 │
 ├── 🧪 Tests (tests/)
@@ -77,7 +77,7 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 │   └── indentation_error.py
 │
 ├── 📈 Results (results/)
-│   ├── optimized_results.csv      # 99.80% accuracy
+│   ├── optimized_results.csv      # 87.26% accuracy
 │   ├── advanced_metrics.txt       # Cohen's Kappa, etc.
 │   └── results.json               # Legacy results
 │
@@ -119,7 +119,7 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 - optimize_model.py
 - advanced_metrics.py
 - generate_results.py
-- evaluate.py
+- evaluate.py (removed, replaced by scripts/optimize_model.py)
 - evaluate_results_visualization.ipynb
 
 **Tests → `tests/`**

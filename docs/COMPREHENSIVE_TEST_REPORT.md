@@ -161,7 +161,7 @@
 ### Detection Methods
 - **Rule-based:** AST/Token analysis (Python)
 - **Rule-based:** Pattern matching (Java/C/C++)
-- **ML-based:** 99.80% trained accuracy
+- **ML-based:** 87.26% trained accuracy
 - **Hybrid:** Combines both approaches
 
 ### Features

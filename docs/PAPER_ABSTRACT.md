@@ -10,17 +10,17 @@
 
 Syntax errors remain a significant challenge for novice programmers, often leading to frustration and discouragement in learning programming. Traditional compiler error messages are typically cryptic and lack pedagogical context, making them difficult for beginners to understand. This paper presents a novel hybrid artificial intelligence system that combines rule-based static analysis with machine learning for detecting and explaining syntax errors across multiple programming languages (Python, Java, C, and C++).
 
-Our approach leverages Abstract Syntax Tree (AST) parsing and token analysis for deterministic error detection in Python, while employing TF-IDF vectorization with Gradient Boosting for pattern-based classification across multiple languages. The system was trained on a curated dataset of 2,551 error samples across 19 distinct error categories, achieving an overall accuracy of **99.80%** with consistent performance across all supported languages (Python: 99.58%, Java/C/C++: 100%).
+Our approach leverages Abstract Syntax Tree (AST) parsing and token analysis for deterministic error detection in Python, while employing TF-IDF vectorization with Gradient Boosting for pattern-based classification across multiple languages. The system was trained on a curated dataset of 3,178 unique error samples across 20 distinct error categories, achieving an overall accuracy of **87.26%** with consistent performance across all supported languages (C: 93.59%, C++: 92.79%, Java: 87.31%, Python: 80.43%).
 
 Key contributions include: (1) a hybrid architecture that combines symbolic and statistical AI techniques achieving near-perfect accuracy, (2) language-agnostic error pattern recognition using machine learning with enhanced feature engineering, (3) beginner-friendly error explanations with contextual fix suggestions, (4) automatic error correction for 12 common error types, (5) code quality analysis with complexity metrics, and (6) production-ready REST API, web UI, and CLI interfaces for educational deployment. 
 
-Evaluation results demonstrate that the hybrid approach with Gradient Boosting and enhanced TF-IDF features significantly outperforms traditional rule-based or ML-only methods. The system includes reproducible training pipelines with fixed random seeds, validation thresholds, and comprehensive testing (13/13 tests passing).
+Evaluation results demonstrate that the hybrid approach with Gradient Boosting and enhanced TF-IDF features significantly outperforms traditional rule-based or ML-only methods. The system includes reproducible training pipelines with fixed random seeds, validation thresholds, and comprehensive testing (46/46 tests passing).
 
 The system is designed for integration into programming education platforms, CI/CD pipelines, and IDE extensions, providing immediate feedback to students and developers. Future work includes extending support to additional languages (JavaScript, Go, Rust), implementing transformer-based models for improved context understanding, and deploying as a cloud service.
 
 **Keywords**: Syntax Error Detection, Programming Education, Hybrid AI, Multi-Language Support, Educational Technology, Machine Learning, Gradient Boosting, Code Analysis, Automated Code Repair
 
-**Current Status**: Production Ready (February 2026) - 99.80% Accuracy
+**Current Status**: Production Ready (February 2026) - 87.26% Genuine Accuracy on 3,178 Unique Samples
 
 ---
 
@@ -43,11 +43,11 @@ The system is designed for integration into programming education platforms, CI/
 - Overview of hybrid detection pipeline
 - Language detection module
 - Rule-based analysis (AST + token analysis)
-- ML-based classification (TF-IDF + Logistic Regression)
+- ML-based classification (TF-IDF + Gradient Boosting)
 - Error explanation and fix suggestion module
 
 ### 4. Dataset Construction
-- Error taxonomy: 19 categories across 4 languages
+- Error taxonomy: 20 categories across 4 languages
 - Data collection methodology
 - Augmentation strategies for balanced representation
 - Language-specific vs cross-language error distribution
@@ -62,7 +62,7 @@ The system is designed for integration into programming education platforms, CI/
 
 #### 5.2 Machine Learning Component
 - Feature extraction: TF-IDF vectorization
-- Model selection rationale: Logistic Regression
+- Model selection rationale: Gradient Boosting
 - Training strategy: 80/20 split
 - Hyperparameter tuning
 
@@ -72,8 +72,8 @@ The system is designed for integration into programming education platforms, CI/
 - Fallback mechanisms
 
 ### 6. Experimental Results
-- Overall performance: 87.8% accuracy
-- Per-language breakdown: Python (94%), C++ (85%), Java (81%), C (78%)
+- Overall performance: 87.26% accuracy
+- Per-language breakdown: C (93.59%), C++ (92.79%), Java (87.31%), Python (80.43%)
 - Per-error-type analysis
 - Confusion matrix analysis
 - Comparison with baseline methods

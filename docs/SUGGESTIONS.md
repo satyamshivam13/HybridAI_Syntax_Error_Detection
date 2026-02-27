@@ -24,25 +24,25 @@ suggestions = {
             "files": ["New extension project", "Language Server Protocol"]
         },
         {
-            "feature": "REST API",
-            "description": "Expose functionality via REST API for integration",
+            "feature": "REST API ✅ DONE",
+            "description": "FastAPI REST API with 6 endpoints (api.py)",
             "benefit": "Allow third-party tools and CI/CD integration",
             "complexity": "Low",
-            "files": ["api.py (new)", "FastAPI/Flask"]
+            "files": ["api.py", "start_api.py"]
         },
         {
-            "feature": "Code Fix Preview",
-            "description": "Show before/after comparison with syntax highlighting",
+            "feature": "Code Fix Preview ✅ DONE",
+            "description": "Auto-fix with before/after comparison in Streamlit UI",
             "benefit": "Better visualization of proposed fixes",
             "complexity": "Medium",
-            "files": ["app.py", "Add diff viewer component"]
+            "files": ["app.py", "src/auto_fix.py"]
         },
         {
-            "feature": "Multi-error Detection",
-            "description": "Detect and report ALL errors in code, not just first one",
+            "feature": "Multi-error Detection ✅ DONE",
+            "description": "Detect and report ALL errors via multi_error_detector.py",
             "benefit": "More comprehensive error reporting",
             "complexity": "Medium",
-            "files": ["error_engine.py", "syntax_checker.py"]
+            "files": ["src/multi_error_detector.py", "app.py"]
         }
     ],
     
@@ -182,7 +182,7 @@ suggestions = {
         {
             "feature": "Model Ensemble",
             "description": "Combine multiple ML models for better accuracy",
-            "benefit": "Improve prediction accuracy beyond 99.8%",
+            "benefit": "Improve prediction accuracy beyond 87.26%",
             "complexity": "Medium",
             "files": ["ml_engine.py", "Add voting classifier"]
         },
@@ -256,9 +256,9 @@ print("=" * 90)
 
 priority_order = [
     "1. JavaScript/TypeScript Support - Expand user base significantly",
-    "2. REST API - Enable integrations with other tools",
-    "3. Code Fix Preview - Improve user experience",
-    "4. Multi-error Detection - More comprehensive feedback",
+    "2. REST API - ✅ DONE (api.py with FastAPI)",
+    "3. Code Fix Preview - ✅ DONE (auto_fix.py + app.py)",
+    "4. Multi-error Detection - ✅ DONE (multi_error_detector.py)",
     "5. VS Code Extension - Professional developer adoption",
     "6. Security Scanner - Add unique value proposition",
     "7. Performance Hints - Educational + practical value",
@@ -276,7 +276,7 @@ print("QUICK WINS (Can implement in 1-2 days)")
 print("=" * 90)
 
 quick_wins = [
-    "✅ REST API - Simple Flask/FastAPI wrapper",
+    "✅ REST API - DONE (api.py with FastAPI)",
     "✅ Git Pre-commit Hook - Basic script",
     "✅ Dark Theme Toggle - Streamlit config",
     "✅ Batch File Processing - Extend CLI",

@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing! This document provides guidelines for contributing to the project.
 
-**Current Status**: Production Ready (99.80% accuracy, 13/13 tests passing)
+**Current Status**: Production Ready (87.26% accuracy, 46/46 tests passing)
 
 ## 🤝 How to Contribute
 
@@ -84,7 +84,7 @@ refactor: Simplify error classification logic
 
 4. **Verify model training**
    ```bash
-   python evaluate.py
+   python scripts/optimize_model.py
    ```
 
 ### Adding Tests
@@ -129,7 +129,7 @@ def test_missing_colon_detection():
 
 4. **Retrain Model**
    ```bash
-   python evaluate.py
+   python scripts/optimize_model.py
    ```
 
 5. **Test Thoroughly**

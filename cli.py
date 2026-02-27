@@ -4,6 +4,12 @@
 # ============================================================
 
 import sys
+import io
+
+# Fix Unicode encoding on Windows (emojis crash with cp1252)
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 from src.error_engine import detect_errors
 from src.auto_fix import AutoFixer
 from src.quality_analyzer import CodeQualityAnalyzer

@@ -9,9 +9,9 @@
 ### 🔴 CRITICAL FIXES
 
 #### 1. Fixed Model Filename Inconsistency
-**Problem**: `evaluate.py` saved models as `error_classifier.pkl` and `tfidf.pkl`, while `optimize_model.py` used `syntax_error_model.pkl` and `tfidf_vectorizer.pkl`. This could overwrite the optimized 99.8% model with an 87% model.
+**Problem**: `evaluate.py` (now removed) saved models as `error_classifier.pkl` and `tfidf.pkl`, while `optimize_model.py` used `syntax_error_model.pkl` and `tfidf_vectorizer.pkl`. This could overwrite the optimized model.
 
-**Solution**: Updated [evaluate.py](scripts/evaluate.py) to use consistent filenames:
+**Solution**: Standardized all model filenames across scripts:
 - `models/syntax_error_model.pkl`
 - `models/tfidf_vectorizer.pkl`
 - `models/label_encoder.pkl`
@@ -56,7 +56,7 @@ random.seed(RANDOM_SEED)
 from utils.data_utils import load_dataset, save_augmented_data
 
 # Load with automatic validation
-df = load_dataset('dataset/merged/all_errors.csv')
+df = load_dataset('dataset/merged/all_errors_v2.csv')
 
 # Save with automatic deduplication
 save_augmented_data(new_samples_df, check_duplicates=True)
@@ -112,7 +112,7 @@ scripts/
 
 ## 🔄 Modified Files
 
-1. [scripts/evaluate.py](scripts/evaluate.py)
+1. [scripts/optimize_model.py](scripts/optimize_model.py)
    - Added random seeds
    - Fixed model filenames
    
@@ -167,7 +167,7 @@ python scripts/augment_weak_errors.py
 python scripts/optimize_model.py
 
 # 3. Evaluate (if needed)
-python scripts/evaluate.py
+python scripts/optimize_model.py
 ```
 
 ### Using Shared Utilities
