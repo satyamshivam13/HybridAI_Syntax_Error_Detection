@@ -126,7 +126,7 @@ def build_features(codes, tfidf, fit_tfidf=False):
         tfidf_matrix = tfidf.transform(codes)
 
     num_matrix = np.array([extract_numerical_features(c) for c in codes])
-    return hstack([tfidf_matrix, num_matrix])
+    return hstack([tfidf_matrix, num_matrix]).tocsr()
 
 
 # ─── Load dataset ────────────────────────────────────────────────────────────
