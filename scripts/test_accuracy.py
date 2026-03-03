@@ -51,8 +51,8 @@ def pct_bar(pct):
 
 # ─── Load dataset ─────────────────────────────────────────────────────────────
 DATASET_PATHS = [
-    "dataset/merged/all_errors.csv",
-    "all_errors.csv",
+    "dataset/merged/all_errors_v2.csv",
+    "all_errors_v2.csv",
 ]
 
 def load_dataset(lang_filter=None, max_samples=None):
@@ -178,7 +178,7 @@ def test_full_pipeline(rows, detect_errors, verbose=False):
     by_type = defaultdict(lambda: [0, 0])
 
     # Build fake filenames for language detection
-    ext_map = {'Python': '.py', 'Java': '.java', 'C': '.c', 'C++': '.cpp'}
+    ext_map = {'Python': '.py', 'Java': '.java', 'C': '.c', 'C++': '.cpp', 'JavaScript': '.js'}
 
     start = time.time()
     for row in rows:

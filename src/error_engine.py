@@ -32,27 +32,27 @@ from .tutor_explainer import explain_error
 
 # Confidence thresholds
 SYNTAX_ERROR_THRESHOLD   = 0.65   # ML classifying a known syntax error
-SEMANTIC_ERROR_THRESHOLD = 0.98   # ML classifying a semantic/runtime error
-SHORT_CODE_SEMANTIC_THRESHOLD = 0.985  # Stricter bar for very short snippets
+SEMANTIC_ERROR_THRESHOLD = 0.85   # ML classifying a semantic/runtime error
+SHORT_CODE_SEMANTIC_THRESHOLD = 0.85  # Stricter bar for very short snippets
 MIN_CODE_LINES_FOR_SEMANTIC = 4        # Below this, use SHORT_CODE_SEMANTIC_THRESHOLD
 
 # Per-type minimum confidence for semantic errors (reduce false positives)
 SEMANTIC_ERROR_THRESHOLDS = {
-    "DivisionByZero": 0.98,
-    "ImportError": 0.99,
-    "InfiniteLoop": 0.99,
-    "UnreachableCode": 0.99,
-    "InvalidAssignment": 0.99,
-    "DuplicateDefinition": 0.99,
-    "NameError": 0.995,
-    "UndeclaredIdentifier": 0.995,
-    "TypeMismatch": 0.985,
-    "MissingImport": 0.985,
-    "MissingInclude": 0.99,
-    "LineTooLong": 0.99,
-    "WildcardImport": 0.99,
-    "MutableDefault": 0.99,
-    "UnusedVariable": 0.99,
+    "DivisionByZero": 0.85,
+    "ImportError": 0.85,
+    "InfiniteLoop": 0.85,
+    "UnreachableCode": 0.85,
+    "InvalidAssignment": 0.85,
+    "DuplicateDefinition": 0.85,
+    "NameError": 0.85,
+    "UndeclaredIdentifier": 0.85,
+    "TypeMismatch": 0.85,
+    "MissingImport": 0.85,
+    "MissingInclude": 0.85,
+    "LineTooLong": 0.85,
+    "WildcardImport": 0.85,
+    "MutableDefault": 0.85,
+    "UnusedVariable": 0.85,
 }
 
 # Rule-based types that are always authoritative
@@ -96,121 +96,8 @@ def _braces_balanced(code):
     return len(stack) == 0
 
 def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
-    """Light heuristics to avoid obvious semantic false positives."""
-    et = error_type
-
-    if et == "DivisionByZero":
-        evidence = False
-        if re.search(r'(/|%)\s*0(\D|$)', code):
-            evidence = True
-        if re.search(r'/\s*\(\s*0(\.0+)?\s*\)', code):
-            evidence = True
-        if re.search(r'/\s*\(\s*(\d+)\s*-\s*\1\s*\)', code):
-            evidence = True
-        if re.search(r'/\s*\(\s*([A-Za-z_]\w*)\s*-\s*\1\s*\)', code):
-            evidence = True
-        assigns = {}
-        for line in code.splitlines():
-            m = re.match(r'^\s*(?:int|float|double|long|short|char|bool|boolean)?\s*([A-Za-z_]\w*)\s*=\s*([0-9]+(?:\.[0-9]+)?)(?:f)?\s*;?\s*$', line)
-            if m:
-                assigns[m.group(1)] = float(m.group(2))
-                continue
-            m = re.match(r'^\s*(?:int|float|double|long|short|char|bool|boolean)?\s*([A-Za-z_]\w*)\s*=\s*(\d+)\s*-\s*\2\s*;?\s*$', line)
-            if m:
-                assigns[m.group(1)] = 0.0
-                continue
-            m = re.match(r'^\s*(?:int|float|double|long|short|char|bool|boolean)?\s*([A-Za-z_]\w*)\s*=\s*([A-Za-z_]\w*)\s*-\s*\2\s*;?\s*$', line)
-            if m:
-                assigns[m.group(1)] = 0.0
-                continue
-        for v, val in assigns.items():
-            if re.search(r'(//|/|%)\s*' + re.escape(v) + r'\b', code):
-                if val == 0.0:
-                    evidence = True
-                else:
-                    return False
-        if re.search(r'\bdivide\s*\([^)]*,\s*0(\.0+)?\s*\)', code):
-            evidence = True
-        return evidence
-
-    if et == "InvalidAssignment":
-        if re.search(r'^\s*(\d+|[\'\"].*[\'\"]|True|False|None|null|NULL|\(.*\)|\[.*\]|\{.*\})\s*=', code, re.M):
-            return True
-        if re.search(r'^\s*.+\s*[\+\-\*/]\s*.+\s*=', code, re.M):
-            return True
-        if re.search(r'\b(const|final)\b', code):
-            m = re.search(r'\b(const|final)\b\s+\w+\s+(\w+)\s*=', code)
-            if m:
-                name = m.group(2)
-                return len(re.findall(r'\b' + re.escape(name) + r'\s*=', code)) >= 2
-            return False
-        return False
-
-    if et == "DuplicateDefinition":
-        if language == "Python":
-            defs = re.findall(r'^\s*def\s+\w+\s*\(', code, re.M)
-            classes = re.findall(r'^\s*class\s+\w+', code, re.M)
-            return (len(defs) + len(classes)) >= 2
-        classes = re.findall(r'\bclass\s+\w+', code)
-        if len(classes) >= 2:
-            return True
-        decls = re.findall(r'\b(int|float|double|char|long|short|bool|boolean|String|string)\s+(\w+)\s*=', code)
-        names = [name for _, name in decls]
-        if len(names) >= 2 and len(names) != len(set(names)):
-            return True
-        funcs = re.findall(r'\b(\w+)\s*\([^;]*\)\s*\{', code)
-        return len(funcs) >= 2 and len(funcs) != len(set(funcs))
-
-    if et == "UnreachableCode":
-        return bool(re.search(r'\b(return|break|continue|raise|throw)\b[^\n]*\n\s*\S', code))
-
-    if et == "InfiniteLoop":
-        return bool(re.search(r'while\s*\(\s*true\s*\)|while\s+True|while\s*\(\s*1\s*\)|for\s*\(\s*;\s*;\s*\)', code))
-
-    if et == "ImportError":
-        if not re.search(r'^\s*(import|from)\s+', code, re.M):
-            return False
-        # Allow common stdlib imports to pass (avoid false positives)
-        safe_modules = {
-            "math", "os", "sys", "re", "json", "datetime", "time", "random",
-            "itertools", "collections", "functools", "pathlib", "string", "statistics"
-        }
-        safe_symbols = {
-            "path", "Path", "sqrt", "pi", "sin", "cos", "tan", "randint",
-            "choice", "Counter", "defaultdict", "deque"
-        }
-        for line in code.splitlines():
-            line = line.strip()
-            if line.startswith("import "):
-                mods = [m.strip().split()[0] for m in line[7:].split(",")]
-                if any(m in safe_modules for m in mods):
-                    return False
-            if line.startswith("from "):
-                parts = line.split()
-                if len(parts) >= 4 and parts[0] == "from" and parts[2] == "import":
-                    mod = parts[1]
-                    names = [n.strip() for n in " ".join(parts[3:]).split(",")]
-                    if mod in safe_modules and all(n in safe_symbols for n in names):
-                        return False
-        return True
-
-    if et == "MissingImport":
-        if re.search(r'^\s*(import|from)\s+', code, re.M):
-            return False
-        return True
-
-    if et == "TypeMismatch":
-        for line in code.splitlines():
-            if re.match(r'^\s*\w+\s*=\s*(?:[\'"].*[\'"]\s*\+\s*)+[\'"].*[\'"]\s*$', line):
-                return False
-            if re.match(r'^\s*print\(\s*(?:[\'"].*[\'"]\s*\+\s*)+[\'"].*[\'"]\s*\)\s*$', line):
-                return False
-        return True
-
-    if et == "UndeclaredIdentifier" and language in {"C", "C++", "Java"}:
-        if re.search(r'\bfor\s*\(\s*int\s+\w+\s*=', code):
-            return False
-
+    """Light heuristics to avoid obvious semantic false positives.
+    (Currently bypassed to trust the high-accuracy ML model)."""
     return True
 
 def _has_missing_semicolons(code):
@@ -439,20 +326,31 @@ def detect_errors(code: str, filename: str | None = None):
                 "rule_based_issues": []
             }
 
-        if has_missing_semi:
+        ml_error, confidence = detect_error_ml(code)
+        ml_error = _normalize(ml_error)
+        if confidence >= SYNTAX_ERROR_THRESHOLD and ml_error in RULE_BASED_TYPES:
             return {
                 "language": language,
-                "predicted_error": "MissingDelimiter",
+                "predicted_error": ml_error,
+                "confidence": confidence,
+                "tutor": explain_error(ml_error),
+                "rule_based_issues": []
+            }
+
+        if has_unbalanced:
+            return {
+                "language": language,
+                "predicted_error": "UnmatchedBracket",
                 "confidence": 1.0,
-                "tutor": explain_error("MissingDelimiter"),
+                "tutor": explain_error("UnmatchedBracket"),
                 "rule_based_issues": []
             }
 
         return {
             "language": language,
-            "predicted_error": "UnmatchedBracket",
+            "predicted_error": "MissingDelimiter",
             "confidence": 1.0,
-            "tutor": explain_error("UnmatchedBracket"),
+            "tutor": explain_error("MissingDelimiter"),
             "rule_based_issues": []
         }
 

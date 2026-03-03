@@ -24,7 +24,7 @@ try:
 except:
     numerical_features = None
 
-df = pd.read_csv('dataset/merged/all_errors.csv')
+df = pd.read_csv('dataset/merged/all_errors_v2.csv')
 
 # Handle both 'code' and 'buggy_code' columns
 if 'buggy_code' in df.columns:
