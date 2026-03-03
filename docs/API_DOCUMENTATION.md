@@ -30,7 +30,7 @@ Check API status and configuration.
 {
   "status": "healthy",
   "version": "1.0.0",
-  "supported_languages": ["Python", "Java", "C", "C++"],
+  "supported_languages": ["Python", "Java", "C", "C++", "JavaScript"],
   "ml_model_loaded": true
 }
 ```
@@ -207,6 +207,7 @@ fetch('http://localhost:8000/check', {
 - **Java** (.java)
 - **C** (.c)
 - **C++** (.cpp)
+- **JavaScript** (.js)
 
 ---
 

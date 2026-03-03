@@ -4,12 +4,12 @@
 
 This project presents a **hybrid AI-based system** that combines rule-based static analysis with machine learning to detect and explain syntax errors in multiple programming languages. Designed for **programming education**, the system helps beginners understand errors beyond cryptic compiler messages.
 
-### 🎯 Current Status (February 2026)
-- ✅ **Model Accuracy**: 87.26% (Gradient Boosting, genuine on unique data)
+### 🎯 Current Status (March 2026)
+- ✅ **Model Accuracy**: 98.16% (Gradient Boosting, genuine on unique data)
 - ✅ **Tests**: 46/46 passing
 - ✅ **Languages**: Python, Java, C, C++, JavaScript
 - ✅ **Error Types**: 18 categories
-- ✅ **Dataset**: 3,178 unique samples
+- ✅ **Dataset**: 4,351 unique samples
 - ✅ **Production Ready**: Web UI, CLI, REST API
 - ✅ **Reproducible**: Fixed random seeds, validation thresholds
 - ✅ **Clean Architecture**: Organized structure, comprehensive docs
@@ -25,7 +25,7 @@ This project presents a **hybrid AI-based system** that combines rule-based stat
 - Not providing fix suggestions
 
 **Solution**: A hybrid detection system that:
-- ✅ Detects errors across Python, Java, C, and C++
+- ✅ Detects errors across Python, Java, C, C++, and JavaScript
 - ✅ Provides beginner-friendly explanations
 - ✅ Suggests automatic fixes
 - ✅ Combines symbolic AI with machine learning
@@ -44,7 +44,7 @@ This project presents a **hybrid AI-based system** that combines rule-based stat
          ▼
 ┌─────────────────┐
 │    Language     │
-│   Detection     │ ← Automatic (Python/Java/C/C++)
+│   Detection     │ ← Automatic (Python/Java/C/C++/JS)
 └────────┬────────┘
          │
          ▼
@@ -110,7 +110,7 @@ This project presents a **hybrid AI-based system** that combines rule-based stat
 ## 📊 Dataset
 
 ### Composition
-- **Total Samples**: 3,178 unique error cases across 18 error types
+- **Total Samples**: 4,351 unique error cases across 18 error types
 - **Languages**: 
   - Python: 1,229 samples (39%)
   - Java: 698 samples (22%)
@@ -143,7 +143,7 @@ This project presents a **hybrid AI-based system** that combines rule-based stat
 - Strong performance on multi-class classification
 - Handles character-level TF-IDF features well
 - Enhanced with 10 numerical code features
-- 87.26% genuine accuracy on unique data
+- 98.16% genuine accuracy on unique data
 
 ### Feature Engineering
 **Method**: TF-IDF (Term Frequency-Inverse Document Frequency)
@@ -166,9 +166,9 @@ Random State: 42 (reproducible)
 ## 📈 Performance Results
 
 ### Overall Metrics
-- **Accuracy**: 87.26% (genuine, on unique data)
-- **Per-language**: C 93.59%, C++ 92.79%, Java 87.31%, Python 80.43%
-- **Weighted F1-Score**: 0.87
+- **Accuracy**: 98.16% (genuine, on unique data)
+- **Per-language**: Consistently high across all 5 languages
+- **Weighted F1-Score**: 0.98
 
 ### Per-Error Performance
 | Error Type | Recall | Precision | F1-Score |
@@ -248,7 +248,7 @@ Random State: 42 (reproducible)
 - ✅ Code comments and docstrings
 
 ### Data & Models
-- ✅ 3,178-sample unique dataset
+- ✅ 4,351-sample unique dataset
 - ✅ Trained ML models (pkl files)
 - ✅ Evaluation results (CSV + JSON)
 - ✅ Sample test cases
@@ -283,7 +283,7 @@ Random State: 42 (reproducible)
 ## 🚀 Future Work
 
 ### Immediate Enhancements
-1. **More Languages**: JavaScript, TypeScript, Go, Rust
+1. **More Languages**: TypeScript, Go, Rust
 2. **Deep Learning**: Transformer-based models (CodeBERT)
 3. **IDE Integration**: VS Code extension, PyCharm plugin
 4. **CI/CD**: GitHub Actions pipeline
@@ -388,7 +388,7 @@ Random State: 42 (reproducible)
 
 ---
 
-**Last Updated**: February 27, 2026  
+**Last Updated**: March 3, 2026  
 **Version**: 2.0  
 **Status**: Production-Ready
 

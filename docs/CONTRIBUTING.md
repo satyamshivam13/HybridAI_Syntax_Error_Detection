@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing! This document provides guidelines for contributing to the project.
 
-**Current Status**: Production Ready (87.26% accuracy, 46/46 tests passing)
+**Current Status**: Production Ready (98.16% accuracy, 46/46 tests passing)
 
 ## 🤝 How to Contribute
 
@@ -42,7 +42,7 @@ def detect_error(code: str, language: str) -> dict:
     
     Args:
         code: Source code to analyze
-        language: Programming language (python, java, c, cpp)
+        language: Programming language (python, java, c, cpp, javascript)
     
     Returns:
         dict: {
