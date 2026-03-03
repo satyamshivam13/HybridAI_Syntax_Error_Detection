@@ -47,7 +47,7 @@ The system is designed for integration into programming education platforms, CI/
 - Error explanation and fix suggestion module
 
 ### 4. Dataset Construction
-- Error taxonomy: 20 categories across 4 languages
+- Error taxonomy: 18 categories across 5 languages
 - Data collection methodology
 - Augmentation strategies for balanced representation
 - Language-specific vs cross-language error distribution

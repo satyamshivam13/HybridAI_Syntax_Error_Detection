@@ -57,7 +57,7 @@ Use this checklist to verify all components are complete before submission/demon
 ## 📁 Data & Models
 
 ### Dataset
-- [x] `dataset/merged/all_errors_v2.csv` - 3,178 unique samples, 20 error types
+- [x] `dataset/merged/all_errors_v2.csv` - 3,178 unique samples, 18 error types
 - [x] `dataset/active/` - Language-specific seed samples
   - [x] `python_errors.csv`, `java_errors.csv`, `c_errors.csv`, `cpp_errors.csv`
   - [x] `noerror_samples.csv` - Correct code samples
@@ -65,7 +65,7 @@ Use this checklist to verify all components are complete before submission/demon
 ### Trained Models ✅
 - [x] `models/syntax_error_model.pkl` - Gradient Boosting (87.26% accuracy)
 - [x] `models/tfidf_vectorizer.pkl` - TF-IDF vectorizer (8K features)
-- [x] `models/label_encoder.pkl` - Label encoder (20 classes)
+- [x] `models/label_encoder.pkl` - Label encoder (18 classes)
 - [x] `models/numerical_features.pkl` - Feature names
 
 ### Results ✅
@@ -128,7 +128,7 @@ pytest tests/ -v  # 46/46 passing
 
 1. **Python accuracy (80.43%)**: Lower than C/C++ due to more error types
 2. **MissingImport detection**: Low F1 (0.14) — needs more diverse samples
-3. **Limited to 4 languages**: Python, Java, C, C++ only
+3. **Limited to 5 languages**: Python, Java, C, C++, JavaScript only
 4. **Emojis on Windows**: CLI uses replacement chars on non-UTF-8 terminals
 
 ## 💡 Remaining Enhancements

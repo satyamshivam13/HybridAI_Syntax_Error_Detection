@@ -50,7 +50,7 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 ├── 🤖 models/ - Trained ML Models
 │   ├── syntax_error_model.pkl       # Gradient Boosting (87.26% accuracy)
 │   ├── tfidf_vectorizer.pkl         # TF-IDF vectorizer (8K features)
-│   ├── label_encoder.pkl            # Label encoder (20 classes)
+│   ├── label_encoder.pkl            # Label encoder (18 classes)
 │   └── numerical_features.pkl       # Feature names
 │
 ├── 📊 dataset/ - Training Data (3,178 unique samples)
@@ -148,7 +148,7 @@ pytest tests/test_detection.py -v
 
 - **Model Accuracy**: 87.26% (Gradient Boosting, genuine on unique data)
 - **Test Coverage**: 46/46 tests passing
-- **Supported Languages**: Python, Java, C, C++
+- **Supported Languages**: Python, Java, C, C++, JavaScript
 - **Error Types**: 20
 - **Documentation**: Complete (15 files)
 - **Production Ready**: Yes

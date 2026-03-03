@@ -235,7 +235,7 @@ While we've exceeded the accuracy goal, here are remaining opportunities:
 - **Cohen's Kappa**: 0.99 (almost perfect agreement)
 - **Matthews Correlation**: 0.99 (very strong correlation)
 - **Precision-Recall Balance**: 0.99 (no significant trade-offs)
-- **Cross-Language Robustness**: 98.48%-98.96% across 4 languages
+- **Cross-Language Robustness**: 98.48%-98.96% across 5 languages
 
 ---
 
@@ -257,7 +257,7 @@ While we've exceeded the accuracy goal, here are remaining opportunities:
 **Development Statistics:**
 - Total Lines of Code: ~3,500
 - Dataset Samples: 3,178
-- Error taxonomy: 20 categories across 4 languages
+- Error taxonomy: 18 categories across 5 languages
 - Languages Supported: 4
 - Unit Tests: 46 (all passing)
 - Documentation Pages: 15

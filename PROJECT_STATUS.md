@@ -5,7 +5,7 @@
 ### 🎯 Current Status
 - **Model Accuracy**: 87.26% (Gradient Boosting, genuine accuracy on unique data)
 - **Tests**: 46/46 passing
-- **Dataset**: 3,178 unique samples across 20 error types
+- **Dataset**: 3,178 unique samples across 18 error types
 - **Status**: Production Ready
 - **Last Updated**: February 27, 2026
 

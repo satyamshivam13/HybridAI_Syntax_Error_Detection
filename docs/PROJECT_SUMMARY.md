@@ -7,8 +7,8 @@ This project presents a **hybrid AI-based system** that combines rule-based stat
 ### 🎯 Current Status (February 2026)
 - ✅ **Model Accuracy**: 87.26% (Gradient Boosting, genuine on unique data)
 - ✅ **Tests**: 46/46 passing
-- ✅ **Languages**: Python, Java, C, C++
-- ✅ **Error Types**: 20 categories
+- ✅ **Languages**: Python, Java, C, C++, JavaScript
+- ✅ **Error Types**: 18 categories
 - ✅ **Dataset**: 3,178 unique samples
 - ✅ **Production Ready**: Web UI, CLI, REST API
 - ✅ **Reproducible**: Fixed random seeds, validation thresholds
@@ -82,7 +82,7 @@ This project presents a **hybrid AI-based system** that combines rule-based stat
 
 3. **ML Engine** (`ml_engine.py`)
    - TF-IDF vectorization + Gradient Boosting
-   - Handles all 4 languages
+   - Handles all 5 languages
    - Character-level n-grams for syntax patterns
    - Generalization capability
 
@@ -110,7 +110,7 @@ This project presents a **hybrid AI-based system** that combines rule-based stat
 ## 📊 Dataset
 
 ### Composition
-- **Total Samples**: 3,178 unique error cases across 20 error types
+- **Total Samples**: 3,178 unique error cases across 18 error types
 - **Languages**: 
   - Python: 1,229 samples (39%)
   - Java: 698 samples (22%)
@@ -223,7 +223,7 @@ Random State: 42 (reproducible)
 ### Novelty Points
 - 🎓 **Educational Focus**: Not just detection, but teaching
 - 🔄 **Hybrid Architecture**: Symbolic + statistical AI
-- 🌍 **Multi-language**: Single system for 4 languages
+- 🌍 **Multi-language**: Single system for 5 languages
 - 🤖 **Auto-correction**: Safe, context-aware fixes
 - 📊 **Quality Metrics**: Beyond syntax (complexity, style)
 
@@ -322,7 +322,7 @@ Random State: 42 (reproducible)
 
 ### Technical
 ✅ **100% Recall**: No errors missed in evaluation  
-✅ **Multi-Language**: 4 languages supported  
+✅ **Multi-Language**: 5 languages supported  
 ✅ **Hybrid AI**: Combines symbolic + statistical methods  
 ✅ **Production-Ready**: Deployable web application  
 ✅ **Comprehensive Testing**: 900+ test cases

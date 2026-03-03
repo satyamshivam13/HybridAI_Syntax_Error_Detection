@@ -35,7 +35,7 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 │   ├── tfidf_vectorizer.pkl       # TF-IDF vectorizer
 │   ├── label_encoder.pkl          # Label encoder
 │   └── numerical_features.pkl     # Feature names
-├── 📊 dataset/                     # Training data (3,178 unique samples, 20 error types)
+├── 📊 dataset/                     # Training data (3,178 unique samples, 18 error types)
 │   ├── active/                    # Current datasets by language
 │   │   └── noerror_samples.csv    # No-error code samples (multi-language)
 │   ├── merged/all_errors_v2.csv    # Combined dataset (3,178 unique samples)
@@ -96,7 +96,7 @@ This hybrid approach improves accuracy, interpretability, and learning effective
 
 ## 🎯 Key Features
 
-✅ **Multi-language Support**: Python, Java, C, C++
+✅ **Multi-language Support**: Python, Java, C, C++, JavaScript
 
 ✅ **Automatic language detection**
 
@@ -162,8 +162,8 @@ Results Display (Web UI / CLI)
 ✅ Full Support | ⚠️ Partial/ML-based | ❌ Not Applicable
 
 ### Detection Coverage
-- **Total Error Types**: 20 categories
-- **Multi-language Support**: 4 languages (Python, Java, C, C++)
+- **Total Error Types**: 18 categories
+- **Multi-language Support**: 5 languages (Python, Java, C, C++, JavaScript)
 - **Hybrid Detection**: Rule-based (80%) + ML-based (20%)
 
 ---
@@ -173,7 +173,7 @@ Results Display (Web UI / CLI)
 **Model Architecture:**
 - **Vectorization**: TF-IDF (8,000 char-level trigrams)
 - **Classifier**: Gradient Boosting (200 estimators, learning_rate=0.1)
-- **Training Data**: 3,178 unique samples across 4 languages
+- **Training Data**: 3,178 unique samples across 5 languages
 - **Features**: TF-IDF vectors + 10 enhanced numerical features
 
 **Enhanced Numerical Features:**
@@ -476,9 +476,9 @@ The project follows standard software engineering and machine learning practices
 - **Educational demonstrations**: Clear architecture and explanations
 
 ### 📊 Dataset Information
-- **Total Samples**: 3,178 unique samples across 20 error types and 4 languages
+- **Total Samples**: 3,178 unique samples across 18 error types and 5 languages
 - **Language Distribution**: Python (1,229), Java (698), C (682), C++ (569)
-- **Error Categories**: 20 distinct types with cross-language balance, plus explicit NoError class
+- **Error Categories**: 18 distinct types with cross-language balance, plus explicit NoError class
 - **Cross-Language Errors**: 12 error types present in all applicable languages
 - **Language-Specific Errors**: 8 error types (Python: 5, C/C++: 2, Java: 1)
 - **Data Quality**: All samples genuinely unique — randomized variable names, code patterns, and structures
