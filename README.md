@@ -3,11 +3,11 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.18%2B-FF4B4B.svg)](https://streamlit.io/)
-[![Accuracy](https://img.shields.io/badge/Accuracy-87.26%25-success.svg)](docs/OPTIMIZATION_SUMMARY.md)
-[![Tests](https://img.shields.io/badge/Tests-46%2F46%20Passing-success.svg)](tests/)
+[![Accuracy](https://img.shields.io/badge/Accuracy-98.12%25-success.svg)](docs/PROJECT_SUMMARY.md)
+[![Tests](https://img.shields.io/badge/Tests-47%2F47%20Passing-success.svg)](tests/)
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](PROJECT_STRUCTURE.md)
 
-**Quick Links:** [🚀 Quick Start](docs/QUICKSTART.md) | [📁 Structure](PROJECT_STRUCTURE.md) | [🤝 Contributing](docs/CONTRIBUTING.md) | [📊 Results](results/optimized_results.csv) | [📖 Documentation](docs/)
+**Quick Links:** [🚀 Quick Start](docs/QUICKSTART.md) | [📁 Structure](PROJECT_STRUCTURE.md) | [🤝 Contributing](docs/CONTRIBUTING.md) | [📊 Results](results/01_confusion_matrix.png) | [📖 Documentation](docs/)
 
 ---
 
@@ -22,7 +22,7 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 │   └── start_api.py                # API server launcher
 ├── 📚 src/                         # Core engine modules
 │   ├── error_engine.py            # Main detection orchestrator
-│   ├── ml_engine.py               # ML model (87.26% accuracy)
+│   ├── ml_engine.py               # ML model (98.12% accuracy)
 │   ├── syntax_checker.py          # Rule-based AST parser
 │   ├── language_detector.py       # Multi-language detection (score-based)
 │   ├── tutor_explainer.py         # Error explanations
@@ -30,32 +30,29 @@ Hybrid_AI-Based_Multi-Language_Syntax_Error_Detection_System/
 │   ├── quality_analyzer.py        # Code quality metrics
 │   ├── multi_error_detector.py    # Multi-error detection
 │   └── feature_utils.py           # Shared ML feature extraction
-├── 🤖 models/                      # Trained ML models (87.26%)
+├── 🤖 models/                      # Trained ML models (98.12%)
 │   ├── syntax_error_model.pkl     # Gradient Boosting classifier
 │   ├── tfidf_vectorizer.pkl       # TF-IDF vectorizer
 │   ├── label_encoder.pkl          # Label encoder
 │   └── numerical_features.pkl     # Feature names
-├── 📊 dataset/                     # Training data (3,178 unique samples, 18 error types)
+├── 📊 dataset/                     # Training data (4,351 unique samples, 18 error types)
 │   ├── active/                    # Current datasets by language
 │   │   └── noerror_samples.csv    # No-error code samples (multi-language)
-│   ├── merged/all_errors_v2.csv    # Combined dataset (3,178 unique samples)
+│   ├── merged/all_errors_v2.csv    # Combined dataset (4,351 unique samples)
 │   └── archieve/                  # Historical datasets
 ├── 🔬 scripts/                     # Training & utilities
-│   ├── optimize_model.py          # ✅ Model training (PRIMARY)
-│   ├── augment_data.py            # Data augmentation
-│   ├── generate_results.py        # Results generation
+│   ├── retrain_model.py           # ✅ Model training pipeline
 │   ├── advanced_metrics.py        # Performance metrics
-│   ├── evaluate_results_visualization.ipynb
-│   └── utils/data_utils.py        # Shared utilities
-├── 🧪 tests/                       # Unit tests (46/46 passing)
+│   ├── evaluate_results_visualization.py # Headless chart generator
+│   └── evaluate_results_visualization.ipynb
+├── 🧪 tests/                       # Unit tests (47/47 passing)
 ├── 📝 samples/                     # Example error files
-├── 📈 results/                     # Evaluation results
+├── 📈 results/                     # High-res Data Visualizations
 ├── 📖 docs/                        # Complete documentation
 │   ├── QUICKSTART.md              # Quick start guide
 │   ├── PROJECT_SUMMARY.md         # Technical overview
-│   ├── IMPROVEMENTS_SUMMARY.md    # Recent improvements
-│   ├── OPTIMIZATION_SUMMARY.md    # Model optimization
-│   └── ... (12 docs total)
+│   ├── PAPER_ABSTRACT.md          # Academic Paper Guide
+│   └── ... (6 docs total)
 ├── PROJECT_STRUCTURE.md            # Detailed structure guide
 ├── README.md                       # This file
 ├── requirements.txt                # Production dependencies
@@ -75,7 +72,7 @@ The system combines:
 
 **Rule-based static analysis** (deterministic, high confidence)
 
-**Machine learning–based classification** (flexible, multi-language, **87.26% accuracy**)
+**Machine learning–based classification** (flexible, multi-language, **98.12% accuracy**)
 
 This hybrid approach improves accuracy, interpretability, and learning effectiveness.
 
@@ -85,7 +82,7 @@ This hybrid approach improves accuracy, interpretability, and learning effective
 
 - **[Quick Start Guide](docs/QUICKSTART.md)** - Get started in 5 minutes
 - **[Project Summary](docs/PROJECT_SUMMARY.md)** - Technical architecture overview
-- **[Optimization Details](docs/OPTIMIZATION_SUMMARY.md)** - How we achieved 87.26% accuracy
+- **[Optimization Details](docs/OPTIMIZATION_SUMMARY.md)** - How we achieved 98.12% accuracy
 - **[Integration Guide](docs/INTEGRATION_SUMMARY.md)** - Auto-fix & quality analyzer features
 - **[Contributing Guidelines](docs/CONTRIBUTING.md)** - How to contribute to the project
 - **[Research Abstract](docs/PAPER_ABSTRACT.md)** - Academic paper outline
@@ -96,13 +93,13 @@ This hybrid approach improves accuracy, interpretability, and learning effective
 
 ## 🎯 Key Features
 
-✅ **Multi-language Support**: Python, Java, C, C++, JavaScript
+✅ **Multi-language Support**: Python, Java, C, C++, **JavaScript**
 
 ✅ **Automatic language detection**
 
 ✅ **Rule-based syntax detection** for Python (AST + token analysis)
 
-✅ **ML-based error classification** using Gradient Boosting + TF-IDF (87.26% accuracy)
+✅ **ML-based error classification** using Gradient Boosting + TF-IDF (98.12% accuracy)
 
 ✅ **Multi-Error Detection** - Find ALL errors in code (not just first one)
 
@@ -164,17 +161,17 @@ Results Display (Web UI / CLI)
 ### Detection Coverage
 - **Total Error Types**: 18 categories
 - **Multi-language Support**: 5 languages (Python, Java, C, C++, JavaScript)
-- **Hybrid Detection**: Rule-based (80%) + ML-based (20%)
+- **Hybrid Detection**: Rule-based (Symbolic AI) + ML-based (Gradient Boosting)
 
 ---
 
 ## 🤖 Machine Learning Details
 
 **Model Architecture:**
-- **Vectorization**: TF-IDF (8,000 char-level trigrams)
-- **Classifier**: Gradient Boosting (200 estimators, learning_rate=0.1)
-- **Training Data**: 3,178 unique samples across 5 languages
-- **Features**: TF-IDF vectors + 10 enhanced numerical features
+- **Vectorization**: TF-IDF (5,000 char-level subword n-grams)
+- **Classifier**: Gradient Boosting (100 estimators, max_depth=5)
+- **Training Data**: 4,351 unique deduplicated samples across 5 languages
+- **Features**: TF-IDF vectors + 10 deterministic numerical AST features
 
 **Enhanced Numerical Features:**
 1. Code length (characters)
@@ -189,24 +186,21 @@ Results Display (Web UI / CLI)
 10. Bracket balance score
 
 **Training Split:**
-- Training Set: 80% (2,040 samples)
-- Test Set: 20% (511 samples)
+- Training Set: 80%
+- Test Set: 20%
 
 **Performance Metrics:**
-- **Overall Accuracy**: 87.26%
-- **Cohen's Kappa**: 0.9996 (nearly perfect)
-- **Matthews Correlation**: 0.9996
-- **Weighted Precision**: 1.00
-- **Weighted Recall**: 1.00
-- **Weighted F1-Score**: 1.00
-- **Per-Language Accuracy**: Python (99.91%), C++ (100%), Java (100%), C (100%)
+- **Overall Accuracy**: **98.12%**
+- **Weighted Precision**: 98.13%
+- **Weighted Recall**: 98.12%
+- **Weighted F1-Score**: 98.11%
+- **Per-Language Accuracy**: JavaScript (99.90%), C++ (98.59%), C (98.39%), Java (97.56%), Python (96.71%)
 
 **Model Optimization Journey:**
 - Initial: 87.8% (Logistic Regression)
-- First optimization: 98.82% (Random Forest, +240 samples)
-- Second optimization: +430 samples (weak error types)
-- Algorithm upgrade: Gradient Boosting with enhanced features
-- Final: **87.26% accuracy** (+12.0% improvement)
+- First optimization: 98.82% (Random Forest, but suffered from duplicate leakage)
+- Overhaul: Merged duplicate error types, standardized on Gradient Boosting
+- Final Benchmark: **98.12% genuine accuracy** on completely unique deduplicated data
 
 **Role of ML:**
 - Handles all languages with high accuracy
@@ -246,13 +240,13 @@ Based on evaluation results ([results.json](results/results.json)):
 
 ## 🎯 **Performance Metrics** (Optimized Model)
 
-### 🏆 **Breakthrough Achievement: 87.26% Accuracy**
+### 🏆 **Breakthrough Achievement: 98.12% Accuracy**
 
 After targeted augmentation (+670 total samples) and model optimization with Gradient Boosting + enhanced feature engineering:
 
 | Metric | Score | Improvement |
 |--------|-------|-------------|
-| **Overall Accuracy** | **87.26%** | +12.0% |
+| **Overall Accuracy** | **98.12%** | +12.0% |
 | Weighted Precision | 1.00 | +0.09 |
 | Weighted Recall | 1.00 | +0.13 |
 | Weighted F1-Score | 1.00 | +0.13 |
@@ -297,7 +291,7 @@ Detailed evaluation and visualizations are available in:
 - **Training Scripts**: [scripts/optimize_model.py](scripts/optimize_model.py), [scripts/advanced_metrics.py](scripts/advanced_metrics.py)
 
 Run the notebook to generate:
-- Confusion matrices (87.26% accuracy)
+- Confusion matrices (98.12% accuracy)
 - Per-language accuracy charts
 - Error distribution plots
 - Precision-recall curves
@@ -333,7 +327,7 @@ Required packages:
 
 ### 3️⃣ Pre-trained Models Ready!
 ✅ **No training needed!** The repository includes optimized models:
-- `models/syntax_error_model.pkl` (Gradient Boosting, 87.26% accuracy)
+- `models/syntax_error_model.pkl` (Gradient Boosting, 98.12% accuracy)
 - `models/tfidf_vectorizer.pkl` (8K features)
 - `models/label_encoder.pkl`
 - `models/numerical_features.pkl`
@@ -407,7 +401,7 @@ python -m pytest tests/test_detection.py -v
 
 ### 7️⃣ View Evaluation Notebook
 Open `scripts/evaluate_results_visualization.ipynb` in Jupyter or VS Code to see:
-- Confusion matrices (87.26% accuracy)
+- Confusion matrices (98.12% accuracy)
 - Performance charts
 - Language-wise analysis
 - Advanced metrics visualization
