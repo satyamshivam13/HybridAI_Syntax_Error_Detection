@@ -39,6 +39,9 @@ class TestLanguageDetector(unittest.TestCase):
         code = '#include <iostream>\nusing namespace std;\nint main() { cout << "test"; }'
         self.assertEqual(detect_language(code), "C++")
 
+    def test_javascript_detection(self):
+        code = "const hello = () => { console.log('Hi'); }"
+        self.assertEqual(detect_language(code), "JavaScript")
 
 class TestLanguageDetectorEdgeCases(unittest.TestCase):
     """Tests for the printf-vs-print bug fix and other edge cases."""

@@ -30,7 +30,7 @@ class AutoFixer:
     
     def fix_missing_semicolon(self, code: str, line_num: int = None) -> str:
         """
-        Add missing semicolon (for C/C++/Java)
+        Add missing semicolon (for C/C++/Java/JavaScript)
         """
         lines = code.split('\n')
         
@@ -244,7 +244,7 @@ class AutoFixer:
             if error_type == "MissingDelimiter":
                 if language == "Python" and line_num is not None:
                     fixed_code = self.fix_missing_colon(code, line_num)
-                elif language in ["Java", "C", "C++"] and line_num is not None:
+                elif language in ["Java", "C", "C++", "JavaScript"] and line_num is not None:
                     fixed_code = self.fix_missing_semicolon(code, line_num)
             
             # Specific error types

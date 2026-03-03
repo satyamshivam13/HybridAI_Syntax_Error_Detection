@@ -45,6 +45,13 @@ python start_api.py
 ```
 Open docs: `http://localhost:8000/docs`
 
+### 6. Deploy to Streamlit Cloud (Free Hosting)
+You can deploy your main `app.py` for free in minutes.
+1. Push this entire repository to your GitHub account.
+2. Go to [share.streamlit.io](https://share.streamlit.io) and log in.
+3. Click **"New app"**, select your repository, set the main file path to `app.py`.
+4. Click **Deploy**. The app will build using `requirements.txt`.
+
 ---
 
 ## 📝 Common Commands

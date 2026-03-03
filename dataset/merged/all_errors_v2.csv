@@ -22,7 +22,7 @@ int main() { strlen(""test""); return 0; }",1.0
 Python,NoError,"mixed = [1, 'two', 3.0, True]","mixed = [1, 'two', 3.0, True]",
 C++,UnusedVariable,"int x = 10;
 cout << ""Hi"";","cout << ""Hi"";",1.0
-Python,NameError,print(name),"name = 'John'
+Python,UndeclaredIdentifier,print(name),"name = 'John'
 print(name)",1.0
 C,UnusedVariable,char c = 'a'; int result = 5;,int result = 5;,1.0
 Python,IndentationError,"def calculate(a, b):
@@ -34,7 +34,7 @@ C++,MissingDelimiter,int y = 20,int y = 20;,1.0
 Python,IndentationError,"def func():
 print('Hi')","def func():
     print('Hi')",2.0
-Python,MissingImport,"data = json.loads('{""key"": ""value""}')
+Python,ImportError,"data = json.loads('{""key"": ""value""}')
 print(data)",,
 Python,TypeMismatch,x = '5' + 3,x = int('5') + 3,1.0
 Python,UnclosedString,"greeting = 'Hello ' + name + '!
@@ -44,7 +44,7 @@ C++,UnclosedString,"string s = ""hello;","string s = ""hello"";",1.0
 Java,InvalidAssignment,"""hello"" = str;","str = ""hello"";",1.0
 Python,TypeMismatch,"x = [1, 2, 3] + 20",,
 Java,TypeMismatch,"int x = ""5"";",int x = 5;,1.0
-Python,NameError,print(undefined_var),"undefined_var = 10
+Python,UndeclaredIdentifier,print(undefined_var),"undefined_var = 10
 print(undefined_var)",1.0
 Python,ImportError,"import maths
 maths.sqrt(4)","import math
@@ -68,7 +68,7 @@ Java,UndeclaredIdentifier,"public class Main {
     }
 }",,
 Python,DivisionByZero,result = 100 / (x - x),"result = 100 / max(x - x, 1)",1.0
-Python,MissingImport,"soup = BeautifulSoup(html, 'html.parser')
+Python,ImportError,"soup = BeautifulSoup(html, 'html.parser')
 print(soup.title)",,
 Python,UnclosedString,print('Hello World),,
 C++,UnmatchedBracket,"int main() {
@@ -95,7 +95,7 @@ Java,InfiniteLoop,"while (true) {
 Python,MissingDelimiter,"class Animal
     pass","class Animal:
     pass",1.0
-Python,MissingImport,"np.array([1,2,3])","import numpy as np
+Python,ImportError,"np.array([1,2,3])","import numpy as np
 np.array([1,2,3])",1.0
 C,MissingDelimiter,"while (1) {
     break
@@ -145,7 +145,7 @@ Python,InvalidAssignment,func() = result,,
 Python,MutableDefault,"def add_item(x, lst=[]): lst.append(x)","def add_item(x, lst=None):
     if lst is None: lst = []
     lst.append(x)",1.0
-Python,MissingImport,"re.match(r'\d+', '123')","import re
+Python,ImportError,"re.match(r'\d+', '123')","import re
 re.match(r'\d+', '123')",1.0
 Python,LineTooLong,"result = very_long_function_name(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)","result = very_long_function_name(
     arg1, arg2, arg3, arg4,
@@ -190,9 +190,9 @@ C++,InvalidAssignment,5 = x;,int x = 5;,1.0
 C++,MissingDelimiter,int x = 10,int x = 10;,1.0
 Python,TypeMismatch,z = 'hello' * 'world',,
 Python,WildcardImport,from random import *,"from random import randint, choice",1.0
-Python,MissingImport,request.get('url'),"import requests
+Python,ImportError,request.get('url'),"import requests
 request.get('url')",1.0
-Python,NameError,print(x),"x = 10
+Python,UndeclaredIdentifier,print(x),"x = 10
 print(x)",1.0
 Java,NoError,"public class Main {\n    public static int add(int a, int b) {\n        return a + b;\n    }\n    public static void main(String[] args) {\n        System.out.println(add(5, 3));\n    }\n}","public class Main {\n    public static int add(int a, int b) {\n        return a + b;\n    }\n    public static void main(String[] args) {\n        System.out.println(add(5, 3));\n    }\n}",
 C,DivisionByZero,"float calculate() {
@@ -207,7 +207,7 @@ Python,InvalidAssignment,"[1, 2, 3] = items",,
 C++,InvalidAssignment,10 + 5 = result;,result = 10 + 5;,1.0
 Python,DuplicateDefinition,"def f(): pass
 def f(): pass",def f(): pass,2.0
-Python,NameError,items = fetch_form_db(),,
+Python,UndeclaredIdentifier,items = fetch_form_db(),,
 Python,MutableDefault,"def update(val, config={}): config['val'] = val","def update(val, config=None):
     if config is None: config = {}
     config['val'] = val",1.0
@@ -226,7 +226,7 @@ C++,UnusedVariable,"int main() {
 }",,
 Java,DivisionByZero,"int x = 0;
 int y = 51 / x;",,
-Python,MissingImport,"plt.plot([1,2,3], [4,5,6])
+Python,ImportError,"plt.plot([1,2,3], [4,5,6])
 plt.show()",,
 Python,UnreachableCode,"def find_max(lst):
     return max(lst)
@@ -234,7 +234,7 @@ Python,UnreachableCode,"def find_max(lst):
     return result",,
 Python,DivisionByZero,"x = 0
 y = 41 / x",,
-Python,NameError,total = count * 2,"count = 5
+Python,UndeclaredIdentifier,total = count * 2,"count = 5
 total = count * 2",1.0
 Python,MutableDefault,"def add_item(x, items=[]): items.append(x)","def add_item(x, items=None):
     if items is None: items = []
@@ -278,7 +278,7 @@ Java,UnclosedString,"System.out.println(""test);","System.out.println(""test"");
 Python,MissingDelimiter,"while count > 0
     count -= 1","while count > 0:
     count -= 1",1.0
-Python,MissingImport,df = pd.DataFrame(),"import pandas as pd
+Python,ImportError,df = pd.DataFrame(),"import pandas as pd
 df = pd.DataFrame()",1.0
 Java,InvalidAssignment,5 = x;,int x = 5;,1.0
 Python,MutableDefault,"def append_to(element, lst=[]): lst.append(element)","def append_to(element, lst=None):
@@ -345,7 +345,7 @@ System.out.println(x);",1.0
 Python,MutableDefault,"def save(record, records=[]):
     records.append(record)
     return len(records)",,
-Python,NameError,"for item in uninitialized_list:
+Python,UndeclaredIdentifier,"for item in uninitialized_list:
     print(item)",,
 C,DivisionByZero,int x = 10 / 0;,int x = 10 / 2;,1.0
 Python,NoError,import sys,import sys,
@@ -364,7 +364,7 @@ int dens = (area > 0) ? pop / area : 0;",3.0
 Python,TypeMismatch,"data = '100'
 percentage = (data / 1000) * 100","data = 100
 percentage = (data / 1000) * 100",2.0
-Python,MissingImport,now = datetime.now(),"from datetime import datetime
+Python,ImportError,now = datetime.now(),"from datetime import datetime
 now = datetime.now()",1.0
 Java,NoError,public class Main {\n    public static void main(String[] args) {\n        for (int i = 0; i < 10; i++) {\n            System.out.println(i);\n        }\n    }\n},public class Main {\n    public static void main(String[] args) {\n        for (int i = 0; i < 10; i++) {\n            System.out.println(i);\n        }\n    }\n},
 C,InvalidAssignment,"""string"" = value;",,
@@ -408,7 +408,7 @@ int avg = (days > 0) ? hours / days : 0;",3.0
 Java,TypeMismatch,"float f = 3.14;
 int i = f + 10;","float f = 3.14f;
 int i = (int)f + 10;",2.0
-Python,MissingImport,"with zipfile.ZipFile('archive.zip') as z:
+Python,ImportError,"with zipfile.ZipFile('archive.zip') as z:
     z.extractall('output')",,
 Python,UnusedVariable,"class Config:
     def __init__(self):
@@ -449,11 +449,11 @@ C,DivisionByZero,"float calculate() {
     int denominator = 0;
     return 89 / denominator;
 }",,
-Python,NameError,result = unknown_function(10),,
+Python,UndeclaredIdentifier,result = unknown_function(10),,
 Python,NoError,average = sum(numbers) / len(numbers),average = sum(numbers) / len(numbers),
 C,MissingInclude,"int main() { printf(""Hello""); return 0; }","#include <stdio.h>
 int main() { printf(""Hello""); return 0; }",1.0
-Python,MissingImport,"random.randint(1, 10)","import random
+Python,ImportError,"random.randint(1, 10)","import random
 random.randint(1, 10)",1.0
 C,InfiniteLoop,"for (;;) { printf(""loop""); }","for (int i = 0; i < 10; i++) { printf(""loop""); }",1.0
 Python,InvalidAssignment,5 = x,x = 5,1.0
@@ -497,13 +497,13 @@ break","while True:
     break",2.0
 C,MissingInclude,"printf(""Hello"");","#include <stdio.h>
 printf(""Hello"");",1.0
-Python,MissingImport,"config = configparser.ConfigParser()
+Python,ImportError,"config = configparser.ConfigParser()
 config.read('app.ini')",,
 C,InvalidAssignment,5 = x;,int x = 5;,1.0
 Python,InfiniteLoop,"x = 0
 while x < 10:
     print(x)",,
-Python,MissingImport,os.path.exists('file'),"import os
+Python,ImportError,os.path.exists('file'),"import os
 os.path.exists('file')",1.0
 Java,TypeMismatch,"double d = 9.99;
 boolean check = d;","double d = 9.99;
@@ -521,7 +521,7 @@ public class Main {
         System.out.println(list.size());
     }
 }",,
-Java,MissingImport,ArrayList list = new ArrayList();,"import java.util.ArrayList;
+Java,ImportError,ArrayList list = new ArrayList();,"import java.util.ArrayList;
 ArrayList list = new ArrayList();",1.0
 Python,MissingDelimiter,"def function_0()
     return 61",,
@@ -545,7 +545,7 @@ C++,MissingInclude,"int main() {
     return 0;
 }",,
 C,MissingDelimiter,int x = 68,,
-Python,MissingImport,"response = requests.get('https://api.example.com')
+Python,ImportError,"response = requests.get('https://api.example.com')
 print(response.json())",,
 Python,DivisionByZero,"def divide(x, y=0):
     return x / y
@@ -557,7 +557,7 @@ int i = static_cast<int>(f) + 10;",2.0
 C++,MissingInclude,"int main() { string s = ""hi""; return 0; }","#include <string>
 using namespace std;
 int main() { string s = ""hi""; return 0; }",1.0
-Python,MissingImport,"plt.plot([1,2,3])","import matplotlib.pyplot as plt
+Python,ImportError,"plt.plot([1,2,3])","import matplotlib.pyplot as plt
 plt.plot([1,2,3])",1.0
 Java,DivisionByZero,"int x = 0;
 int y = 38 / x;",,
@@ -599,7 +599,7 @@ salary = hours * wage",3.0
 C,InfiniteLoop,"do { printf(""run""); } while (true);","do { printf(""run""); break; } while (true);",1.0
 C,DivisionByZero,"int x = 0;
 int y = 57 / x;",,
-Python,MissingImport,"arr = np.array([1,2,3,4,5])
+Python,ImportError,"arr = np.array([1,2,3,4,5])
 print(arr.mean())",,
 C++,MissingDelimiter,int z = 30,int z = 30;,1.0
 Python,MissingDelimiter,"for i in range(19)
@@ -630,7 +630,7 @@ Python,ImportError,from datetime import datetimee,from datetime import datetime,
 C,MissingDelimiter,"int a = 5
 int b = 10;","int a = 5;
 int b = 10;",1.0
-Python,NameError,"result = calculte(x, y)",,
+Python,UndeclaredIdentifier,"result = calculte(x, y)",,
 C,DivisionByZero,"int a = 17;
 int b = 0;
 int c = a / b;",,
@@ -645,7 +645,7 @@ Python,ImportError,"import python_does_not_have_this
 result = python_does_not_have_this.run()",,
 Java,InvalidAssignment,x + y = z;,,
 Python,InvalidAssignment,42 = count,,
-Python,MissingImport,result = math.sqrt(16),"import math
+Python,ImportError,result = math.sqrt(16),"import math
 result = math.sqrt(16)",1.0
 Python,DivisionByZero,"def divide(x, y=0):
     return x / y
@@ -689,10 +689,10 @@ Python,NoError,for item in items:\n    process(item),for item in items:\n    pro
 Java,UnclosedString,"System.out.println(""Hello);","System.out.println(""Hello"");",1.0
 Python,IndentationError,"def greet(name):
 print(f'Hello {name}')",,
-Python,MissingImport,data = json.loads('{}'),"import json
+Python,ImportError,data = json.loads('{}'),"import json
 data = json.loads('{}')",1.0
 C,UnmatchedBracket,for (int i = 0; i < 10; i++ { },for (int i = 0; i < 10; i++) { },1.0
-Python,NameError,result = x + y,"x = 5
+Python,UndeclaredIdentifier,result = x + y,"x = 5
 y = 10
 result = x + y",1.0
 Java,MissingDelimiter,int x = 74,,
@@ -731,7 +731,7 @@ int mean = sum / items;","int sum = 500;
 int items = 0;
 int mean = (items > 0) ? sum / items : 0;",3.0
 C,MissingDelimiter,return 71,,
-Python,NameError,response = reequests.get(url),,
+Python,UndeclaredIdentifier,response = reequests.get(url),,
 Python,UndeclaredIdentifier,"numbers = [1,2,3,4,5]
 print(maximum)",,
 Python,IndentationError,"def process(data):
@@ -760,7 +760,7 @@ result = 15 / numbers[2]",,
 C,MissingDelimiter,"char* name = ""value""",,
 Python,UnclosedString,"query = ""SELECT * FROM users WHERE name = 'Alice""
 db.execute(query)",,
-Python,MissingImport,"conn = sqlite3.connect('app.db')
+Python,ImportError,"conn = sqlite3.connect('app.db')
 cursor = conn.cursor()",,
 Python,DivisionByZero,"def divide(x, y=0):
     return x / y
@@ -990,7 +990,7 @@ int mod = (y != 0) ? x % y : 0;",3.0
 C++,TypeMismatch,"double d = 3.14;
 int i = d;","double d = 3.14;
 int i = static_cast<int>(d);",2.0
-Python,MissingImport,"pattern = re.compile(r'\d+')
+Python,ImportError,"pattern = re.compile(r'\d+')
 matches = pattern.findall(text)",,
 C++,NoError,"#include <iostream>\n#include <vector>\nusing namespace std;\nint main() {\n    vector<int> v = {1, 2, 3};\n    cout << v[0] << endl;\n    return 0;\n}","#include <iostream>\n#include <vector>\nusing namespace std;\nint main() {\n    vector<int> v = {1, 2, 3};\n    cout << v[0] << endl;\n    return 0;\n}",
 Java,UndeclaredIdentifier,"public class Main {
@@ -1116,7 +1116,7 @@ int rpe = (emp > 0) ? rev / emp : 0;",3.0
 Python,DuplicateDefinition,"class Config:
     DEBUG = True
     DEBUG = False",,
-Python,MissingImport,"counter = Counter(words)
+Python,ImportError,"counter = Counter(words)
 print(counter.most_common(10))",,
 Python,IndentationError,"def outer():
     def inner():
@@ -1181,7 +1181,7 @@ for n in nums:
     print(int(n) + 5)","nums = [1, 2, 3]
 for n in nums:
     print(n + 5)",2.0
-Python,MissingImport,"t = threading.Thread(target=worker)
+Python,ImportError,"t = threading.Thread(target=worker)
 t.start()",,
 Python,IndentationError,"if condition:
     do_something()
@@ -1288,8 +1288,8 @@ void *v = (void*)&a;",2.0
 C++,MissingDelimiter,"double price = 19.99
 return price;","double price = 19.99;
 return price;",1.0
-Python,NameError,value = get_reslt(),,
-Python,MissingImport,"ftp = ftplib.FTP('ftp.example.com')
+Python,UndeclaredIdentifier,value = get_reslt(),,
+Python,ImportError,"ftp = ftplib.FTP('ftp.example.com')
 ftp.login('user', 'pass')",,
 C,DivisionByZero,"int hours = 40;
 int days = 0;
@@ -1498,7 +1498,7 @@ C,MissingInclude,"int main() {
     int len = strlen(s);
     return 0;
 }",,
-Python,NameError,config = load_cofig('app.ini'),,
+Python,UndeclaredIdentifier,config = load_cofig('app.ini'),,
 Java,UnreachableCode,"public class Main {
     public static boolean check(int x) {
         if (x > 0) return true;
@@ -1565,7 +1565,7 @@ Python,NoError,"def main():\n    print('Hello, World!')\n\nif __name__ == '__mai
 C++,TypeMismatch,"unsigned int u = 200;
 char c = u;","unsigned int u = 200;
 char c = static_cast<char>(u);",2.0
-Python,NameError,print(undefined_variable),,
+Python,UndeclaredIdentifier,print(undefined_variable),,
 Python,LineTooLong,"response = requests.post('https://api.example.com/endpoint', headers={'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'}, json=payload)",,
 C,UnreachableCode,"void process() {
     return;
@@ -1640,14 +1640,14 @@ Python,UnreachableCode,"for item in items:
         print('skipped')",,
 Java,DivisionByZero,int mod = 94 % 0;,,
 Python,NoError,greeting = f'Hello {name}',greeting = f'Hello {name}',
-Python,NameError,x = UndefinedClass(),,
+Python,UndeclaredIdentifier,x = UndefinedClass(),,
 Python,LineTooLong,"sql_query = ""SELECT u.id, u.name, u.email, o.order_id, o.total FROM users u JOIN orders o ON u.id = o.user_id WHERE u.active = 1 ORDER BY o.created_at DESC""",,
 C,TypeMismatch,char c = 45.5;,,
 Python,NoError,def greet(name):\n    return f'Hello {name}',def greet(name):\n    return f'Hello {name}',
 Python,WildcardImport,"from sys import *
 print(argv)",,
 Python,NoError,try:\n    x = int(input())\nexcept ValueError:\n    x = 0,try:\n    x = int(input())\nexcept ValueError:\n    x = 0,
-Python,MissingImport,"tree = ET.parse('data.xml')
+Python,ImportError,"tree = ET.parse('data.xml')
 root = tree.getroot()",,
 Java,NoError,"import java.util.Arrays;
 public class Main {
@@ -1743,7 +1743,7 @@ Java,UnreachableCode,"public class Main {
     }
 }",,
 Python,TypeMismatch,a = 28 / 'string',,
-Python,NameError,"import math
+Python,UndeclaredIdentifier,"import math
 result = math.squart(16)",,
 C++,MissingDelimiter,"while (true) {
     break
@@ -2008,7 +2008,7 @@ Python,NoError,"class Queue:
         return self.items.pop(0)
     def is_empty(self):
         return len(self.items) == 0",,
-Python,NameError,"class Dog:
+Python,UndeclaredIdentifier,"class Dog:
     def bark(self):
         print(selff.name)",,
 Java,UnclosedString,"public class Main {
@@ -2071,7 +2071,7 @@ total_questions = 0
 accuracy = correct / total_questions","correct = 20
 total_questions = 0
 accuracy = correct / total_questions if total_questions > 0 else 0",3.0
-Python,NameError,"def greet(name):
+Python,UndeclaredIdentifier,"def greet(name):
     return f'Hello {naem}'",,
 Python,NoError,name = 'Alice',name = 'Alice',
 Python,UnmatchedBracket,"result = (a + b * (c - d)
@@ -2099,7 +2099,7 @@ Python,UndeclaredIdentifier,"def compute():
 Python,UnreachableCode,"def get_value():
     return 42
     print('done')",,
-Python,NameError,print(fist_name),,
+Python,UndeclaredIdentifier,print(fist_name),,
 Python,WildcardImport,"from os import *
 files = listdir('.')",,
 Python,MutableDefault,"def store(item, storage={}):
@@ -2306,7 +2306,7 @@ result = value / 2",2.0
 Python,DivisionByZero,"def calculate():
     denominator = 0
     return 16 / denominator",,
-Python,NameError,"try:
+Python,UndeclaredIdentifier,"try:
     result = int('abc')
 except ValueEror:
     result = 0",,
@@ -2458,13 +2458,13 @@ Python,IndentationError,"class Config:
     DEBUG = True
     def load(self):
     pass",,
-Python,MissingImport,"path = os.path.join('home', 'user', 'docs')
+Python,ImportError,"path = os.path.join('home', 'user', 'docs')
 print(path)",,
 Python,LineTooLong,logging.info(f'Processing request from {request.remote_addr} for user {user.id} ({user.email}) at {datetime.datetime.now().isoformat()}'),,
 Python,UnmatchedBracket,"if (x > 0 and y < 10:
     process()",,
 Java,DivisionByZero,int result = 13 / 0;,,
-Python,MissingImport,"now = datetime.datetime.now()
+Python,ImportError,"now = datetime.datetime.now()
 print(now)",,
 Java,DivisionByZero,"double miles = 100.0;
 double gallons = 0.0;
@@ -2477,7 +2477,7 @@ float *fp = (float*)&x;",2.0
 Python,ImportError,"from no_such_package.utils import load
 data = load('file.txt')",,
 Python,NoError,total = a + b,total = a + b,
-Python,NameError,df = panda.DataFrame(data),,
+Python,UndeclaredIdentifier,df = panda.DataFrame(data),,
 C++,MissingDelimiter,"char c = 'A'
 cout << c;","char c = 'A';
 cout << c;",1.0
@@ -2509,7 +2509,7 @@ x = randint(1, 100)",,
 Java,DivisionByZero,double result = 31.0 / 0.0;,,
 Python,UnclosedString,"pattern = r'\d+\.\d+
 re.findall(pattern, text)",,
-Python,MissingImport,"df = pd.DataFrame({'a': [1,2,3]})
+Python,ImportError,"df = pd.DataFrame({'a': [1,2,3]})
 print(df)",,
 C,TypeMismatch,"long l = 1000000;
 short s = l;","long l = 1000000;
@@ -2542,12 +2542,12 @@ average = sum(scores) / len(scores)","scores = [90, 85, 95]
 average = sum(scores) / len(scores)",2.0
 Python,ImportError,"from missing_module import helper
 result = helper.run()",,
-Python,MissingImport,"model = RandomForestClassifier()
+Python,ImportError,"model = RandomForestClassifier()
 model.fit(X_train, y_train)",,
 Java,TypeMismatch,"char letter = 'A';
 String word = letter + ""BC"";","char letter = 'A';
 String word = Character.toString(letter) + ""BC"";",2.0
-Python,NameError,total = sum + extra_amount,,
+Python,UndeclaredIdentifier,total = sum + extra_amount,,
 Python,UnusedVariable,"def parse(text):
     words = text.split()
     length = len(text)
@@ -2612,7 +2612,7 @@ int div = 5 - 5;
 int quot = num / div;","int num = 25;
 int div = 5 - 5;
 int quot = (div != 0) ? num / div : 0;",3.0
-Python,NameError,data = loaad_data(),,
+Python,UndeclaredIdentifier,data = loaad_data(),,
 Python,ImportError,"import invalid_package
 print(invalid_package.VERSION)",,
 Python,UnclosedString,"url = 'https://api.example.com/data
@@ -2731,7 +2731,7 @@ Java,UnmatchedBracket,"public class Main {
         return a + b;
     }
 }",,
-Python,MissingImport,"result = math.factorial(10)
+Python,ImportError,"result = math.factorial(10)
 print(result)",,
 Python,UnmatchedBracket,"data = {'key': 'value'
 process(data)",,
@@ -2851,7 +2851,7 @@ int code = (int)c;",2.0
 C,TypeMismatch,"int arr[5];
 int size = arr;","int arr[5];
 int size = sizeof(arr)/sizeof(arr[0]);",2.0
-Python,MissingImport,"path = Path('/home/user/docs')
+Python,ImportError,"path = Path('/home/user/docs')
 print(path.exists())",,
 Python,DivisionByZero,"x = 25
 y = 10 - 10
@@ -2972,7 +2972,7 @@ int main() {
 }",,
 C,NoError,"#include <stdio.h>\nint main() {\n    int arr[5] = {1, 2, 3, 4, 5};\n    printf(""%d\\n"", arr[0]);\n    return 0;\n}","#include <stdio.h>\nint main() {\n    int arr[5] = {1, 2, 3, 4, 5};\n    printf(""%d\\n"", arr[0]);\n    return 0;\n}",
 Java,DivisionByZero,double result = 8.0 / 0.0;,,
-Python,NameError,"if nonexistent_flag:
+Python,UndeclaredIdentifier,"if nonexistent_flag:
     process()",,
 C++,UnclosedString,"#include <iostream>
 using namespace std;
@@ -3018,7 +3018,7 @@ Java,UnreachableCode,"public class Main {
         return y;
     }
 }",,
-Python,NameError,"numbers = [1,2,3]
+Python,UndeclaredIdentifier,"numbers = [1,2,3]
 print(numbres)",,
 Python,MutableDefault,"def enqueue(item, queue=[]):
     queue.append(item)
@@ -3036,7 +3036,7 @@ Java,UndeclaredIdentifier,"public class Calculator {
         return a + b + offset;
     }
 }",,
-Python,NameError,"user = Usr('Alice', 30)",,
+Python,UndeclaredIdentifier,"user = Usr('Alice', 30)",,
 Python,WildcardImport,"from itertools import *
 result = list(chain([1,2],[3,4]))",,
 C++,NoError,"#include <iostream>
@@ -3072,7 +3072,7 @@ if age > 18:
     print('Adult')","age = int(input('Enter age: '))
 if age > 18:
     print('Adult')",2.0
-Python,MissingImport,"img = cv2.imread('image.jpg')
+Python,ImportError,"img = cv2.imread('image.jpg')
 cv2.imshow('window', img)",,
 Python,WildcardImport,"from re import *
 pattern = compile(r'\d+')",,
@@ -3701,153 +3701,153 @@ m.sqrt(7)",1.0
 Python,ImportError,"import numpyy as m
 m.sqrt(85)","import numpy as m
 m.sqrt(14)",1.0
-Python,NameError,print(len(y)),"y = 'content'
+Python,UndeclaredIdentifier,print(len(y)),"y = 'content'
 print(len(y))",1.0
-Python,NameError,"def func():
+Python,UndeclaredIdentifier,"def func():
     return num
 func()","def func():
     num = 54
     return num
 func()",1.0
-Python,NameError,"if item > 0:
+Python,UndeclaredIdentifier,"if item > 0:
     print('pos')","item = 54
 if item > 0:
     print('pos')",1.0
-Python,NameError,"for i in range(m):
+Python,UndeclaredIdentifier,"for i in range(m):
     pass","m = 34
 for i in range(m):
     pass",1.0
-Python,NameError,print(value),"value = 21
+Python,UndeclaredIdentifier,print(value),"value = 21
 print(value)",1.0
-Python,NameError,print(c),"c = 15
+Python,UndeclaredIdentifier,print(c),"c = 15
 print(c)",1.0
-Python,NameError,idx.append(23),"idx = []
+Python,UndeclaredIdentifier,idx.append(23),"idx = []
 idx.append(6)",1.0
-Python,NameError,"if val > 0:
+Python,UndeclaredIdentifier,"if val > 0:
     print('pos')","val = 46
 if val > 0:
     print('pos')",1.0
-Python,NameError,print(len(amount)),"amount = 'alpha'
+Python,UndeclaredIdentifier,print(len(amount)),"amount = 'alpha'
 print(len(amount))",1.0
-Python,NameError,result.append(76),"result = []
+Python,UndeclaredIdentifier,result.append(76),"result = []
 result.append(62)",1.0
-Python,NameError,"for i in range(age):
+Python,UndeclaredIdentifier,"for i in range(age):
     pass","age = 4
 for i in range(age):
     pass",1.0
-Python,NameError,time_val.append(2),"time_val = []
+Python,UndeclaredIdentifier,time_val.append(2),"time_val = []
 time_val.append(91)",1.0
-Python,NameError,"def func():
+Python,UndeclaredIdentifier,"def func():
     return rate
 func()","def func():
     rate = 86
     return rate
 func()",1.0
-Python,NameError,result = n + 85,"n = 94
+Python,UndeclaredIdentifier,result = n + 85,"n = 94
 result = n + 32",1.0
-Python,NameError,"if a > 0:
+Python,UndeclaredIdentifier,"if a > 0:
     print('pos')","a = 61
 if a > 0:
     print('pos')",1.0
-Python,NameError,print(data),"data = 43
+Python,UndeclaredIdentifier,print(data),"data = 43
 print(data)",1.0
-Python,NameError,print(len(weight)),"weight = 'data'
+Python,UndeclaredIdentifier,print(len(weight)),"weight = 'data'
 print(len(weight))",1.0
-Python,NameError,"def func():
+Python,UndeclaredIdentifier,"def func():
     return y
 func()","def func():
     y = 1
     return y
 func()",1.0
-Python,NameError,score.append(7),"score = []
+Python,UndeclaredIdentifier,score.append(7),"score = []
 score.append(29)",1.0
-Python,NameError,"for i in range(weight):
+Python,UndeclaredIdentifier,"for i in range(weight):
     pass","weight = 61
 for i in range(weight):
     pass",1.0
-Python,NameError,"def func():
+Python,UndeclaredIdentifier,"def func():
     return m
 func()","def func():
     m = 46
     return m
 func()",1.0
-Python,NameError,print(len(rate)),"rate = 'sigma'
+Python,UndeclaredIdentifier,print(len(rate)),"rate = 'sigma'
 print(len(rate))",1.0
-Python,NameError,print(len(area)),"area = 'result'
+Python,UndeclaredIdentifier,print(len(area)),"area = 'result'
 print(len(area))",1.0
-Python,NameError,"for i in range(amount):
+Python,UndeclaredIdentifier,"for i in range(amount):
     pass","amount = 87
 for i in range(amount):
     pass",1.0
-Python,NameError,"for i in range(distance):
+Python,UndeclaredIdentifier,"for i in range(distance):
     pass","distance = 7
 for i in range(distance):
     pass",1.0
-Python,NameError,"def func():
+Python,UndeclaredIdentifier,"def func():
     return distance
 func()","def func():
     distance = 14
     return distance
 func()",1.0
-Python,NameError,"if price > 0:
+Python,UndeclaredIdentifier,"if price > 0:
     print('pos')","price = 89
 if price > 0:
     print('pos')",1.0
-Python,NameError,age.append(90),"age = []
+Python,UndeclaredIdentifier,age.append(90),"age = []
 age.append(71)",1.0
-Python,NameError,print(len(price)),"price = 'header'
+Python,UndeclaredIdentifier,print(len(price)),"price = 'header'
 print(len(price))",1.0
-Python,NameError,print(len(length)),"length = 'alpha'
+Python,UndeclaredIdentifier,print(len(length)),"length = 'alpha'
 print(len(length))",1.0
-Python,NameError,print(len(m)),"m = 'alpha'
+Python,UndeclaredIdentifier,print(len(m)),"m = 'alpha'
 print(len(m))",1.0
-Python,NameError,print(limit),"limit = 37
+Python,UndeclaredIdentifier,print(limit),"limit = 37
 print(limit)",1.0
-Python,NameError,count.append(8),"count = []
+Python,UndeclaredIdentifier,count.append(8),"count = []
 count.append(89)",1.0
-Python,NameError,"def func():
+Python,UndeclaredIdentifier,"def func():
     return value
 func()","def func():
     value = 14
     return value
 func()",1.0
-Python,NameError,print(temp),"temp = 96
+Python,UndeclaredIdentifier,print(temp),"temp = 96
 print(temp)",1.0
-Python,NameError,"def func():
+Python,UndeclaredIdentifier,"def func():
     return height
 func()","def func():
     height = 2
     return height
 func()",1.0
-Python,NameError,"def func():
+Python,UndeclaredIdentifier,"def func():
     return age
 func()","def func():
     age = 97
     return age
 func()",1.0
-Python,NameError,"def func():
+Python,UndeclaredIdentifier,"def func():
     return count
 func()","def func():
     count = 10
     return count
 func()",1.0
-Python,NameError,print(m),"m = 49
+Python,UndeclaredIdentifier,print(m),"m = 49
 print(m)",1.0
-Python,NameError,amount.append(81),"amount = []
+Python,UndeclaredIdentifier,amount.append(81),"amount = []
 amount.append(79)",1.0
-Python,NameError,"def func():
+Python,UndeclaredIdentifier,"def func():
     return score
 func()","def func():
     score = 41
     return score
 func()",1.0
-Python,NameError,print(len(b)),"b = 'info'
+Python,UndeclaredIdentifier,print(len(b)),"b = 'info'
 print(len(b))",1.0
-Python,NameError,print(distance),"distance = 66
+Python,UndeclaredIdentifier,print(distance),"distance = 66
 print(distance)",1.0
-Python,NameError,result.append(81),"result = []
+Python,UndeclaredIdentifier,result.append(81),"result = []
 result.append(28)",1.0
-Python,NameError,print(len(volume)),"volume = 'sigma'
+Python,UndeclaredIdentifier,print(len(volume)),"volume = 'sigma'
 print(len(volume))",1.0
 Python,UnmatchedBracket,result = ((56 + 41) * 3,result = ((50 + 87) * 16),1.0
 Python,UnmatchedBracket,print((score + 78),print((score + 12)),1.0
@@ -5172,25 +5172,25 @@ Python,LineTooLong,print('header title beta error omega theta alpha output name 
 Python,LineTooLong,x = 46 + 39 + 91 + 43 + 67 + 85 + 77 + 62 + 15 + 35 + 88 + 67 + 94 + 82 + 3,"num = sum([53, 29, 85, 19, 46])",1.0
 Python,LineTooLong,rate = 23 + 34 + 87 + 45 + 43 + 51 + 76 + 54 + 36 + 40 + 25 + 6 + 75 + 67 + 90,"amount = sum([79, 16, 56, 59, 73])",1.0
 Python,LineTooLong,radius = 13 + 34 + 39 + 77 + 40 + 23 + 73 + 56 + 87 + 42 + 75 + 18 + 88 + 99 + 26,"idx = sum([18, 54, 71, 26, 39])",1.0
-Python,MissingImport,app = Flask(__name__),"from flask import Flask
+Python,ImportError,app = Flask(__name__),"from flask import Flask
 app = Flask(__name__)",1.0
-Python,MissingImport,"plt.plot([89,41])","import matplotlib.pyplot as plt
+Python,ImportError,"plt.plot([89,41])","import matplotlib.pyplot as plt
 plt.plot([65,88])",1.0
-Python,MissingImport,r = requests.get('http://example.com'),"import requests
+Python,ImportError,r = requests.get('http://example.com'),"import requests
 r = requests.get('http://example.com')",1.0
-Python,MissingImport,"arr = np.array([75, 66])","import numpy as np
+Python,ImportError,"arr = np.array([75, 66])","import numpy as np
 arr = np.array([48, 17])",1.0
-Python,MissingImport,"plt.plot([29,87])","import matplotlib.pyplot as plt
+Python,ImportError,"plt.plot([29,87])","import matplotlib.pyplot as plt
 plt.plot([82,20])",1.0
-Python,MissingImport,"arr = np.array([81, 40])","import numpy as np
+Python,ImportError,"arr = np.array([81, 40])","import numpy as np
 arr = np.array([93, 1])",1.0
-Python,MissingImport,"plt.plot([57,51])","import matplotlib.pyplot as plt
+Python,ImportError,"plt.plot([57,51])","import matplotlib.pyplot as plt
 plt.plot([8,16])",1.0
-Python,MissingImport,"plt.plot([86,13])","import matplotlib.pyplot as plt
+Python,ImportError,"plt.plot([86,13])","import matplotlib.pyplot as plt
 plt.plot([76,64])",1.0
-Python,MissingImport,"plt.plot([85,80])","import matplotlib.pyplot as plt
+Python,ImportError,"plt.plot([85,80])","import matplotlib.pyplot as plt
 plt.plot([57,6])",1.0
-Python,MissingImport,"arr = np.array([52, 9])","import numpy as np
+Python,ImportError,"arr = np.array([52, 9])","import numpy as np
 arr = np.array([6, 4])",1.0
 Java,DivisionByZero,int y = 18 % 0;,int y = 82 % 74;,1.0
 Java,DivisionByZero,int temp = 26 / 0;,int temp = 95 / 21;,1.0
@@ -5923,9 +5923,9 @@ Java,UnusedVariable,"int speed = 14;
 System.out.println(""done"");","System.out.println(""done"");",1.0
 Java,UnusedVariable,"int m = 30;
 System.out.println(""done"");","System.out.println(""done"");",1.0
-Java,MissingImport,Scanner sc = new Scanner(System.in);,"import java.util.Scanner;
+Java,ImportError,Scanner sc = new Scanner(System.in);,"import java.util.Scanner;
 Scanner sc = new Scanner(System.in);",1.0
-Java,MissingImport,HashMap map = new HashMap();,"import java.util.HashMap;
+Java,ImportError,HashMap map = new HashMap();,"import java.util.HashMap;
 HashMap map = new HashMap();",1.0
 Java,LineTooLong,"System.out.println(""output name footer result warning body beta label hello omega label test sigma output header text error content name value"");","System.out.println(""content"");",1.0
 Java,LineTooLong,"System.out.println(""warning world data body test status text content hello header beta name beta theta warning info world value phi data"");","System.out.println(""body"");",1.0
@@ -7914,3 +7914,2930 @@ C++,NoError,"int setup(int a, int b) {
     return a + b;
 }",,1.0
 C++,NoError,"vector<int> v = {71, 29, 92};",,1.0
+Python,NoError,"def parse(count, data):
+    return count + data",,
+Python,NoError,"class MyClass:
+    def __init__(self):
+        self.limit = 4
+
+    def get_limit(self):
+        return self.limit",,
+Python,NoError,"with open('test.txt', 'r') as f:
+    score = f.read()
+    print(len(score))",,
+Python,NoError,"price = [1, 49, 50]
+for item in price:
+    print(item)",,
+Python,NoError,"import os
+price = os.path.join('dir', 'file.txt')
+print(price)",,
+Python,NoError,"def transform(*args):
+    return sum(args)
+
+print(transform(46, 23))",,
+Python,NoError,"with open('test.txt', 'r') as f:
+    temp = f.read()
+    print(len(temp))",,
+Python,NoError,"class MyClass:
+    def __init__(self):
+        self.buffer = 6
+
+    def get_buffer(self):
+        return self.buffer",,
+Python,NoError,"buffer = {}
+buffer['value'] = 49
+print(buffer['value'])",,
+Python,NoError,"try:
+    name = int(input())
+    print(name * 27)
+except ValueError:
+    print('Invalid input')",,
+Python,NoError,"def parse(value):
+    if value > 21:
+        return True
+    return False",,
+Python,NoError,"def fetch(temp):
+    limit = temp * 99
+    return limit",,
+Python,NoError,"class MyClass:
+    def __init__(self):
+        self.score = 35
+
+    def get_score(self):
+        return self.score",,
+Python,NoError,"threshold = {}
+threshold['msg'] = 51
+print(threshold['msg'])",,
+Python,NoError,"with open('test.txt', 'r') as f:
+    total = f.read()
+    print(len(total))",,
+Python,NoError,"temp = [47, 15, 62]
+for item in temp:
+    print(item)",,
+Python,NoError,"depth = [15, 10, 25]
+for item in depth:
+    print(item)",,
+Python,NoError,"with open('test.txt', 'r') as f:
+    price = f.read()
+    print(len(price))",,
+Python,NoError,"try:
+    temp = int(input())
+    print(temp * 88)
+except ValueError:
+    print('Invalid input')",,
+Python,NoError,"def create(msg):
+    count = msg * 21
+    return count",,
+Python,NoError,"with open('test.txt', 'r') as f:
+    ratio = f.read()
+    print(len(ratio))",,
+Python,NoError,"import os
+depth = os.path.join('dir', 'file.txt')
+print(depth)",,
+Python,NoError,"def parse(buffer, score):
+    return buffer + score",,
+Python,NoError,"height = {}
+height['value'] = 17
+print(height['value'])",,
+Python,NoError,"class MyClass:
+    def __init__(self):
+        self.limit = 28
+
+    def get_limit(self):
+        return self.limit",,
+Python,NoError,"def extract(buffer, age):
+    return buffer + age",,
+Python,NoError,"def process(score):
+    threshold = score * 10
+    return threshold",,
+Python,NoError,"class MyClass:
+    def __init__(self):
+        self.score = 10
+
+    def get_score(self):
+        return self.score",,
+Python,NoError,"def validate(*args):
+    return sum(args)
+
+print(validate(93, 37))",,
+Python,NoError,"def create(height, score):
+    return height + score",,
+Python,NoError,"def create(price):
+    name = price * 60
+    return name",,
+Python,NoError,"class MyClass:
+    def __init__(self):
+        self.count = 14
+
+    def get_count(self):
+        return self.count",,
+Python,NoError,"try:
+    output = int(input())
+    print(output * 55)
+except ValueError:
+    print('Invalid input')",,
+Python,NoError,"def extract(width):
+    score = width * 71
+    return score",,
+Python,NoError,"limit = {}
+limit['data'] = 22
+print(limit['data'])",,
+Python,NoError,"def compute(height):
+    output = height * 22
+    return output",,
+Python,NoError,"with open('test.txt', 'r') as f:
+    age = f.read()
+    print(len(age))",,
+Python,NoError,"def evaluate(*args):
+    return sum(args)
+
+print(evaluate(28, 4))",,
+Python,NoError,"limit = {}
+limit['result'] = 7
+print(limit['result'])",,
+Python,NoError,"depth = [66, 6, 72]
+for item in depth:
+    print(item)",,
+Python,NoError,"class MyClass:
+    def __init__(self):
+        self.value = 16
+
+    def get_value(self):
+        return self.value",,
+Python,NoError,"def create(*args):
+    return sum(args)
+
+print(create(85, 38))",,
+Python,NoError,"try:
+    score = int(input())
+    print(score * 86)
+except ValueError:
+    print('Invalid input')",,
+Python,NoError,"def process(*args):
+    return sum(args)
+
+print(process(59, 40))",,
+Python,NoError,"count = [65, 17, 82]
+for item in count:
+    print(item)",,
+Python,NoError,"name = {}
+name['value'] = 37
+print(name['value'])",,
+Python,NoError,"try:
+    limit = int(input())
+    print(limit * 86)
+except ValueError:
+    print('Invalid input')",,
+Python,NoError,"with open('test.txt', 'r') as f:
+    count = f.read()
+    print(len(count))",,
+Python,NoError,"class MyClass:
+    def __init__(self):
+        self.total = 92
+
+    def get_total(self):
+        return self.total",,
+Python,NoError,"def generate(temp):
+    if temp > 7:
+        return True
+    return False",,
+Python,NoError,"try:
+    temp = int(input())
+    print(temp * 99)
+except ValueError:
+    print('Invalid input')",,
+Python,NoError,"def create(items, width):
+    return items + width",,
+Python,NoError,"with open('test.txt', 'r') as f:
+    value = f.read()
+    print(len(value))",,
+Python,NoError,"def compute(total):
+    price = total * 40
+    return price",,
+Python,NoError,"with open('test.txt', 'r') as f:
+    name = f.read()
+    print(len(name))",,
+Python,NoError,"def convert(price):
+    total = price * 23
+    return total",,
+Python,NoError,"def parse(items, msg):
+    return items + msg",,
+Python,NoError,"import os
+age = os.path.join('dir', 'file.txt')
+print(age)",,
+Python,NoError,"def process(buffer):
+    if buffer > 85:
+        return True
+    return False",,
+Python,NoError,"with open('test.txt', 'r') as f:
+    msg = f.read()
+    print(len(msg))",,
+Python,NoError,"age = [15, 17, 32]
+for item in age:
+    print(item)",,
+Python,NoError,"import os
+threshold = os.path.join('dir', 'file.txt')
+print(threshold)",,
+Python,NoError,"class MyClass:
+    def __init__(self):
+        self.msg = 50
+
+    def get_msg(self):
+        return self.msg",,
+Python,NoError,"class MyClass:
+    def __init__(self):
+        self.temp = 67
+
+    def get_temp(self):
+        return self.temp",,
+Python,NoError,"def fetch(name, price):
+    return name + price",,
+Python,NoError,"try:
+    buffer = int(input())
+    print(buffer * 42)
+except ValueError:
+    print('Invalid input')",,
+Python,NoError,"limit = [86, 25, 111]
+for item in limit:
+    print(item)",,
+Python,NoError,"try:
+    ratio = int(input())
+    print(ratio * 71)
+except ValueError:
+    print('Invalid input')",,
+Python,NoError,"buffer = {}
+buffer['output'] = 60
+print(buffer['output'])",,
+Python,NoError,"try:
+    output = int(input())
+    print(output * 85)
+except ValueError:
+    print('Invalid input')",,
+Python,NoError,"class MyClass:
+    def __init__(self):
+        self.depth = 87
+
+    def get_depth(self):
+        return self.depth",,
+Python,NoError,"def compute(*args):
+    return sum(args)
+
+print(compute(32, 31))",,
+Python,NoError,"def analyze(value):
+    if value > 92:
+        return True
+    return False",,
+Python,NoError,"def validate(height):
+    age = height * 84
+    return age",,
+Python,NoError,"count = {}
+count['price'] = 90
+print(count['price'])",,
+Python,NoError,"result = {}
+result['limit'] = 59
+print(result['limit'])",,
+Python,NoError,"with open('test.txt', 'r') as f:
+    depth = f.read()
+    print(len(depth))",,
+Python,UnusedVariable,"def convert(price, limit):
+    width = price + limit
+    return price",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+width = max(numbers)
+temp = min(numbers)
+print(temp)",,
+Python,UnusedVariable,"class Temp:
+    def __init__(self):
+        self.height = 10
+        self.score = 'temp'
+    def show(self):
+        print(self.height)",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+buffer = max(numbers)
+score = min(numbers)
+print(score)",,
+Python,UnusedVariable,"class Temp:
+    def __init__(self):
+        self.value = 50
+        self.total = 'threshold'
+    def show(self):
+        print(self.value)",,
+Python,UnusedVariable,"import os
+total = os.getcwd()
+output = os.listdir('.')
+print(total)",,
+Python,UnusedVariable,"def compute(limit, width):
+    price = limit + width
+    return limit",,
+Python,UnusedVariable,"def build():
+    age = 62
+    threshold = 62 + 1
+    return threshold",,
+Python,UnusedVariable,"class Temp:
+    def __init__(self):
+        self.name = 69
+        self.buffer = 'age'
+    def show(self):
+        print(self.name)",,
+Python,UnusedVariable,"def parse(limit, score):
+    height = limit + score
+    return limit",,
+Python,UnusedVariable,"class Temp:
+    def __init__(self):
+        self.height = 86
+        self.data = 'age'
+    def show(self):
+        print(self.height)",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+age = max(numbers)
+items = min(numbers)
+print(items)",,
+Python,UnusedVariable,"def calculate(data, age):
+    ratio = data + age
+    return data",,
+Python,UnusedVariable,"def compute(total, width):
+    items = total + width
+    return total",,
+Python,UnusedVariable,"def fetch(msg, output):
+    width = msg + output
+    return msg",,
+Python,UnusedVariable,"def calculate():
+    temp = 61
+    price = 61 + 1
+    return price",,
+Python,UnusedVariable,"def parse():
+    limit = 84
+    result = 84 + 1
+    return result",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+result = max(numbers)
+data = min(numbers)
+print(data)",,
+Python,UnusedVariable,"def merge():
+    total = 86
+    score = 86 + 1
+    return score",,
+Python,UnusedVariable,"import os
+threshold = os.getcwd()
+output = os.listdir('.')
+print(threshold)",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+items = max(numbers)
+count = min(numbers)
+print(count)",,
+Python,UnusedVariable,"data = 'hello'
+buffer = len(data)
+age = buffer * 2
+print(buffer)",,
+Python,UnusedVariable,"import os
+value = os.getcwd()
+threshold = os.listdir('.')
+print(value)",,
+Python,UnusedVariable,"def update(ratio, count):
+    result = ratio + count
+    return ratio",,
+Python,UnusedVariable,"def fetch(name, value):
+    depth = name + value
+    return name",,
+Python,UnusedVariable,"def update(height, count):
+    price = height + count
+    return height",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+total = max(numbers)
+price = min(numbers)
+print(price)",,
+Python,UnusedVariable,"height = 'hello'
+width = len(height)
+price = width * 2
+print(width)",,
+Python,UnusedVariable,"def parse(value, temp):
+    width = value + temp
+    return value",,
+Python,UnusedVariable,"import os
+threshold = os.getcwd()
+age = os.listdir('.')
+print(threshold)",,
+Python,UnusedVariable,"import os
+items = os.getcwd()
+height = os.listdir('.')
+print(items)",,
+Python,UnusedVariable,"temp = 'hello'
+ratio = len(temp)
+limit = ratio * 2
+print(ratio)",,
+Python,UnusedVariable,"value = 'hello'
+score = len(value)
+price = score * 2
+print(score)",,
+Python,UnusedVariable,"import os
+height = os.getcwd()
+ratio = os.listdir('.')
+print(height)",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+score = max(numbers)
+age = min(numbers)
+print(age)",,
+Python,UnusedVariable,"class Temp:
+    def __init__(self):
+        self.name = 55
+        self.height = 'limit'
+    def show(self):
+        print(self.name)",,
+Python,UnusedVariable,"import os
+limit = os.getcwd()
+msg = os.listdir('.')
+print(limit)",,
+Python,UnusedVariable,"def analyze():
+    temp = 41
+    score = 41 + 1
+    return score",,
+Python,UnusedVariable,"def analyze(limit, items):
+    output = limit + items
+    return limit",,
+Python,UnusedVariable,"temp = 'hello'
+threshold = len(temp)
+depth = threshold * 2
+print(threshold)",,
+Python,UnusedVariable,"def convert():
+    buffer = 39
+    score = 39 + 1
+    return score",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+limit = max(numbers)
+total = min(numbers)
+print(total)",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+buffer = max(numbers)
+total = min(numbers)
+print(total)",,
+Python,UnusedVariable,"buffer = 'hello'
+height = len(buffer)
+threshold = height * 2
+print(height)",,
+Python,UnusedVariable,"def transform(result, temp):
+    height = result + temp
+    return result",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+height = max(numbers)
+value = min(numbers)
+print(value)",,
+Python,UnusedVariable,"def transform(buffer, value):
+    score = buffer + value
+    return buffer",,
+Python,UnusedVariable,"def build(ratio, score):
+    depth = ratio + score
+    return ratio",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+buffer = max(numbers)
+threshold = min(numbers)
+print(threshold)",,
+Python,UnusedVariable,"class Temp:
+    def __init__(self):
+        self.result = 34
+        self.count = 'output'
+    def show(self):
+        print(self.result)",,
+Python,UnusedVariable,"def convert():
+    value = 71
+    items = 71 + 1
+    return items",,
+Python,UnusedVariable,"numbers = [1, 2, 3]
+items = max(numbers)
+data = min(numbers)
+print(data)",,
+Python,UnusedVariable,"class Temp:
+    def __init__(self):
+        self.height = 37
+        self.buffer = 'result'
+    def show(self):
+        print(self.height)",,
+Python,UnusedVariable,"class Temp:
+    def __init__(self):
+        self.buffer = 34
+        self.width = 'value'
+    def show(self):
+        print(self.buffer)",,
+Python,UnusedVariable,"threshold = 'hello'
+output = len(threshold)
+price = output * 2
+print(output)",,
+Python,UnusedVariable,"total = 'hello'
+temp = len(total)
+ratio = temp * 2
+print(temp)",,
+Python,UnusedVariable,"def extract(buffer, threshold):
+    ratio = buffer + threshold
+    return buffer",,
+Python,UnusedVariable,"def merge():
+    buffer = 57
+    age = 57 + 1
+    return age",,
+Python,UnusedVariable,"import os
+ratio = os.getcwd()
+result = os.listdir('.')
+print(ratio)",,
+Python,UnusedVariable,"class Temp:
+    def __init__(self):
+        self.data = 98
+        self.value = 'score'
+    def show(self):
+        print(self.data)",,
+JavaScript,DivisionByZero,"let count = 17 / 0;
+console.log(count);",,
+JavaScript,DivisionByZero,"function init() {
+  return 17 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"let count = 10;
+let count = 20;",,
+JavaScript,DuplicateDefinition,"const name = 'test';
+const name = 'test2';",,
+JavaScript,ImportError,import { count } from './nonexistent_module.js';,,
+JavaScript,ImportError,const name = require('unknown-package');,,
+JavaScript,InfiniteLoop,"while(true) {
+  console.log('loop');
+}",,
+JavaScript,InfiniteLoop,"for(let i=0; i>=0; i++) {
+  count += i;
+}",,
+JavaScript,InvalidAssignment,"const count = 5;
+count = 10;",,
+JavaScript,InvalidAssignment,5 = name;,,
+JavaScript,LineTooLong,const count = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';,,
+JavaScript,MissingDelimiter,const obj = { name: 'test' age: 25 },,
+JavaScript,MissingDelimiter,"let count = 5
+let name = 10",,
+JavaScript,NoError,"const count = 17;
+console.log(count);",,
+JavaScript,NoError,"function init(name) {
+  return name * 2;
+}",,
+JavaScript,NoError,const name = () => { return 'count'; };,,
+JavaScript,NoError,import { init } from './utils.js';,,
+JavaScript,TypeMismatch,"let count = 'string';
+let res = count * 5;",,
+JavaScript,TypeMismatch,"function init(x) { return x; }
+init({} + []);",,
+JavaScript,UnclosedString,"const count = 'unclosed string;
+console.log(count);",,
+JavaScript,UnclosedString,"let msg = ""Hello World;",,
+JavaScript,UndeclaredIdentifier,console.log(undefined_var);,,
+JavaScript,UndeclaredIdentifier,init(name); // name is not defined,,
+JavaScript,UnmatchedBracket,"function init() {
+  console.log('test');
+",,
+JavaScript,UnmatchedBracket,"if (count > 5) {
+  name = 10;
+} else {
+",,
+JavaScript,UnreachableCode,"function init() {
+  return;
+  console.log('unreachable');
+}",,
+JavaScript,UnreachableCode,"while(false) {
+  console.log('never runs');
+}",,
+JavaScript,UnusedVariable,"function init() {
+  let count = 5;
+  return 10;
+}",,
+JavaScript,UnusedVariable,"const name = 'unused';
+console.log('hello');",,
+JavaScript,DivisionByZero,"let item = 50 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 50 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"let item = 10;
+let item = 20;",,
+JavaScript,DuplicateDefinition,"const data = 'test';
+const data = 'test2';",,
+JavaScript,ImportError,import { item } from './nonexistent_module.js';,,
+JavaScript,ImportError,const data = require('unknown-package');,,
+JavaScript,InfiniteLoop,"for(let i=0; i>=0; i++) {
+  item += i;
+}",,
+JavaScript,InvalidAssignment,"const item = 5;
+item = 10;",,
+JavaScript,InvalidAssignment,5 = data;,,
+JavaScript,LineTooLong,const item = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';,,
+JavaScript,MissingDelimiter,"let item = 5
+let data = 10",,
+JavaScript,NoError,"const item = 50;
+console.log(item);",,
+JavaScript,NoError,"function updateState(data) {
+  return data * 2;
+}",,
+JavaScript,NoError,const data = () => { return 'item'; };,,
+JavaScript,NoError,import { updateState } from './utils.js';,,
+JavaScript,TypeMismatch,"let item = 'string';
+let res = item * 5;",,
+JavaScript,TypeMismatch,"function updateState(x) { return x; }
+updateState({} + []);",,
+JavaScript,UnclosedString,"const item = 'unclosed string;
+console.log(item);",,
+JavaScript,UndeclaredIdentifier,updateState(data); // data is not defined,,
+JavaScript,UnmatchedBracket,"function updateState() {
+  console.log('test');
+",,
+JavaScript,UnmatchedBracket,"if (item > 5) {
+  data = 10;
+} else {
+",,
+JavaScript,UnreachableCode,"function updateState() {
+  return;
+  console.log('unreachable');
+}",,
+JavaScript,UnusedVariable,"function updateState() {
+  let item = 5;
+  return 10;
+}",,
+JavaScript,UnusedVariable,"const data = 'unused';
+console.log('hello');",,
+JavaScript,DivisionByZero,"let user = 22 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function init() {
+  return 22 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"let user = 10;
+let user = 20;",,
+JavaScript,DuplicateDefinition,"const item = 'test';
+const item = 'test2';",,
+JavaScript,ImportError,import { user } from './nonexistent_module.js';,,
+JavaScript,ImportError,const item = require('unknown-package');,,
+JavaScript,InfiniteLoop,"for(let i=0; i>=0; i++) {
+  user += i;
+}",,
+JavaScript,InvalidAssignment,"const user = 5;
+user = 10;",,
+JavaScript,InvalidAssignment,5 = item;,,
+JavaScript,LineTooLong,const user = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';,,
+JavaScript,MissingDelimiter,"let user = 5
+let item = 10",,
+JavaScript,NoError,"const user = 22;
+console.log(user);",,
+JavaScript,NoError,"function init(item) {
+  return item * 2;
+}",,
+JavaScript,NoError,const item = () => { return 'user'; };,,
+JavaScript,TypeMismatch,"let user = 'string';
+let res = user * 5;",,
+JavaScript,UnclosedString,"const user = 'unclosed string;
+console.log(user);",,
+JavaScript,UndeclaredIdentifier,init(item); // item is not defined,,
+JavaScript,UnmatchedBracket,"if (user > 5) {
+  item = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function init() {
+  let user = 5;
+  return 10;
+}",,
+JavaScript,UnusedVariable,"const item = 'unused';
+console.log('hello');",,
+JavaScript,DivisionByZero,"let count = 9 / 0;
+console.log(count);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 9 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"const result = 'test';
+const result = 'test2';",,
+JavaScript,ImportError,const result = require('unknown-package');,,
+JavaScript,InvalidAssignment,5 = result;,,
+JavaScript,MissingDelimiter,"let count = 5
+let result = 10",,
+JavaScript,NoError,"const count = 9;
+console.log(count);",,
+JavaScript,NoError,"function calculateTotal(result) {
+  return result * 2;
+}",,
+JavaScript,NoError,const result = () => { return 'count'; };,,
+JavaScript,NoError,import { calculateTotal } from './utils.js';,,
+JavaScript,TypeMismatch,"function calculateTotal(x) { return x; }
+calculateTotal({} + []);",,
+JavaScript,UndeclaredIdentifier,calculateTotal(result); // result is not defined,,
+JavaScript,UnmatchedBracket,"function calculateTotal() {
+  console.log('test');
+",,
+JavaScript,UnmatchedBracket,"if (count > 5) {
+  result = 10;
+} else {
+",,
+JavaScript,UnreachableCode,"function calculateTotal() {
+  return;
+  console.log('unreachable');
+}",,
+JavaScript,UnusedVariable,"function calculateTotal() {
+  let count = 5;
+  return 10;
+}",,
+JavaScript,UnusedVariable,"const result = 'unused';
+console.log('hello');",,
+JavaScript,DivisionByZero,"let item = 52 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function init() {
+  return 52 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"const id = 'test';
+const id = 'test2';",,
+JavaScript,ImportError,const id = require('unknown-package');,,
+JavaScript,InvalidAssignment,5 = id;,,
+JavaScript,MissingDelimiter,"let item = 5
+let id = 10",,
+JavaScript,NoError,"const item = 52;
+console.log(item);",,
+JavaScript,NoError,"function init(id) {
+  return id * 2;
+}",,
+JavaScript,NoError,const id = () => { return 'item'; };,,
+JavaScript,UndeclaredIdentifier,init(id); // id is not defined,,
+JavaScript,UnmatchedBracket,"if (item > 5) {
+  id = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function init() {
+  let item = 5;
+  return 10;
+}",,
+JavaScript,UnusedVariable,"const id = 'unused';
+console.log('hello');",,
+JavaScript,DivisionByZero,"let id = 88 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 88 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"let id = 10;
+let id = 20;",,
+JavaScript,ImportError,import { id } from './nonexistent_module.js';,,
+JavaScript,InfiniteLoop,"for(let i=0; i>=0; i++) {
+  id += i;
+}",,
+JavaScript,InvalidAssignment,"const id = 5;
+id = 10;",,
+JavaScript,LineTooLong,const id = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';,,
+JavaScript,MissingDelimiter,"let id = 5
+let item = 10",,
+JavaScript,NoError,"const id = 88;
+console.log(id);",,
+JavaScript,NoError,"function updateState(item) {
+  return item * 2;
+}",,
+JavaScript,NoError,const item = () => { return 'id'; };,,
+JavaScript,TypeMismatch,"let id = 'string';
+let res = id * 5;",,
+JavaScript,UnclosedString,"const id = 'unclosed string;
+console.log(id);",,
+JavaScript,UndeclaredIdentifier,updateState(item); // item is not defined,,
+JavaScript,UnmatchedBracket,"if (id > 5) {
+  item = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function updateState() {
+  let id = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let name = 65 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function init() {
+  return 65 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"let name = 10;
+let name = 20;",,
+JavaScript,ImportError,import { name } from './nonexistent_module.js';,,
+JavaScript,InfiniteLoop,"for(let i=0; i>=0; i++) {
+  name += i;
+}",,
+JavaScript,InvalidAssignment,"const name = 5;
+name = 10;",,
+JavaScript,LineTooLong,const name = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';,,
+JavaScript,MissingDelimiter,"let name = 5
+let data = 10",,
+JavaScript,NoError,"const name = 65;
+console.log(name);",,
+JavaScript,NoError,"function init(data) {
+  return data * 2;
+}",,
+JavaScript,NoError,const data = () => { return 'name'; };,,
+JavaScript,TypeMismatch,"let name = 'string';
+let res = name * 5;",,
+JavaScript,UnclosedString,"const name = 'unclosed string;
+console.log(name);",,
+JavaScript,UndeclaredIdentifier,init(data); // data is not defined,,
+JavaScript,UnmatchedBracket,"if (name > 5) {
+  data = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function init() {
+  let name = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let count = 25 / 0;
+console.log(count);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 25 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"const user = 'test';
+const user = 'test2';",,
+JavaScript,ImportError,const user = require('unknown-package');,,
+JavaScript,InvalidAssignment,5 = user;,,
+JavaScript,MissingDelimiter,"let count = 5
+let user = 10",,
+JavaScript,NoError,"const count = 25;
+console.log(count);",,
+JavaScript,NoError,"function processData(user) {
+  return user * 2;
+}",,
+JavaScript,NoError,const user = () => { return 'count'; };,,
+JavaScript,NoError,import { processData } from './utils.js';,,
+JavaScript,TypeMismatch,"function processData(x) { return x; }
+processData({} + []);",,
+JavaScript,UndeclaredIdentifier,processData(user); // user is not defined,,
+JavaScript,UnmatchedBracket,"function processData() {
+  console.log('test');
+",,
+JavaScript,UnmatchedBracket,"if (count > 5) {
+  user = 10;
+} else {
+",,
+JavaScript,UnreachableCode,"function processData() {
+  return;
+  console.log('unreachable');
+}",,
+JavaScript,UnusedVariable,"function processData() {
+  let count = 5;
+  return 10;
+}",,
+JavaScript,UnusedVariable,"const user = 'unused';
+console.log('hello');",,
+JavaScript,DivisionByZero,"let count = 50 / 0;
+console.log(count);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 50 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let count = 5
+let data = 10",,
+JavaScript,NoError,"const count = 50;
+console.log(count);",,
+JavaScript,NoError,"function renderView(data) {
+  return data * 2;
+}",,
+JavaScript,NoError,const data = () => { return 'count'; };,,
+JavaScript,NoError,import { renderView } from './utils.js';,,
+JavaScript,TypeMismatch,"function renderView(x) { return x; }
+renderView({} + []);",,
+JavaScript,UndeclaredIdentifier,renderView(data); // data is not defined,,
+JavaScript,UnmatchedBracket,"function renderView() {
+  console.log('test');
+",,
+JavaScript,UnmatchedBracket,"if (count > 5) {
+  data = 10;
+} else {
+",,
+JavaScript,UnreachableCode,"function renderView() {
+  return;
+  console.log('unreachable');
+}",,
+JavaScript,UnusedVariable,"function renderView() {
+  let count = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let name = 23 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 23 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"const total = 'test';
+const total = 'test2';",,
+JavaScript,ImportError,const total = require('unknown-package');,,
+JavaScript,InvalidAssignment,5 = total;,,
+JavaScript,MissingDelimiter,"let name = 5
+let total = 10",,
+JavaScript,NoError,"const name = 23;
+console.log(name);",,
+JavaScript,NoError,"function calculateTotal(total) {
+  return total * 2;
+}",,
+JavaScript,NoError,const total = () => { return 'name'; };,,
+JavaScript,UndeclaredIdentifier,calculateTotal(total); // total is not defined,,
+JavaScript,UnmatchedBracket,"if (name > 5) {
+  total = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function calculateTotal() {
+  let name = 5;
+  return 10;
+}",,
+JavaScript,UnusedVariable,"const total = 'unused';
+console.log('hello');",,
+JavaScript,DivisionByZero,"let id = 76 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 76 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"const value = 'test';
+const value = 'test2';",,
+JavaScript,ImportError,const value = require('unknown-package');,,
+JavaScript,InvalidAssignment,5 = value;,,
+JavaScript,MissingDelimiter,"let id = 5
+let value = 10",,
+JavaScript,NoError,"const id = 76;
+console.log(id);",,
+JavaScript,NoError,"function fetchUser(value) {
+  return value * 2;
+}",,
+JavaScript,NoError,const value = () => { return 'id'; };,,
+JavaScript,NoError,import { fetchUser } from './utils.js';,,
+JavaScript,TypeMismatch,"function fetchUser(x) { return x; }
+fetchUser({} + []);",,
+JavaScript,UndeclaredIdentifier,fetchUser(value); // value is not defined,,
+JavaScript,UnmatchedBracket,"function fetchUser() {
+  console.log('test');
+",,
+JavaScript,UnmatchedBracket,"if (id > 5) {
+  value = 10;
+} else {
+",,
+JavaScript,UnreachableCode,"function fetchUser() {
+  return;
+  console.log('unreachable');
+}",,
+JavaScript,UnusedVariable,"function fetchUser() {
+  let id = 5;
+  return 10;
+}",,
+JavaScript,UnusedVariable,"const value = 'unused';
+console.log('hello');",,
+JavaScript,DivisionByZero,"let id = 89 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 89 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let id = 5
+let user = 10",,
+JavaScript,NoError,"const id = 89;
+console.log(id);",,
+JavaScript,NoError,"function renderView(user) {
+  return user * 2;
+}",,
+JavaScript,NoError,const user = () => { return 'id'; };,,
+JavaScript,UndeclaredIdentifier,renderView(user); // user is not defined,,
+JavaScript,UnmatchedBracket,"if (id > 5) {
+  user = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function renderView() {
+  let id = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let user = 97 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 97 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"const count = 'test';
+const count = 'test2';",,
+JavaScript,ImportError,const count = require('unknown-package');,,
+JavaScript,InvalidAssignment,5 = count;,,
+JavaScript,MissingDelimiter,"let user = 5
+let count = 10",,
+JavaScript,NoError,"const user = 97;
+console.log(user);",,
+JavaScript,NoError,"function processData(count) {
+  return count * 2;
+}",,
+JavaScript,NoError,const count = () => { return 'user'; };,,
+JavaScript,UndeclaredIdentifier,processData(count); // count is not defined,,
+JavaScript,UnmatchedBracket,"if (user > 5) {
+  count = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function processData() {
+  let user = 5;
+  return 10;
+}",,
+JavaScript,UnusedVariable,"const count = 'unused';
+console.log('hello');",,
+JavaScript,DivisionByZero,"let total = 96 / 0;
+console.log(total);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 96 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"let total = 10;
+let total = 20;",,
+JavaScript,DuplicateDefinition,"const index = 'test';
+const index = 'test2';",,
+JavaScript,ImportError,import { total } from './nonexistent_module.js';,,
+JavaScript,ImportError,const index = require('unknown-package');,,
+JavaScript,InfiniteLoop,"for(let i=0; i>=0; i++) {
+  total += i;
+}",,
+JavaScript,InvalidAssignment,"const total = 5;
+total = 10;",,
+JavaScript,InvalidAssignment,5 = index;,,
+JavaScript,LineTooLong,const total = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';,,
+JavaScript,MissingDelimiter,"let total = 5
+let index = 10",,
+JavaScript,NoError,"const total = 96;
+console.log(total);",,
+JavaScript,NoError,"function processData(index) {
+  return index * 2;
+}",,
+JavaScript,NoError,const index = () => { return 'total'; };,,
+JavaScript,TypeMismatch,"let total = 'string';
+let res = total * 5;",,
+JavaScript,UnclosedString,"const total = 'unclosed string;
+console.log(total);",,
+JavaScript,UndeclaredIdentifier,processData(index); // index is not defined,,
+JavaScript,UnmatchedBracket,"if (total > 5) {
+  index = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function processData() {
+  let total = 5;
+  return 10;
+}",,
+JavaScript,UnusedVariable,"const index = 'unused';
+console.log('hello');",,
+JavaScript,DivisionByZero,"let total = 60 / 0;
+console.log(total);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 60 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let total = 5
+let data = 10",,
+JavaScript,NoError,"const total = 60;
+console.log(total);",,
+JavaScript,NoError,const data = () => { return 'total'; };,,
+JavaScript,UnmatchedBracket,"if (total > 5) {
+  data = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function updateState() {
+  let total = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let index = 20 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 20 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"let index = 10;
+let index = 20;",,
+JavaScript,ImportError,import { index } from './nonexistent_module.js';,,
+JavaScript,InfiniteLoop,"for(let i=0; i>=0; i++) {
+  index += i;
+}",,
+JavaScript,InvalidAssignment,"const index = 5;
+index = 10;",,
+JavaScript,LineTooLong,const index = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';,,
+JavaScript,MissingDelimiter,"let index = 5
+let count = 10",,
+JavaScript,NoError,"const index = 20;
+console.log(index);",,
+JavaScript,NoError,const count = () => { return 'index'; };,,
+JavaScript,TypeMismatch,"let index = 'string';
+let res = index * 5;",,
+JavaScript,UnclosedString,"const index = 'unclosed string;
+console.log(index);",,
+JavaScript,UnmatchedBracket,"if (index > 5) {
+  count = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function processData() {
+  let index = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let data = 94 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 94 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"let data = 10;
+let data = 20;",,
+JavaScript,ImportError,import { data } from './nonexistent_module.js';,,
+JavaScript,InfiniteLoop,"for(let i=0; i>=0; i++) {
+  data += i;
+}",,
+JavaScript,InvalidAssignment,"const data = 5;
+data = 10;",,
+JavaScript,LineTooLong,const data = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';,,
+JavaScript,MissingDelimiter,"let data = 5
+let item = 10",,
+JavaScript,NoError,"const data = 94;
+console.log(data);",,
+JavaScript,NoError,const item = () => { return 'data'; };,,
+JavaScript,TypeMismatch,"let data = 'string';
+let res = data * 5;",,
+JavaScript,UnclosedString,"const data = 'unclosed string;
+console.log(data);",,
+JavaScript,UnmatchedBracket,"if (data > 5) {
+  item = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function updateState() {
+  let data = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let name = 15 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 15 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let name = 5
+let item = 10",,
+JavaScript,NoError,"const name = 15;
+console.log(name);",,
+JavaScript,NoError,"function processData(item) {
+  return item * 2;
+}",,
+JavaScript,NoError,const item = () => { return 'name'; };,,
+JavaScript,UndeclaredIdentifier,processData(item); // item is not defined,,
+JavaScript,UnmatchedBracket,"if (name > 5) {
+  item = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function processData() {
+  let name = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let item = 73 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function init() {
+  return 73 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let item = 5
+let result = 10",,
+JavaScript,NoError,"const item = 73;
+console.log(item);",,
+JavaScript,NoError,"function init(result) {
+  return result * 2;
+}",,
+JavaScript,NoError,const result = () => { return 'item'; };,,
+JavaScript,UndeclaredIdentifier,init(result); // result is not defined,,
+JavaScript,UnmatchedBracket,"if (item > 5) {
+  result = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let name = 34 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 34 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 34;
+console.log(name);",,
+JavaScript,NoError,"function processData(data) {
+  return data * 2;
+}",,
+JavaScript,UndeclaredIdentifier,processData(data); // data is not defined,,
+JavaScript,DivisionByZero,"let name = 22 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 22 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 22;
+console.log(name);",,
+JavaScript,NoError,"function renderView(total) {
+  return total * 2;
+}",,
+JavaScript,UndeclaredIdentifier,renderView(total); // total is not defined,,
+JavaScript,UnusedVariable,"function renderView() {
+  let name = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let index = 80 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function init() {
+  return 80 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let index = 5
+let data = 10",,
+JavaScript,NoError,"const index = 80;
+console.log(index);",,
+JavaScript,NoError,const data = () => { return 'index'; };,,
+JavaScript,UnmatchedBracket,"if (index > 5) {
+  data = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function init() {
+  let index = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let index = 15 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 15 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let index = 5
+let user = 10",,
+JavaScript,NoError,"const index = 15;
+console.log(index);",,
+JavaScript,NoError,"function fetchUser(user) {
+  return user * 2;
+}",,
+JavaScript,NoError,const user = () => { return 'index'; };,,
+JavaScript,UndeclaredIdentifier,fetchUser(user); // user is not defined,,
+JavaScript,UnmatchedBracket,"if (index > 5) {
+  user = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function fetchUser() {
+  let index = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let user = 90 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 90 / (5 - 5);
+}",,
+JavaScript,NoError,"const user = 90;
+console.log(user);",,
+JavaScript,NoError,"function fetchUser(item) {
+  return item * 2;
+}",,
+JavaScript,UndeclaredIdentifier,fetchUser(item); // item is not defined,,
+JavaScript,UnusedVariable,"function fetchUser() {
+  let user = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let index = 51 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 51 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let index = 5
+let result = 10",,
+JavaScript,NoError,"const index = 51;
+console.log(index);",,
+JavaScript,NoError,"function processData(result) {
+  return result * 2;
+}",,
+JavaScript,NoError,const result = () => { return 'index'; };,,
+JavaScript,UndeclaredIdentifier,processData(result); // result is not defined,,
+JavaScript,UnmatchedBracket,"if (index > 5) {
+  result = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let result = 89 / 0;
+console.log(result);",,
+JavaScript,DivisionByZero,"function init() {
+  return 89 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"let result = 10;
+let result = 20;",,
+JavaScript,ImportError,import { result } from './nonexistent_module.js';,,
+JavaScript,InfiniteLoop,"for(let i=0; i>=0; i++) {
+  result += i;
+}",,
+JavaScript,InvalidAssignment,"const result = 5;
+result = 10;",,
+JavaScript,LineTooLong,const result = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';,,
+JavaScript,MissingDelimiter,"let result = 5
+let value = 10",,
+JavaScript,NoError,"const result = 89;
+console.log(result);",,
+JavaScript,NoError,"function init(value) {
+  return value * 2;
+}",,
+JavaScript,NoError,const value = () => { return 'result'; };,,
+JavaScript,TypeMismatch,"let result = 'string';
+let res = result * 5;",,
+JavaScript,UnclosedString,"const result = 'unclosed string;
+console.log(result);",,
+JavaScript,UndeclaredIdentifier,init(value); // value is not defined,,
+JavaScript,UnmatchedBracket,"if (result > 5) {
+  value = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function init() {
+  let result = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let result = 23 / 0;
+console.log(result);",,
+JavaScript,DivisionByZero,"function init() {
+  return 23 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let result = 5
+let index = 10",,
+JavaScript,NoError,"const result = 23;
+console.log(result);",,
+JavaScript,NoError,"function init(index) {
+  return index * 2;
+}",,
+JavaScript,NoError,const index = () => { return 'result'; };,,
+JavaScript,UndeclaredIdentifier,init(index); // index is not defined,,
+JavaScript,UnmatchedBracket,"if (result > 5) {
+  index = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let item = 38 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 38 / (5 - 5);
+}",,
+JavaScript,NoError,"const item = 38;
+console.log(item);",,
+JavaScript,NoError,"function calculateTotal(data) {
+  return data * 2;
+}",,
+JavaScript,UndeclaredIdentifier,calculateTotal(data); // data is not defined,,
+JavaScript,UnusedVariable,"function calculateTotal() {
+  let item = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let value = 73 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 73 / (5 - 5);
+}",,
+JavaScript,DuplicateDefinition,"let value = 10;
+let value = 20;",,
+JavaScript,ImportError,import { value } from './nonexistent_module.js';,,
+JavaScript,InfiniteLoop,"for(let i=0; i>=0; i++) {
+  value += i;
+}",,
+JavaScript,InvalidAssignment,"const value = 5;
+value = 10;",,
+JavaScript,LineTooLong,const value = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';,,
+JavaScript,MissingDelimiter,"let value = 5
+let count = 10",,
+JavaScript,NoError,"const value = 73;
+console.log(value);",,
+JavaScript,NoError,const count = () => { return 'value'; };,,
+JavaScript,TypeMismatch,"let value = 'string';
+let res = value * 5;",,
+JavaScript,UnclosedString,"const value = 'unclosed string;
+console.log(value);",,
+JavaScript,UnmatchedBracket,"if (value > 5) {
+  count = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function processData() {
+  let value = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let id = 95 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 95 / (5 - 5);
+}",,
+JavaScript,NoError,"const id = 95;
+console.log(id);",,
+JavaScript,NoError,"function renderView(value) {
+  return value * 2;
+}",,
+JavaScript,UndeclaredIdentifier,renderView(value); // value is not defined,,
+JavaScript,DivisionByZero,"let user = 70 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function init() {
+  return 70 / (5 - 5);
+}",,
+JavaScript,NoError,"const user = 70;
+console.log(user);",,
+JavaScript,NoError,"function init(count) {
+  return count * 2;
+}",,
+JavaScript,UndeclaredIdentifier,init(count); // count is not defined,,
+JavaScript,DivisionByZero,"let item = 76 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function init() {
+  return 76 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let item = 5
+let name = 10",,
+JavaScript,NoError,"const item = 76;
+console.log(item);",,
+JavaScript,NoError,const name = () => { return 'item'; };,,
+JavaScript,UnmatchedBracket,"if (item > 5) {
+  name = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let value = 46 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function init() {
+  return 46 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let value = 5
+let id = 10",,
+JavaScript,NoError,"const value = 46;
+console.log(value);",,
+JavaScript,NoError,const id = () => { return 'value'; };,,
+JavaScript,UnmatchedBracket,"if (value > 5) {
+  id = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function init() {
+  let value = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let index = 68 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 68 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let index = 5
+let total = 10",,
+JavaScript,NoError,"const index = 68;
+console.log(index);",,
+JavaScript,NoError,"function fetchUser(total) {
+  return total * 2;
+}",,
+JavaScript,NoError,const total = () => { return 'index'; };,,
+JavaScript,UndeclaredIdentifier,fetchUser(total); // total is not defined,,
+JavaScript,UnmatchedBracket,"if (index > 5) {
+  total = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let value = 80 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 80 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let value = 5
+let data = 10",,
+JavaScript,NoError,"const value = 80;
+console.log(value);",,
+JavaScript,NoError,const data = () => { return 'value'; };,,
+JavaScript,UnmatchedBracket,"if (value > 5) {
+  data = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function renderView() {
+  let value = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let id = 10 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 10 / (5 - 5);
+}",,
+JavaScript,NoError,"const id = 10;
+console.log(id);",,
+JavaScript,UnusedVariable,"function processData() {
+  let id = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let value = 76 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 76 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 76;
+console.log(value);",,
+JavaScript,NoError,"function calculateTotal(count) {
+  return count * 2;
+}",,
+JavaScript,UndeclaredIdentifier,calculateTotal(count); // count is not defined,,
+JavaScript,UnusedVariable,"function calculateTotal() {
+  let value = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let user = 57 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 57 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let user = 5
+let data = 10",,
+JavaScript,NoError,"const user = 57;
+console.log(user);",,
+JavaScript,NoError,const data = () => { return 'user'; };,,
+JavaScript,UnmatchedBracket,"if (user > 5) {
+  data = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function calculateTotal() {
+  let user = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let value = 94 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 94 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let value = 5
+let result = 10",,
+JavaScript,NoError,"const value = 94;
+console.log(value);",,
+JavaScript,NoError,"function renderView(result) {
+  return result * 2;
+}",,
+JavaScript,NoError,const result = () => { return 'value'; };,,
+JavaScript,UndeclaredIdentifier,renderView(result); // result is not defined,,
+JavaScript,UnmatchedBracket,"if (value > 5) {
+  result = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let id = 50 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 50 / (5 - 5);
+}",,
+JavaScript,NoError,"const id = 50;
+console.log(id);",,
+JavaScript,NoError,"function calculateTotal(value) {
+  return value * 2;
+}",,
+JavaScript,UndeclaredIdentifier,calculateTotal(value); // value is not defined,,
+JavaScript,UnusedVariable,"function calculateTotal() {
+  let id = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let value = 41 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 41 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 41;
+console.log(value);",,
+JavaScript,DivisionByZero,"let index = 65 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 65 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let index = 5
+let id = 10",,
+JavaScript,NoError,"const index = 65;
+console.log(index);",,
+JavaScript,NoError,"function updateState(id) {
+  return id * 2;
+}",,
+JavaScript,NoError,const id = () => { return 'index'; };,,
+JavaScript,UndeclaredIdentifier,updateState(id); // id is not defined,,
+JavaScript,UnmatchedBracket,"if (index > 5) {
+  id = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function updateState() {
+  let index = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let count = 90 / 0;
+console.log(count);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 90 / (5 - 5);
+}",,
+JavaScript,NoError,"const count = 90;
+console.log(count);",,
+JavaScript,NoError,"function processData(name) {
+  return name * 2;
+}",,
+JavaScript,UndeclaredIdentifier,processData(name); // name is not defined,,
+JavaScript,DivisionByZero,"let user = 79 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function init() {
+  return 79 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let user = 5
+let name = 10",,
+JavaScript,NoError,"const user = 79;
+console.log(user);",,
+JavaScript,NoError,const name = () => { return 'user'; };,,
+JavaScript,UnmatchedBracket,"if (user > 5) {
+  name = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let result = 28 / 0;
+console.log(result);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 28 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let result = 5
+let name = 10",,
+JavaScript,NoError,"const result = 28;
+console.log(result);",,
+JavaScript,NoError,"function updateState(name) {
+  return name * 2;
+}",,
+JavaScript,NoError,const name = () => { return 'result'; };,,
+JavaScript,UndeclaredIdentifier,updateState(name); // name is not defined,,
+JavaScript,UnmatchedBracket,"if (result > 5) {
+  name = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function updateState() {
+  let result = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let id = 28 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 28 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let id = 5
+let count = 10",,
+JavaScript,NoError,"const id = 28;
+console.log(id);",,
+JavaScript,NoError,"function renderView(count) {
+  return count * 2;
+}",,
+JavaScript,NoError,const count = () => { return 'id'; };,,
+JavaScript,UndeclaredIdentifier,renderView(count); // count is not defined,,
+JavaScript,UnmatchedBracket,"if (id > 5) {
+  count = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let index = 5 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 5 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let index = 5
+let item = 10",,
+JavaScript,NoError,"const index = 5;
+console.log(index);",,
+JavaScript,NoError,"function calculateTotal(item) {
+  return item * 2;
+}",,
+JavaScript,NoError,const item = () => { return 'index'; };,,
+JavaScript,UndeclaredIdentifier,calculateTotal(item); // item is not defined,,
+JavaScript,UnmatchedBracket,"if (index > 5) {
+  item = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function calculateTotal() {
+  let index = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let data = 19 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 19 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let data = 5
+let count = 10",,
+JavaScript,NoError,"const data = 19;
+console.log(data);",,
+JavaScript,NoError,const count = () => { return 'data'; };,,
+JavaScript,UnmatchedBracket,"if (data > 5) {
+  count = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function renderView() {
+  let data = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let item = 75 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 75 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let item = 5
+let index = 10",,
+JavaScript,NoError,"const item = 75;
+console.log(item);",,
+JavaScript,NoError,"function fetchUser(index) {
+  return index * 2;
+}",,
+JavaScript,NoError,const index = () => { return 'item'; };,,
+JavaScript,UndeclaredIdentifier,fetchUser(index); // index is not defined,,
+JavaScript,UnmatchedBracket,"if (item > 5) {
+  index = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function fetchUser() {
+  let item = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let index = 17 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 17 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let index = 5
+let value = 10",,
+JavaScript,NoError,"const index = 17;
+console.log(index);",,
+JavaScript,NoError,"function updateState(value) {
+  return value * 2;
+}",,
+JavaScript,NoError,const value = () => { return 'index'; };,,
+JavaScript,UndeclaredIdentifier,updateState(value); // value is not defined,,
+JavaScript,UnmatchedBracket,"if (index > 5) {
+  value = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let data = 61 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 61 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let data = 5
+let index = 10",,
+JavaScript,NoError,"const data = 61;
+console.log(data);",,
+JavaScript,NoError,"function updateState(index) {
+  return index * 2;
+}",,
+JavaScript,NoError,const index = () => { return 'data'; };,,
+JavaScript,UndeclaredIdentifier,updateState(index); // index is not defined,,
+JavaScript,UnmatchedBracket,"if (data > 5) {
+  index = 10;
+} else {
+",,
+JavaScript,NoError,"function processData(id) {
+  return id * 2;
+}",,
+JavaScript,UndeclaredIdentifier,processData(id); // id is not defined,,
+JavaScript,UnusedVariable,"function processData() {
+  let item = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let value = 52 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 52 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 52;
+console.log(value);",,
+JavaScript,DivisionByZero,"let result = 38 / 0;
+console.log(result);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 38 / (5 - 5);
+}",,
+JavaScript,NoError,"const result = 38;
+console.log(result);",,
+JavaScript,DivisionByZero,"let item = 35 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 35 / (5 - 5);
+}",,
+JavaScript,NoError,"const item = 35;
+console.log(item);",,
+JavaScript,DivisionByZero,"let data = 77 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 77 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let data = 5
+let name = 10",,
+JavaScript,NoError,"const data = 77;
+console.log(data);",,
+JavaScript,NoError,"function renderView(name) {
+  return name * 2;
+}",,
+JavaScript,NoError,const name = () => { return 'data'; };,,
+JavaScript,UndeclaredIdentifier,renderView(name); // name is not defined,,
+JavaScript,UnmatchedBracket,"if (data > 5) {
+  name = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let result = 27 / 0;
+console.log(result);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 27 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let result = 5
+let total = 10",,
+JavaScript,NoError,"const result = 27;
+console.log(result);",,
+JavaScript,NoError,const total = () => { return 'result'; };,,
+JavaScript,UnmatchedBracket,"if (result > 5) {
+  total = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function renderView() {
+  let result = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 38 / (5 - 5);
+}",,
+JavaScript,NoError,"function fetchUser(name) {
+  return name * 2;
+}",,
+JavaScript,UndeclaredIdentifier,fetchUser(name); // name is not defined,,
+JavaScript,UnusedVariable,"function fetchUser() {
+  let result = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let data = 69 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 69 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let data = 5
+let id = 10",,
+JavaScript,NoError,"const data = 69;
+console.log(data);",,
+JavaScript,NoError,"function fetchUser(id) {
+  return id * 2;
+}",,
+JavaScript,NoError,const id = () => { return 'data'; };,,
+JavaScript,UndeclaredIdentifier,fetchUser(id); // id is not defined,,
+JavaScript,UnmatchedBracket,"if (data > 5) {
+  id = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function fetchUser() {
+  let data = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let total = 63 / 0;
+console.log(total);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 63 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let total = 5
+let result = 10",,
+JavaScript,NoError,"const total = 63;
+console.log(total);",,
+JavaScript,NoError,"function updateState(result) {
+  return result * 2;
+}",,
+JavaScript,NoError,const result = () => { return 'total'; };,,
+JavaScript,UndeclaredIdentifier,updateState(result); // result is not defined,,
+JavaScript,UnmatchedBracket,"if (total > 5) {
+  result = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let total = 45 / 0;
+console.log(total);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 45 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let total = 5
+let item = 10",,
+JavaScript,NoError,"const total = 45;
+console.log(total);",,
+JavaScript,NoError,const item = () => { return 'total'; };,,
+JavaScript,UnmatchedBracket,"if (total > 5) {
+  item = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function calculateTotal() {
+  let total = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let name = 26 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 26 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let name = 5
+let value = 10",,
+JavaScript,NoError,"const name = 26;
+console.log(name);",,
+JavaScript,NoError,const value = () => { return 'name'; };,,
+JavaScript,UnmatchedBracket,"if (name > 5) {
+  value = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let count = 41 / 0;
+console.log(count);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 41 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let count = 5
+let total = 10",,
+JavaScript,NoError,"const count = 41;
+console.log(count);",,
+JavaScript,NoError,const total = () => { return 'count'; };,,
+JavaScript,UnmatchedBracket,"if (count > 5) {
+  total = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function fetchUser() {
+  let count = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let index = 60 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 60 / (5 - 5);
+}",,
+JavaScript,NoError,"const index = 60;
+console.log(index);",,
+JavaScript,NoError,"function calculateTotal(id) {
+  return id * 2;
+}",,
+JavaScript,UndeclaredIdentifier,calculateTotal(id); // id is not defined,,
+JavaScript,DivisionByZero,"let item = 84 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 84 / (5 - 5);
+}",,
+JavaScript,NoError,"const item = 84;
+console.log(item);",,
+JavaScript,DivisionByZero,"let count = 26 / 0;
+console.log(count);",,
+JavaScript,NoError,"const count = 26;
+console.log(count);",,
+JavaScript,NoError,"function calculateTotal(name) {
+  return name * 2;
+}",,
+JavaScript,UndeclaredIdentifier,calculateTotal(name); // name is not defined,,
+JavaScript,DivisionByZero,"let result = 98 / 0;
+console.log(result);",,
+JavaScript,DivisionByZero,"function init() {
+  return 98 / (5 - 5);
+}",,
+JavaScript,NoError,"const result = 98;
+console.log(result);",,
+JavaScript,DivisionByZero,"let id = 54 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 54 / (5 - 5);
+}",,
+JavaScript,NoError,"const id = 54;
+console.log(id);",,
+JavaScript,NoError,"function processData(value) {
+  return value * 2;
+}",,
+JavaScript,UndeclaredIdentifier,processData(value); // value is not defined,,
+JavaScript,DivisionByZero,"let name = 62 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 62 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let name = 5
+let index = 10",,
+JavaScript,NoError,"const name = 62;
+console.log(name);",,
+JavaScript,NoError,const index = () => { return 'name'; };,,
+JavaScript,UnmatchedBracket,"if (name > 5) {
+  index = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function fetchUser() {
+  let name = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let name = 84 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 84 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 84;
+console.log(name);",,
+JavaScript,DivisionByZero,"let item = 39 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 39 / (5 - 5);
+}",,
+JavaScript,NoError,"const item = 39;
+console.log(item);",,
+JavaScript,DivisionByZero,"let name = 85 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function init() {
+  return 85 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 85;
+console.log(name);",,
+JavaScript,DivisionByZero,"let name = 19 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 19 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 19;
+console.log(name);",,
+JavaScript,DivisionByZero,"let value = 60 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 60 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let value = 5
+let index = 10",,
+JavaScript,NoError,"const value = 60;
+console.log(value);",,
+JavaScript,NoError,"function renderView(index) {
+  return index * 2;
+}",,
+JavaScript,NoError,const index = () => { return 'value'; };,,
+JavaScript,UndeclaredIdentifier,renderView(index); // index is not defined,,
+JavaScript,UnmatchedBracket,"if (value > 5) {
+  index = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let user = 76 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 76 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let user = 5
+let index = 10",,
+JavaScript,NoError,"const user = 76;
+console.log(user);",,
+JavaScript,NoError,const index = () => { return 'user'; };,,
+JavaScript,UnmatchedBracket,"if (user > 5) {
+  index = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let name = 51 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function init() {
+  return 51 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 51;
+console.log(name);",,
+JavaScript,DivisionByZero,"let index = 11 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 11 / (5 - 5);
+}",,
+JavaScript,NoError,"const index = 11;
+console.log(index);",,
+JavaScript,DivisionByZero,"let result = 61 / 0;
+console.log(result);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 61 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let result = 5
+let data = 10",,
+JavaScript,NoError,"const result = 61;
+console.log(result);",,
+JavaScript,NoError,const data = () => { return 'result'; };,,
+JavaScript,UnmatchedBracket,"if (result > 5) {
+  data = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let total = 16 / 0;
+console.log(total);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 16 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let total = 5
+let name = 10",,
+JavaScript,NoError,"const total = 16;
+console.log(total);",,
+JavaScript,NoError,const name = () => { return 'total'; };,,
+JavaScript,UnmatchedBracket,"if (total > 5) {
+  name = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 89 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let result = 5
+let item = 10",,
+JavaScript,NoError,const item = () => { return 'result'; };,,
+JavaScript,UnmatchedBracket,"if (result > 5) {
+  item = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let item = 37 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 37 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let item = 5
+let count = 10",,
+JavaScript,NoError,"const item = 37;
+console.log(item);",,
+JavaScript,NoError,"function fetchUser(count) {
+  return count * 2;
+}",,
+JavaScript,NoError,const count = () => { return 'item'; };,,
+JavaScript,UndeclaredIdentifier,fetchUser(count); // count is not defined,,
+JavaScript,UnmatchedBracket,"if (item > 5) {
+  count = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let value = 70 / 0;
+console.log(value);",,
+JavaScript,MissingDelimiter,"let value = 5
+let total = 10",,
+JavaScript,NoError,"const value = 70;
+console.log(value);",,
+JavaScript,NoError,"function init(total) {
+  return total * 2;
+}",,
+JavaScript,NoError,const total = () => { return 'value'; };,,
+JavaScript,UndeclaredIdentifier,init(total); // total is not defined,,
+JavaScript,UnmatchedBracket,"if (value > 5) {
+  total = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let result = 34 / 0;
+console.log(result);",,
+JavaScript,DivisionByZero,"function init() {
+  return 34 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let result = 5
+let user = 10",,
+JavaScript,NoError,"const result = 34;
+console.log(result);",,
+JavaScript,NoError,"function init(user) {
+  return user * 2;
+}",,
+JavaScript,NoError,const user = () => { return 'result'; };,,
+JavaScript,UndeclaredIdentifier,init(user); // user is not defined,,
+JavaScript,UnmatchedBracket,"if (result > 5) {
+  user = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let user = 42 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function init() {
+  return 42 / (5 - 5);
+}",,
+JavaScript,NoError,"const user = 42;
+console.log(user);",,
+JavaScript,DivisionByZero,"let total = 51 / 0;
+console.log(total);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 51 / (5 - 5);
+}",,
+JavaScript,NoError,"const total = 51;
+console.log(total);",,
+JavaScript,DivisionByZero,"let user = 94 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 94 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let user = 5
+let id = 10",,
+JavaScript,NoError,"const user = 94;
+console.log(user);",,
+JavaScript,NoError,const id = () => { return 'user'; };,,
+JavaScript,UnmatchedBracket,"if (user > 5) {
+  id = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let count = 1 / 0;
+console.log(count);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 1 / (5 - 5);
+}",,
+JavaScript,NoError,"const count = 1;
+console.log(count);",,
+JavaScript,DivisionByZero,"let data = 14 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function init() {
+  return 14 / (5 - 5);
+}",,
+JavaScript,NoError,"const data = 14;
+console.log(data);",,
+JavaScript,UnusedVariable,"function init() {
+  let data = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let name = 10 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 10 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 10;
+console.log(name);",,
+JavaScript,DivisionByZero,"let item = 57 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function init() {
+  return 57 / (5 - 5);
+}",,
+JavaScript,NoError,"const item = 57;
+console.log(item);",,
+JavaScript,DivisionByZero,"let index = 93 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 93 / (5 - 5);
+}",,
+JavaScript,NoError,"const index = 93;
+console.log(index);",,
+JavaScript,MissingDelimiter,"let value = 5
+let name = 10",,
+JavaScript,NoError,const name = () => { return 'value'; };,,
+JavaScript,UnmatchedBracket,"if (value > 5) {
+  name = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let index = 63 / 0;
+console.log(index);",,
+JavaScript,NoError,"const index = 63;
+console.log(index);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 41 / (5 - 5);
+}",,
+JavaScript,NoError,"function calculateTotal(index) {
+  return index * 2;
+}",,
+JavaScript,UndeclaredIdentifier,calculateTotal(index); // index is not defined,,
+JavaScript,DivisionByZero,"let index = 41 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 41 / (5 - 5);
+}",,
+JavaScript,NoError,"const index = 41;
+console.log(index);",,
+JavaScript,DivisionByZero,"let index = 78 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 78 / (5 - 5);
+}",,
+JavaScript,NoError,"const index = 78;
+console.log(index);",,
+JavaScript,DivisionByZero,"let total = 19 / 0;
+console.log(total);",,
+JavaScript,MissingDelimiter,"let total = 5
+let user = 10",,
+JavaScript,NoError,"const total = 19;
+console.log(total);",,
+JavaScript,NoError,const user = () => { return 'total'; };,,
+JavaScript,UnmatchedBracket,"if (total > 5) {
+  user = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function renderView() {
+  let total = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let data = 39 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 39 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let data = 5
+let total = 10",,
+JavaScript,NoError,"const data = 39;
+console.log(data);",,
+JavaScript,NoError,const total = () => { return 'data'; };,,
+JavaScript,UnmatchedBracket,"if (data > 5) {
+  total = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function calculateTotal() {
+  let data = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let user = 96 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 96 / (5 - 5);
+}",,
+JavaScript,NoError,"const user = 96;
+console.log(user);",,
+JavaScript,UnusedVariable,"function renderView() {
+  let user = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let count = 77 / 0;
+console.log(count);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 77 / (5 - 5);
+}",,
+JavaScript,NoError,"const count = 77;
+console.log(count);",,
+JavaScript,UnusedVariable,"function updateState() {
+  let count = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let count = 97 / 0;
+console.log(count);",,
+JavaScript,DivisionByZero,"function init() {
+  return 97 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let count = 5
+let item = 10",,
+JavaScript,NoError,"const count = 97;
+console.log(count);",,
+JavaScript,NoError,const item = () => { return 'count'; };,,
+JavaScript,UnmatchedBracket,"if (count > 5) {
+  item = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let name = 25 / 0;
+console.log(name);",,
+JavaScript,MissingDelimiter,"let name = 5
+let id = 10",,
+JavaScript,NoError,"const name = 25;
+console.log(name);",,
+JavaScript,NoError,const id = () => { return 'name'; };,,
+JavaScript,UnmatchedBracket,"if (name > 5) {
+  id = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let index = 26 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 26 / (5 - 5);
+}",,
+JavaScript,NoError,"const index = 26;
+console.log(index);",,
+JavaScript,DivisionByZero,"let data = 88 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function init() {
+  return 88 / (5 - 5);
+}",,
+JavaScript,NoError,"const data = 88;
+console.log(data);",,
+JavaScript,DivisionByZero,"let count = 42 / 0;
+console.log(count);",,
+JavaScript,NoError,"const count = 42;
+console.log(count);",,
+JavaScript,DivisionByZero,"let index = 32 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 32 / (5 - 5);
+}",,
+JavaScript,NoError,"const index = 32;
+console.log(index);",,
+JavaScript,DivisionByZero,"let id = 33 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function init() {
+  return 33 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let id = 5
+let name = 10",,
+JavaScript,NoError,"const id = 33;
+console.log(id);",,
+JavaScript,NoError,const name = () => { return 'id'; };,,
+JavaScript,UnmatchedBracket,"if (id > 5) {
+  name = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function init() {
+  let id = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let name = 42 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 42 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let name = 5
+let result = 10",,
+JavaScript,NoError,"const name = 42;
+console.log(name);",,
+JavaScript,NoError,const result = () => { return 'name'; };,,
+JavaScript,UnmatchedBracket,"if (name > 5) {
+  result = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function updateState() {
+  let name = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let item = 18 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function init() {
+  return 18 / (5 - 5);
+}",,
+JavaScript,NoError,"const item = 18;
+console.log(item);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 35 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let item = 5
+let total = 10",,
+JavaScript,NoError,const total = () => { return 'item'; };,,
+JavaScript,UnmatchedBracket,"if (item > 5) {
+  total = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let user = 91 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function init() {
+  return 91 / (5 - 5);
+}",,
+JavaScript,NoError,"const user = 91;
+console.log(user);",,
+JavaScript,DivisionByZero,"let user = 3 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 3 / (5 - 5);
+}",,
+JavaScript,NoError,"const user = 3;
+console.log(user);",,
+JavaScript,DivisionByZero,"let index = 34 / 0;
+console.log(index);",,
+JavaScript,NoError,"const index = 34;
+console.log(index);",,
+JavaScript,DivisionByZero,"let index = 19 / 0;
+console.log(index);",,
+JavaScript,NoError,"const index = 19;
+console.log(index);",,
+JavaScript,NoError,"function renderView(item) {
+  return item * 2;
+}",,
+JavaScript,UndeclaredIdentifier,renderView(item); // item is not defined,,
+JavaScript,UnusedVariable,"function renderView() {
+  let index = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let result = 94 / 0;
+console.log(result);",,
+JavaScript,MissingDelimiter,"let result = 5
+let count = 10",,
+JavaScript,NoError,"const result = 94;
+console.log(result);",,
+JavaScript,NoError,const count = () => { return 'result'; };,,
+JavaScript,UnmatchedBracket,"if (result > 5) {
+  count = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let name = 27 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function init() {
+  return 27 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let name = 5
+let user = 10",,
+JavaScript,NoError,"const name = 27;
+console.log(name);",,
+JavaScript,NoError,const user = () => { return 'name'; };,,
+JavaScript,UnmatchedBracket,"if (name > 5) {
+  user = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let index = 54 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 54 / (5 - 5);
+}",,
+JavaScript,NoError,"const index = 54;
+console.log(index);",,
+JavaScript,DivisionByZero,"let user = 72 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function init() {
+  return 72 / (5 - 5);
+}",,
+JavaScript,NoError,"const user = 72;
+console.log(user);",,
+JavaScript,DivisionByZero,"let value = 42 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 42 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 42;
+console.log(value);",,
+JavaScript,DivisionByZero,"let data = 30 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 30 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let data = 5
+let result = 10",,
+JavaScript,NoError,"const data = 30;
+console.log(data);",,
+JavaScript,NoError,const result = () => { return 'data'; };,,
+JavaScript,UnmatchedBracket,"if (data > 5) {
+  result = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let value = 54 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 54 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 54;
+console.log(value);",,
+JavaScript,UnusedVariable,"function updateState() {
+  let value = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let value = 5 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 5 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 5;
+console.log(value);",,
+JavaScript,DivisionByZero,"let index = 29 / 0;
+console.log(index);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 29 / (5 - 5);
+}",,
+JavaScript,NoError,"const index = 29;
+console.log(index);",,
+JavaScript,NoError,"function updateState(user) {
+  return user * 2;
+}",,
+JavaScript,UndeclaredIdentifier,updateState(user); // user is not defined,,
+JavaScript,DivisionByZero,"let id = 62 / 0;
+console.log(id);",,
+JavaScript,MissingDelimiter,"let id = 5
+let index = 10",,
+JavaScript,NoError,"const id = 62;
+console.log(id);",,
+JavaScript,NoError,const index = () => { return 'id'; };,,
+JavaScript,UnmatchedBracket,"if (id > 5) {
+  index = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let value = 47 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 47 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 47;
+console.log(value);",,
+JavaScript,NoError,"function updateState(count) {
+  return count * 2;
+}",,
+JavaScript,UndeclaredIdentifier,updateState(count); // count is not defined,,
+JavaScript,DivisionByZero,"function updateState() {
+  return 90 / (5 - 5);
+}",,
+JavaScript,DivisionByZero,"let count = 15 / 0;
+console.log(count);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 15 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let count = 5
+let value = 10",,
+JavaScript,NoError,"const count = 15;
+console.log(count);",,
+JavaScript,NoError,const value = () => { return 'count'; };,,
+JavaScript,UnmatchedBracket,"if (count > 5) {
+  value = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let result = 39 / 0;
+console.log(result);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 39 / (5 - 5);
+}",,
+JavaScript,NoError,"const result = 39;
+console.log(result);",,
+JavaScript,DivisionByZero,"let item = 17 / 0;
+console.log(item);",,
+JavaScript,NoError,"const item = 17;
+console.log(item);",,
+JavaScript,DivisionByZero,"let name = 5 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 5 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let name = 5
+let count = 10",,
+JavaScript,NoError,"const name = 5;
+console.log(name);",,
+JavaScript,NoError,const count = () => { return 'name'; };,,
+JavaScript,UnmatchedBracket,"if (name > 5) {
+  count = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let user = 49 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function init() {
+  return 49 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let user = 5
+let value = 10",,
+JavaScript,NoError,"const user = 49;
+console.log(user);",,
+JavaScript,NoError,const value = () => { return 'user'; };,,
+JavaScript,UnmatchedBracket,"if (user > 5) {
+  value = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let name = 100 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 100 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 100;
+console.log(name);",,
+JavaScript,DivisionByZero,"let value = 36 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 36 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 36;
+console.log(value);",,
+JavaScript,NoError,"function fetchUser(result) {
+  return result * 2;
+}",,
+JavaScript,UndeclaredIdentifier,fetchUser(result); // result is not defined,,
+JavaScript,UnusedVariable,"function fetchUser() {
+  let value = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let value = 66 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 66 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 66;
+console.log(value);",,
+JavaScript,DivisionByZero,"let name = 78 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 78 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 78;
+console.log(name);",,
+JavaScript,NoError,"function processData(total) {
+  return total * 2;
+}",,
+JavaScript,UndeclaredIdentifier,processData(total); // total is not defined,,
+JavaScript,DivisionByZero,"let name = 72 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 72 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 72;
+console.log(name);",,
+JavaScript,NoError,"function renderView(id) {
+  return id * 2;
+}",,
+JavaScript,UndeclaredIdentifier,renderView(id); // id is not defined,,
+JavaScript,DivisionByZero,"let result = 18 / 0;
+console.log(result);",,
+JavaScript,NoError,"const result = 18;
+console.log(result);",,
+JavaScript,DivisionByZero,"let id = 7 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 7 / (5 - 5);
+}",,
+JavaScript,NoError,"const id = 7;
+console.log(id);",,
+JavaScript,DivisionByZero,"let index = 10 / 0;
+console.log(index);",,
+JavaScript,NoError,"const index = 10;
+console.log(index);",,
+JavaScript,DivisionByZero,"let total = 56 / 0;
+console.log(total);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 56 / (5 - 5);
+}",,
+JavaScript,NoError,"const total = 56;
+console.log(total);",,
+JavaScript,DivisionByZero,"let user = 11 / 0;
+console.log(user);",,
+JavaScript,NoError,"const user = 11;
+console.log(user);",,
+JavaScript,DivisionByZero,"let result = 5 / 0;
+console.log(result);",,
+JavaScript,NoError,"const result = 5;
+console.log(result);",,
+JavaScript,DivisionByZero,"let value = 29 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function init() {
+  return 29 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let value = 5
+let user = 10",,
+JavaScript,NoError,"const value = 29;
+console.log(value);",,
+JavaScript,NoError,const user = () => { return 'value'; };,,
+JavaScript,UnmatchedBracket,"if (value > 5) {
+  user = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let data = 55 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 55 / (5 - 5);
+}",,
+JavaScript,NoError,"const data = 55;
+console.log(data);",,
+JavaScript,DivisionByZero,"let value = 51 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 51 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 51;
+console.log(value);",,
+JavaScript,DivisionByZero,"let value = 7 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 7 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 7;
+console.log(value);",,
+JavaScript,DivisionByZero,"let value = 82 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 82 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 82;
+console.log(value);",,
+JavaScript,DivisionByZero,"let data = 1 / 0;
+console.log(data);",,
+JavaScript,MissingDelimiter,"let data = 5
+let user = 10",,
+JavaScript,NoError,"const data = 1;
+console.log(data);",,
+JavaScript,NoError,const user = () => { return 'data'; };,,
+JavaScript,UnmatchedBracket,"if (data > 5) {
+  user = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function processData() {
+  let data = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let name = 98 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 98 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 98;
+console.log(name);",,
+JavaScript,DivisionByZero,"function init() {
+  return 54 / (5 - 5);
+}",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 19 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let total = 5
+let value = 10",,
+JavaScript,NoError,const value = () => { return 'total'; };,,
+JavaScript,UnmatchedBracket,"if (total > 5) {
+  value = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let data = 62 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 62 / (5 - 5);
+}",,
+JavaScript,NoError,"const data = 62;
+console.log(data);",,
+JavaScript,DivisionByZero,"let name = 41 / 0;
+console.log(name);",,
+JavaScript,NoError,"const name = 41;
+console.log(name);",,
+JavaScript,DivisionByZero,"let user = 87 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 87 / (5 - 5);
+}",,
+JavaScript,NoError,"const user = 87;
+console.log(user);",,
+JavaScript,UnusedVariable,"function updateState() {
+  let user = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let value = 59 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 59 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 59;
+console.log(value);",,
+JavaScript,DivisionByZero,"let value = 77 / 0;
+console.log(value);",,
+JavaScript,NoError,"const value = 77;
+console.log(value);",,
+JavaScript,DivisionByZero,"let id = 73 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 73 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let id = 5
+let data = 10",,
+JavaScript,NoError,"const id = 73;
+console.log(id);",,
+JavaScript,NoError,"function fetchUser(data) {
+  return data * 2;
+}",,
+JavaScript,NoError,const data = () => { return 'id'; };,,
+JavaScript,UndeclaredIdentifier,fetchUser(data); // data is not defined,,
+JavaScript,UnmatchedBracket,"if (id > 5) {
+  data = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let data = 24 / 0;
+console.log(data);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 24 / (5 - 5);
+}",,
+JavaScript,NoError,"const data = 24;
+console.log(data);",,
+JavaScript,DivisionByZero,"let count = 32 / 0;
+console.log(count);",,
+JavaScript,NoError,"const count = 32;
+console.log(count);",,
+JavaScript,DivisionByZero,"let name = 74 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 74 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 74;
+console.log(name);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 10 / (5 - 5);
+}",,
+JavaScript,DivisionByZero,"let data = 82 / 0;
+console.log(data);",,
+JavaScript,NoError,"const data = 82;
+console.log(data);",,
+JavaScript,DivisionByZero,"let name = 3 / 0;
+console.log(name);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 3 / (5 - 5);
+}",,
+JavaScript,NoError,"const name = 3;
+console.log(name);",,
+JavaScript,DivisionByZero,"let value = 19 / 0;
+console.log(value);",,
+JavaScript,NoError,"const value = 19;
+console.log(value);",,
+JavaScript,DivisionByZero,"let user = 47 / 0;
+console.log(user);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 47 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let user = 5
+let result = 10",,
+JavaScript,NoError,"const user = 47;
+console.log(user);",,
+JavaScript,NoError,const result = () => { return 'user'; };,,
+JavaScript,UnmatchedBracket,"if (user > 5) {
+  result = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let total = 92 / 0;
+console.log(total);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 92 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let total = 5
+let id = 10",,
+JavaScript,NoError,"const total = 92;
+console.log(total);",,
+JavaScript,NoError,const id = () => { return 'total'; };,,
+JavaScript,UnmatchedBracket,"if (total > 5) {
+  id = 10;
+} else {
+",,
+JavaScript,UnusedVariable,"function fetchUser() {
+  let total = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"function processData() {
+  return 38 / (5 - 5);
+}",,
+JavaScript,UnusedVariable,"function processData() {
+  let result = 5;
+  return 10;
+}",,
+JavaScript,DivisionByZero,"let id = 43 / 0;
+console.log(id);",,
+JavaScript,DivisionByZero,"function calculateTotal() {
+  return 43 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let id = 5
+let result = 10",,
+JavaScript,NoError,"const id = 43;
+console.log(id);",,
+JavaScript,NoError,const result = () => { return 'id'; };,,
+JavaScript,UnmatchedBracket,"if (id > 5) {
+  result = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let total = 14 / 0;
+console.log(total);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 14 / (5 - 5);
+}",,
+JavaScript,MissingDelimiter,"let total = 5
+let count = 10",,
+JavaScript,NoError,"const total = 14;
+console.log(total);",,
+JavaScript,NoError,const count = () => { return 'total'; };,,
+JavaScript,UnmatchedBracket,"if (total > 5) {
+  count = 10;
+} else {
+",,
+JavaScript,DivisionByZero,"let result = 51 / 0;
+console.log(result);",,
+JavaScript,DivisionByZero,"function fetchUser() {
+  return 51 / (5 - 5);
+}",,
+JavaScript,NoError,"const result = 51;
+console.log(result);",,
+JavaScript,DivisionByZero,"let index = 69 / 0;
+console.log(index);",,
+JavaScript,NoError,"const index = 69;
+console.log(index);",,
+JavaScript,DivisionByZero,"let item = 31 / 0;
+console.log(item);",,
+JavaScript,DivisionByZero,"function init() {
+  return 31 / (5 - 5);
+}",,
+JavaScript,NoError,"const item = 31;
+console.log(item);",,
+JavaScript,DivisionByZero,"let user = 35 / 0;
+console.log(user);",,
+JavaScript,NoError,"const user = 35;
+console.log(user);",,
+JavaScript,DivisionByZero,"function renderView() {
+  return 76 / (5 - 5);
+}",,
+JavaScript,DivisionByZero,"let count = 28 / 0;
+console.log(count);",,
+JavaScript,DivisionByZero,"function init() {
+  return 28 / (5 - 5);
+}",,
+JavaScript,NoError,"const count = 28;
+console.log(count);",,
+JavaScript,DivisionByZero,"let index = 28 / 0;
+console.log(index);",,
+JavaScript,NoError,"const index = 28;
+console.log(index);",,
+JavaScript,DivisionByZero,"let value = 31 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function updateState() {
+  return 31 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 31;
+console.log(value);",,
+JavaScript,DivisionByZero,"let value = 37 / 0;
+console.log(value);",,
+JavaScript,DivisionByZero,"function processData() {
+  return 37 / (5 - 5);
+}",,
+JavaScript,NoError,"const value = 37;
+console.log(value);",,

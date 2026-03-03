@@ -9,7 +9,7 @@ def detect_language(code: str, filename: str | None = None) -> str:
       1. Filename extension (most reliable)
       2. Score-based keyword matching (content fallback)
 
-    Returns one of: "Python", "Java", "C++", "C", "Unknown"
+    Returns one of: "Python", "Java", "C++", "C", "JavaScript", "Unknown"
     """
     code_lower = code.lower()
 
@@ -26,6 +26,8 @@ def detect_language(code: str, filename: str | None = None) -> str:
             return "C"
         if ext in (".cpp", ".cc", ".cxx", ".hpp"):
             return "C++"
+        if ext in (".js", ".jsx", ".ts", ".tsx"):
+            return "JavaScript"
 
     # -------------------------
     # 2. Score-based content detection
@@ -33,7 +35,7 @@ def detect_language(code: str, filename: str | None = None) -> str:
     # Each language gets points for specific keywords.
     # More-specific patterns score higher to avoid mis-classification
     # (e.g. C's printf matching Python's print).
-    scores = {"Python": 0, "Java": 0, "C++": 0, "C": 0}
+    scores = {"Python": 0, "Java": 0, "C++": 0, "C": 0, "JavaScript": 0}
 
     # --- C indicators (check BEFORE Python to avoid printf→print false match) ---
     if "printf(" in code_lower or "fprintf(" in code_lower or "scanf(" in code_lower:
@@ -64,6 +66,15 @@ def detect_language(code: str, filename: str | None = None) -> str:
         scores["Java"] += 2
     if "import java." in code_lower:
         scores["Java"] += 2
+
+    # --- JavaScript indicators ---
+    import re
+    if "console.log" in code_lower or "document.getelementbyid" in code_lower:
+        scores["JavaScript"] += 2
+    if re.search(r'\b(let|const|function|var)\b', code_lower):
+        scores["JavaScript"] += 1
+    if "=>" in code_lower:
+        scores["JavaScript"] += 1
 
     # --- Python indicators ---
     if "def " in code_lower:
