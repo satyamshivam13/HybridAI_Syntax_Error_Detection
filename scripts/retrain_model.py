@@ -31,12 +31,37 @@ from scipy.sparse import hstack
 
 warnings.filterwarnings('ignore')
 
-# Import shared feature extraction (single source of truth)
+# ─── Ensure project root is on sys.path so `src` package is importable ─────
+_here = os.path.abspath(__file__)               # e.g. .../scripts/retrain_model.py
+_project_root = os.path.dirname(os.path.dirname(_here))  # .../project_root
+for _p in (_project_root, os.getcwd()):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
 try:
     from src.feature_utils import extract_numerical_features, NUMERICAL_FEATURE_NAMES
-    _SHARED_FEATURES_AVAILABLE = True
 except ImportError:
-    _SHARED_FEATURES_AVAILABLE = False
+    # Inline fallback — matches feature_utils.py exactly so models stay compatible
+    NUMERICAL_FEATURE_NAMES = [
+        'code_length', 'num_lines', 'has_division', 'has_type_conv',
+        'missing_colon', 'missing_semicolon', 'compares_zero',
+        'has_string_ops', 'has_type_decl', 'bracket_diff'
+    ]
+    import re as _re
+    def extract_numerical_features(code: str) -> list:
+        lines = code.split('\n')
+        return [
+            len(code),
+            len(lines),
+            int('/' in code and '0' in code),
+            int(any(t in code for t in ['int(', 'float(', 'str(', 'bool(', 'Number(', 'String('])),
+            int(':' not in code and any(kw in code for kw in ['def ', 'if ', 'for ', 'while ', 'class '])),
+            int(';' not in code and any(kw in code for kw in ['printf', 'cout', 'System.out', 'fprintf', 'console.log'])),
+            int(_re.search(r'===?\s*0|!==?\s*0|/\s*0', code) is not None),
+            int(any(op in code for op in ['.upper()', '.lower()', '.split()', '.join(', '.strip()'])),
+            int(any(t in code for t in ['int ', 'float ', 'double ', 'String ', 'char ', 'bool ', 'let ', 'const ', 'var '])),
+            code.count('(') - code.count(')'),
+        ]
 
 # ─── Colour helpers ──────────────────────────────────────────────────────────
 GREEN  = "\033[92m"
@@ -91,33 +116,6 @@ def find_model_dir():
     return None
 
 
-# ─── Feature extraction ───────────────────────────────────────────────────────
-NUMERICAL_FEATURE_NAMES = [
-    'code_length', 'num_lines', 'has_division', 'has_type_conv',
-    'missing_colon', 'missing_semicolon', 'compares_zero',
-    'has_string_ops', 'has_type_decl', 'bracket_diff'
-]
-
-def extract_numerical_features(code: str) -> list:
-    """
-    Extract the same 10 numerical features as the original model.
-    Must match EXACTLY what the original training used.
-    """
-    lines = code.split('\n')
-    non_empty = [l.strip() for l in lines if l.strip()]
-
-    return [
-        len(code),                                                   # code_length
-        len(lines),                                                  # num_lines
-        int('/' in code and '0' in code),                           # has_division
-        int(any(t in code for t in ['int(', 'float(', 'str(', 'bool('])),  # has_type_conv
-        int(':' not in code and any(kw in code for kw in ['def ', 'if ', 'for ', 'while ', 'class '])),  # missing_colon
-        int(';' not in code and any(kw in code for kw in ['printf', 'cout', 'System.out', 'fprintf'])),  # missing_semicolon
-        int('== 0' in code or '!= 0' in code or '/0' in code or '/ 0' in code),  # compares_zero
-        int(any(op in code for op in ['.upper()', '.lower()', '.split()', '.join(', '.strip()'])),  # has_string_ops
-        int(any(t in code for t in ['int ', 'float ', 'double ', 'String ', 'char ', 'bool '])),  # has_type_decl
-        code.count('(') - code.count(')'),                          # bracket_diff
-    ]
 
 
 def build_features(codes, tfidf, fit_tfidf=False):
