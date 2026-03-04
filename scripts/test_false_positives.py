@@ -13,6 +13,11 @@ Usage:
 import sys
 import os
 import argparse
+import io
+
+# Prevent cp1252 crashes for Unicode output on Windows terminals.
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 sys.path.insert(0, os.path.abspath('.'))
 

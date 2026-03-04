@@ -84,10 +84,20 @@ class CodeQualityAnalyzer:
         # Strip strings and comments before scanning for keywords
         clean_code = self._strip_strings_and_comments(self.code)
 
-        keywords = ['if', 'elif', 'else', 'for', 'while', 'case', 'catch', 'except', '&&', '||']
+        keyword_patterns = [
+            r"\bif\b",
+            r"\belif\b",
+            r"\belse\b",
+            r"\bfor\b",
+            r"\bwhile\b",
+            r"\bcase\b",
+            r"\bcatch\b",
+            r"\bexcept\b",
+            r"&&",
+            r"\|\|",
+        ]
 
-        for keyword in keywords:
-            pattern = rf'\b{keyword}\b'
+        for pattern in keyword_patterns:
             matches = re.findall(pattern, clean_code)
             complexity += len(matches)
 

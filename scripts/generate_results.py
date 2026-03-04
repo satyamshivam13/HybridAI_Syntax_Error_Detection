@@ -1,48 +1,86 @@
 """
-Generate results.csv for visualization from evaluation
+Generate prediction results CSV for downstream visualization.
 """
+
+import argparse
 import os
-import pandas as pd
+import sys
+
 import joblib
-from sklearn.model_selection import train_test_split
+import pandas as pd
 
-# Load dataset
-df = pd.read_csv("dataset/merged/all_errors_v2.csv")
+sys.path.insert(0, os.path.abspath("."))
 
-# Load trained models (use optimized model names)
-try:
-    model = joblib.load("models/syntax_error_model.pkl")
-    vectorizer = joblib.load("models/tfidf_vectorizer.pkl")
-    label_encoder = joblib.load("models/label_encoder.pkl")
-except FileNotFoundError:
-    # Fallback to old model names
-    print("⚠️ Warning: Using legacy model files. Run optimize_model.py to update.")
-    model = joblib.load("models/error_classifier.pkl")
-    vectorizer = joblib.load("models/tfidf.pkl")
-    label_encoder = joblib.load("models/label_encoder.pkl")
+from src.feature_utils import extract_numerical_features
 
-# Prepare features
-X = df["buggy_code"]
-y = df["error_type"]
 
-# Transform features
-X_vec = vectorizer.transform(X)
+def _load_model_bundle(models_dir: str):
+    try:
+        model = joblib.load(os.path.join(models_dir, "syntax_error_model.pkl"))
+        vectorizer = joblib.load(os.path.join(models_dir, "tfidf_vectorizer.pkl"))
+        label_encoder = joblib.load(os.path.join(models_dir, "label_encoder.pkl"))
+    except Exception as exc:  # noqa: BLE001
+        return None, None, None, f"Model bundle unavailable: {exc}"
+    return model, vectorizer, label_encoder, None
 
-# Get predictions
-y_pred_encoded = model.predict(X_vec)
-y_pred = label_encoder.inverse_transform(y_pred_encoded)
 
-# Create results dataframe
-results_df = pd.DataFrame({
-    'code': df['buggy_code'].values,
-    'language': df['language'].values,
-    'error_type': df['error_type'].values,
-    'predicted': y_pred
-})
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Generate prediction results CSV")
+    parser.add_argument("--dataset", default="dataset/merged/all_errors_v2.csv")
+    parser.add_argument("--models-dir", default="models")
+    parser.add_argument("--output", default="results/results_generated.csv")
+    parser.add_argument("--smoke", action="store_true", help="Quick check without writing output")
+    args = parser.parse_args()
 
-# Save to CSV
-os.makedirs("data", exist_ok=True)
-results_df.to_csv("data/results.csv", index=False)
+    if not os.path.exists(args.dataset):
+        print(f"Dataset not found: {args.dataset}")
+        return 1
 
-print(f"✅ Generated data/results.csv with {len(results_df)} samples")
-print(f"Columns: {list(results_df.columns)}")
+    model, vectorizer, label_encoder, load_error = _load_model_bundle(args.models_dir)
+    if load_error:
+        print(f"Skipping generation: {load_error}")
+        return 0
+
+    df = pd.read_csv(args.dataset)
+    if "buggy_code" not in df.columns:
+        print("Dataset must contain 'buggy_code' column")
+        return 1
+    if "error_type" not in df.columns:
+        print("Dataset must contain 'error_type' column")
+        return 1
+
+    texts = df["buggy_code"].fillna("").astype(str)
+    x_text = vectorizer.transform(texts)
+
+    # Try enhanced feature matrix first; fall back gracefully for legacy models.
+    try:
+        from scipy.sparse import hstack
+
+        x_num = [extract_numerical_features(code) for code in texts]
+        x = hstack([x_text, x_num])
+    except Exception:
+        x = x_text
+
+    y_pred_encoded = model.predict(x)
+    y_pred = label_encoder.inverse_transform(y_pred_encoded)
+
+    if args.smoke:
+        print(f"Smoke OK: generated predictions for {len(y_pred)} samples")
+        return 0
+
+    output_df = pd.DataFrame(
+        {
+            "code": texts.values,
+            "language": df.get("language", pd.Series(["Unknown"] * len(df))).values,
+            "error_type": df["error_type"].values,
+            "predicted": y_pred,
+        }
+    )
+    os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
+    output_df.to_csv(args.output, index=False)
+    print(f"Generated {args.output} with {len(output_df)} rows")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

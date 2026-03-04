@@ -26,7 +26,13 @@ import ast as _ast
 import re
 
 from .language_detector import detect_language
-from .ml_engine import detect_error_ml
+from .ml_engine import (
+    ModelInferenceError,
+    ModelUnavailableError,
+    detect_error_ml,
+    get_model_status,
+    is_model_available,
+)
 from .syntax_checker import detect_all
 from .tutor_explainer import explain_error
 
@@ -117,6 +123,32 @@ def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
     (Currently bypassed to trust the high-accuracy ML model)."""
     return True
 
+
+def _append_warning(warnings: list[str], message: str) -> None:
+    if message and message not in warnings:
+        warnings.append(message)
+
+
+def _safe_ml_prediction(code: str, warnings: list[str]) -> tuple[str, float] | None:
+    try:
+        return detect_error_ml(code)
+    except ModelUnavailableError:
+        status = get_model_status()
+        _append_warning(
+            warnings,
+            f"ML model unavailable; semantic classification skipped ({status.get('error', 'unknown reason')})",
+        )
+        return None
+    except ModelInferenceError as exc:
+        _append_warning(warnings, f"ML inference failure; semantic classification skipped ({exc})")
+        return None
+
+
+def _attach_metadata(payload: dict, warnings: list[str]) -> dict:
+    payload["degraded_mode"] = len(warnings) > 0
+    payload["warnings"] = list(warnings)
+    return payload
+
 def _has_missing_semicolons(code):
     import re
     simple_statements = [
@@ -142,7 +174,7 @@ def _has_missing_semicolons(code):
                 return True
     return False
 
-def _ml_semantic_check(code, language, rule_based_issues):
+def _ml_semantic_check(code, language, rule_based_issues, warnings):
     """
     After a structural pass, ask ML if there's a semantic/runtime error.
     Only returns an error if ML is highly confident AND the type is semantic.
@@ -154,7 +186,10 @@ def _ml_semantic_check(code, language, rule_based_issues):
                 if code_lines < MIN_CODE_LINES_FOR_SEMANTIC
                 else SEMANTIC_ERROR_THRESHOLD)
     
-    ml_error, confidence = detect_error_ml(code)
+    ml_result = _safe_ml_prediction(code, warnings)
+    if ml_result is None:
+        return None
+    ml_error, confidence = ml_result
     ml_error = _normalize(ml_error)
     per_type = SEMANTIC_ERROR_THRESHOLDS.get(ml_error, 0.0)
     min_conf = max(min_conf, per_type)
@@ -172,12 +207,22 @@ def _ml_semantic_check(code, language, rule_based_issues):
     return None
 
 
-def detect_errors(code: str, filename: str | None = None):
+def detect_errors(code: str, filename: str | None = None, language_override: str | None = None):
     """
     Detect syntax and semantic errors using a hybrid approach.
     """
+    warnings: list[str] = []
+    if not is_model_available():
+        status = get_model_status()
+        _append_warning(
+            warnings,
+            f"ML model unavailable; falling back to rule-based checks only ({status.get('error', 'unknown reason')})",
+        )
 
-    language = detect_language(code, filename)
+    if language_override in {"Python", "Java", "C", "C++", "JavaScript"}:
+        language = language_override
+    else:
+        language = detect_language(code, filename)
     rule_based_issues = []
 
     # =========================================================================
@@ -204,11 +249,11 @@ def detect_errors(code: str, filename: str | None = None):
         if ast_passed:
             # Code is syntactically valid Python.
             # Still check for semantic/runtime errors via ML.
-            semantic = _ml_semantic_check(code, language, [])
+            semantic = _ml_semantic_check(code, language, [], warnings)
             if semantic:
-                return semantic
+                return _attach_metadata(semantic, warnings)
             # No semantic error detected either
-            return {
+            return _attach_metadata({
                 "language": language,
                 "predicted_error": "NoError",
                 "confidence": 1.0,
@@ -217,7 +262,7 @@ def detect_errors(code: str, filename: str | None = None):
                     "fix": "No changes are required."
                 },
                 "rule_based_issues": []
-            }
+            }, warnings)
 
         # AST failed — classify the syntax error
         rule_based_issues = detect_all(code)
@@ -232,16 +277,25 @@ def detect_errors(code: str, filename: str | None = None):
 
             # Authoritative types never overridden by ML
             if rb_error in RULE_BASED_AUTHORITATIVE:
-                return {
+                return _attach_metadata({
                     "language": language,
                     "predicted_error": rb_error,
                     "confidence": 1.0,
                     "tutor": explain_error(rb_error),
                     "rule_based_issues": rule_based_issues
-                }
+                }, warnings)
 
             # Other rule-based types — ML can override if very confident
-            ml_error, confidence = detect_error_ml(code)
+            ml_result = _safe_ml_prediction(code, warnings)
+            if ml_result is None:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": rb_error,
+                    "confidence": 1.0,
+                    "tutor": explain_error(rb_error),
+                    "rule_based_issues": rule_based_issues
+                }, warnings)
+            ml_error, confidence = ml_result
             ml_error = _normalize(ml_error)
             code_lines = len([l for l in code.splitlines() if l.strip()])
             min_conf = (SHORT_CODE_SEMANTIC_THRESHOLD
@@ -255,27 +309,36 @@ def detect_errors(code: str, filename: str | None = None):
                     and ml_error != "NoError"
                     and ml_error != rb_error
                     and _semantic_heuristic_ok(ml_error, code, language)):
-                return {
+                return _attach_metadata({
                     "language": language,
                     "predicted_error": ml_error,
                     "confidence": confidence,
                     "tutor": explain_error(ml_error),
                     "rule_based_issues": rule_based_issues
-                }
+                }, warnings)
 
-            return {
+            return _attach_metadata({
                 "language": language,
                 "predicted_error": rb_error,
                 "confidence": 1.0,
                 "tutor": explain_error(rb_error),
                 "rule_based_issues": rule_based_issues
-            }
+            }, warnings)
 
         # Rule-based didn't classify → use ML for syntax error classification
-        ml_error, confidence = detect_error_ml(code)
+        ml_result = _safe_ml_prediction(code, warnings)
+        if ml_result is None:
+            return _attach_metadata({
+                "language": language,
+                "predicted_error": "SyntaxError",
+                "confidence": 0.0,
+                "tutor": explain_error("SyntaxError"),
+                "rule_based_issues": rule_based_issues
+            }, warnings)
+        ml_error, confidence = ml_result
         ml_error = _normalize(ml_error)
         if confidence < SYNTAX_ERROR_THRESHOLD or ml_error == "NoError":
-            return {
+            return _attach_metadata({
                 "language": language,
                 "predicted_error": "NoError",
                 "confidence": confidence,
@@ -284,14 +347,14 @@ def detect_errors(code: str, filename: str | None = None):
                     "fix": "No changes are required."
                 },
                 "rule_based_issues": rule_based_issues
-            }
-        return {
+            }, warnings)
+        return _attach_metadata({
             "language": language,
             "predicted_error": ml_error,
             "confidence": confidence,
             "tutor": explain_error(ml_error),
             "rule_based_issues": rule_based_issues
-        }
+        }, warnings)
 
     # =========================================================================
     # JAVA / C / C++
@@ -313,10 +376,10 @@ def detect_errors(code: str, filename: str | None = None):
 
         if not has_missing_semi and not has_unbalanced:
             # Structurally valid — check for semantic errors via ML
-            semantic = _ml_semantic_check(code, language, [])
+            semantic = _ml_semantic_check(code, language, [], warnings)
             if semantic:
-                return semantic
-            return {
+                return _attach_metadata(semantic, warnings)
+            return _attach_metadata({
                 "language": language,
                 "predicted_error": "NoError",
                 "confidence": 1.0,
@@ -325,43 +388,59 @@ def detect_errors(code: str, filename: str | None = None):
                     "fix": "No changes are required."
                 },
                 "rule_based_issues": []
-            }
+            }, warnings)
 
-        ml_error, confidence = detect_error_ml(code)
+        ml_result = _safe_ml_prediction(code, warnings)
+        if ml_result is None:
+            ml_error, confidence = ("NoError", 0.0)
+        else:
+            ml_error, confidence = ml_result
         ml_error = _normalize(ml_error)
         if confidence >= SYNTAX_ERROR_THRESHOLD and ml_error in RULE_BASED_TYPES:
-            return {
+            return _attach_metadata({
                 "language": language,
                 "predicted_error": ml_error,
                 "confidence": confidence,
                 "tutor": explain_error(ml_error),
                 "rule_based_issues": []
-            }
+            }, warnings)
 
         if has_unbalanced:
-            return {
+            return _attach_metadata({
                 "language": language,
                 "predicted_error": "UnmatchedBracket",
                 "confidence": 1.0,
                 "tutor": explain_error("UnmatchedBracket"),
                 "rule_based_issues": []
-            }
+            }, warnings)
 
-        return {
+        return _attach_metadata({
             "language": language,
             "predicted_error": "MissingDelimiter",
             "confidence": 1.0,
             "tutor": explain_error("MissingDelimiter"),
             "rule_based_issues": []
-        }
+        }, warnings)
 
     # =========================================================================
     # UNKNOWN LANGUAGE — ML only
     # =========================================================================
-    ml_error, confidence = detect_error_ml(code)
+    ml_result = _safe_ml_prediction(code, warnings)
+    if ml_result is None:
+        return _attach_metadata({
+            "language": language,
+            "predicted_error": "NoError",
+            "confidence": 0.0,
+            "tutor": {
+                "why": "The code structure could not be fully classified because ML is unavailable.",
+                "fix": "Retry after restoring model compatibility."
+            },
+            "rule_based_issues": rule_based_issues
+        }, warnings)
+    ml_error, confidence = ml_result
     ml_error = _normalize(ml_error)
     if confidence < SYNTAX_ERROR_THRESHOLD or ml_error == "NoError":
-        return {
+        return _attach_metadata({
             "language": language,
             "predicted_error": "NoError",
             "confidence": confidence,
@@ -370,11 +449,11 @@ def detect_errors(code: str, filename: str | None = None):
                 "fix": "No changes are required."
             },
             "rule_based_issues": rule_based_issues
-        }
-    return {
+        }, warnings)
+    return _attach_metadata({
         "language": language,
         "predicted_error": ml_error,
         "confidence": confidence,
         "tutor": explain_error(ml_error),
         "rule_based_issues": rule_based_issues
-    }
+    }, warnings)

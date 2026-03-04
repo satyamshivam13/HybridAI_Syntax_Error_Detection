@@ -3,6 +3,9 @@ Auto-Fix Module for Common Syntax Errors
 Provides safe, conservative auto-correction suggestions
 """
 
+import re
+
+
 class AutoFixer:
     """
     Attempts to automatically fix common syntax errors
@@ -17,15 +20,13 @@ class AutoFixer:
         Add missing colon to control structures
         """
         lines = code.split('\n')
-        if line_num < len(lines):
+        if 0 <= line_num < len(lines):
             line = lines[line_num]
-            # Check if line ends with keywords that need colon
-            keywords = ['if ', 'elif ', 'else', 'for ', 'while ', 'def ', 'class ', 'try', 'except', 'finally', 'with ']
-            for kw in keywords:
-                if kw in line and not line.rstrip().endswith(':'):
-                    lines[line_num] = line.rstrip() + ':'
-                    self.fixes_applied.append(f"Added colon at line {line_num + 1}")
-                    break
+            code_part = line.split('#', 1)[0].rstrip()
+            keyword_pattern = r"^\s*(if|elif|else|for|while|def|class|try|except|finally|with)\b"
+            if re.match(keyword_pattern, code_part) and not code_part.endswith(':'):
+                lines[line_num] = line.rstrip() + ':'
+                self.fixes_applied.append(f"Added colon at line {line_num + 1}")
         return '\n'.join(lines)
     
     def fix_missing_semicolon(self, code: str, line_num: int = None) -> str:
@@ -34,8 +35,8 @@ class AutoFixer:
         """
         lines = code.split('\n')
         
-        # If line_num not provided or is 0, scan all lines
-        if line_num is None or line_num == 0:
+        # If line_num not provided, scan all lines
+        if line_num is None:
             for i, line in enumerate(lines):
                 line_stripped = line.rstrip()
                 # Skip control structures, braces, and comments
@@ -47,7 +48,7 @@ class AutoFixer:
                             self.fixes_applied.append(f"Added semicolon at line {i + 1}")
         else:
             # Fix specific line
-            if line_num < len(lines):
+            if 0 <= line_num < len(lines):
                 line = lines[line_num].rstrip()
                 # Don't add to control structures or comments
                 if not any(x in line for x in ['{', '}', '//', '/*', '*/','if ', 'for ', 'while ']):

@@ -65,21 +65,27 @@ def detect_unclosed_quotes(code: str) -> List[Dict[str, Any]]:
 
 
 def detect_unmatched_brackets(code: str) -> List[Dict[str, Any]]:
-    """Detect missing or extra brackets/parentheses."""
+    """Detect missing or extra brackets/parentheses while ignoring strings/comments."""
     stack = []
     pairs = {')': '(', ']': '[', '}': '{'}
     issues = []
-    for lineno, line in enumerate(code.splitlines(), start=1):
-        for col, ch in enumerate(line, start=1):
+
+    try:
+        token_stream = tokenize.generate_tokens(io.StringIO(code).readline)
+        for tok in token_stream:
+            if tok.type != tokenize.OP:
+                continue
+            ch = tok.string
+            lineno, col = tok.start
             if ch in "([{":
-                stack.append((ch, lineno, col))
+                stack.append((ch, lineno, col + 1))
             elif ch in ")]}":
                 if not stack:
                     issues.append({
                         "type": "UnmatchedBracket",
                         "message": f"Found closing {ch} without opening bracket.",
                         "line": lineno,
-                        "col": col,
+                        "col": col + 1,
                         "suggestion": "Remove the extra closing bracket or add matching opening bracket."
                     })
                 else:
@@ -91,10 +97,37 @@ def detect_unmatched_brackets(code: str) -> List[Dict[str, Any]]:
                             "type": "UnmatchedBracket",
                             "message": f"Bracket mismatch: found {ch} but last opening is {top}.",
                             "line": lineno,
-                            "col": col,
+                            "col": col + 1,
                             "suggestion": "Fix the matching bracket types."
                         })
-    # If any opening bracket is left unmatched
+    except Exception:
+        # Fallback parser when tokenizer fails early.
+        for lineno, line in enumerate(code.splitlines(), start=1):
+            for col, ch in enumerate(line, start=1):
+                if ch in "([{":
+                    stack.append((ch, lineno, col))
+                elif ch in ")]}":
+                    if not stack:
+                        issues.append({
+                            "type": "UnmatchedBracket",
+                            "message": f"Found closing {ch} without opening bracket.",
+                            "line": lineno,
+                            "col": col,
+                            "suggestion": "Remove the extra closing bracket or add matching opening bracket."
+                        })
+                    else:
+                        top, tline, tcol = stack[-1]
+                        if top == pairs[ch]:
+                            stack.pop()
+                        else:
+                            issues.append({
+                                "type": "UnmatchedBracket",
+                                "message": f"Bracket mismatch: found {ch} but last opening is {top}.",
+                                "line": lineno,
+                                "col": col,
+                                "suggestion": "Fix the matching bracket types."
+                            })
+
     for (ch, lineno, col) in stack:
         issues.append({
             "type": "UnmatchedBracket",
