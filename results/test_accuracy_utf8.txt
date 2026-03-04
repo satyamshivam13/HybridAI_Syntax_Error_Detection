@@ -1,0 +1,141 @@
+﻿[1m[96m
+============================================================[0m[0m
+[1m[96m  Accuracy Test ΓÇö OmniSyntax[0m[0m
+[1m[96m============================================================[0m[0m
+
+  Dataset  : dataset/merged/all_errors_v2.csv
+  Samples  : 4351
+[1m
+============================================================[0m
+[1m  TEST 1: ML Engine Accuracy[0m
+[1m============================================================[0m
+
+  Samples tested : 4351
+  Correct        : 4272
+  Wrong          : 79
+  Accuracy       : [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæ][0m 98.18%
+  Avg Confidence : 98.07%
+  Time taken     : 20.56s  (4.7ms/sample)
+
+  [1mPer-Language Breakdown:[0m
+    C        [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæ][0m 97.95%  (668/682)
+    C++      [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæ][0m 99.12%  (564/569)
+    Java     [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæ][0m 98.28%  (686/698)
+    JavaScript [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæ][0m 99.81%  (1034/1036)
+    Python   [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæΓûæ][0m 96.63%  (1320/1366)
+
+  [1mPer-Error-Type Breakdown:[0m
+    [92mΓ£ô[0m DivisionByZero            100.00%  (725/725)
+    [92mΓ£ô[0m DuplicateDefinition        99.07%  (214/216)
+    [93m~[0m ImportError                93.13%  (122/131)
+    [93m~[0m IndentationError           91.18%  (62/68)
+    [92mΓ£ô[0m InfiniteLoop               99.29%  (139/140)
+    [93m~[0m InvalidAssignment          94.04%  (221/235)
+    [92mΓ£ô[0m LineTooLong                99.22%  (127/128)
+    [92mΓ£ô[0m MissingDelimiter           97.67%  (377/386)
+    [93m~[0m MissingInclude             94.94%  (75/79)
+    [92mΓ£ô[0m MutableDefault            100.00%  (75/75)
+    [92mΓ£ô[0m NoError                    98.98%  (584/590)
+    [92mΓ£ô[0m TypeMismatch               98.96%  (381/385)
+    [92mΓ£ô[0m UnclosedString             99.34%  (150/151)
+    [92mΓ£ô[0m UndeclaredIdentifier       96.54%  (251/260)
+    [92mΓ£ô[0m UnmatchedBracket           97.65%  (249/255)
+    [92mΓ£ô[0m UnreachableCode            98.19%  (163/166)
+    [92mΓ£ô[0m UnusedVariable             99.39%  (324/326)
+    [93m~[0m WildcardImport             94.29%  (33/35)
+[1m
+============================================================[0m
+[1m  TEST 2: Full Pipeline Accuracy (detect_errors)[0m
+[1m============================================================[0m
+
+  Samples tested      : 4351
+  Correct             : 4239
+  Wrong               : 112
+  False 'NoError'     : 88  (missed errors)
+  Accuracy            : [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæ][0m 97.43%
+  Time taken          : 18.49s  (4.2ms/sample)
+
+  [1mPer-Language Breakdown:[0m
+    C        [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæ][0m 96.92%  (661/682)
+    C++      [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæ][0m 97.89%  (557/569)
+    Java     [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæ][0m 96.70%  (675/698)
+    JavaScript [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæ][0m 99.71%  (1033/1036)
+    Python   [92m[ΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûêΓûæΓûæ][0m 96.12%  (1313/1366)
+
+  [1mPer-Error-Type Breakdown:[0m
+    [92mΓ£ô[0m DivisionByZero            100.00%  (725/725)
+    [92mΓ£ô[0m DuplicateDefinition        97.69%  (211/216)
+    [93m~[0m ImportError                90.84%  (119/131)
+    [92mΓ£ô[0m IndentationError          100.00%  (68/68)
+    [92mΓ£ô[0m InfiniteLoop               99.29%  (139/140)
+    [93m~[0m InvalidAssignment          92.77%  (218/235)
+    [92mΓ£ô[0m LineTooLong                98.44%  (126/128)
+    [92mΓ£ô[0m MissingDelimiter           95.34%  (368/386)
+    [93m~[0m MissingInclude             94.94%  (75/79)
+    [92mΓ£ô[0m MutableDefault            100.00%  (75/75)
+    [92mΓ£ô[0m NoError                    99.32%  (586/590)
+    [92mΓ£ô[0m TypeMismatch               96.10%  (370/385)
+    [92mΓ£ô[0m UnclosedString             96.03%  (145/151)
+    [93m~[0m UndeclaredIdentifier       94.62%  (246/260)
+    [92mΓ£ô[0m UnmatchedBracket          100.00%  (255/255)
+    [92mΓ£ô[0m UnreachableCode            95.78%  (159/166)
+    [92mΓ£ô[0m UnusedVariable             98.47%  (321/326)
+    [93m~[0m WildcardImport             94.29%  (33/35)
+
+  [1mTop Misclassifications:[0m
+     18x  MissingDelimiter          ΓåÆ [91mNoError[0m
+     14x  TypeMismatch              ΓåÆ [91mNoError[0m
+     12x  UndeclaredIdentifier      ΓåÆ [91mNoError[0m
+     11x  ImportError               ΓåÆ [91mNoError[0m
+     10x  InvalidAssignment         ΓåÆ [91mNoError[0m
+      6x  UnreachableCode           ΓåÆ [91mNoError[0m
+      5x  DuplicateDefinition       ΓåÆ [91mNoError[0m
+      5x  UnusedVariable            ΓåÆ [91mNoError[0m
+[1m
+============================================================[0m
+[1m  TEST 3: Rule-Based Detector Accuracy (Python only)[0m
+[1m============================================================[0m
+
+  Python samples tested : 1366
+  Correct type detected : 131
+  Missed (no detection) : 986
+  Wrong type detected   : 249
+  Recall                : [91m[ΓûêΓûêΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæΓûæ][0m 9.59%
+
+  Note: Rule-based only covers MissingDelimiter, IndentationError,
+        UnmatchedBracket, UnclosedQuotes. Other types fall
+        through to ML ΓÇö low recall here is expected.
+
+  [1mPer-Error-Type Recall:[0m
+    [91mΓ£ù[0m DivisionByZero              0.00%  (0/114)
+    [91mΓ£ù[0m DuplicateDefinition         0.00%  (0/62)
+    [91mΓ£ù[0m ImportError                 0.00%  (0/108)
+    [92mΓ£ô[0m IndentationError          100.00%  (68/68)
+    [91mΓ£ù[0m InfiniteLoop                0.00%  (0/47)
+    [91mΓ£ù[0m InvalidAssignment           0.00%  (0/71)
+    [91mΓ£ù[0m LineTooLong                 0.00%  (0/53)
+    [91mΓ£ù[0m MissingDelimiter            0.00%  (0/76)
+    [91mΓ£ù[0m MutableDefault              0.00%  (0/75)
+    [91mΓ£ù[0m NoError                     0.00%  (0/157)
+    [91mΓ£ù[0m TypeMismatch                0.00%  (0/105)
+    [91mΓ£ù[0m UnclosedString              0.00%  (0/62)
+    [91mΓ£ù[0m UndeclaredIdentifier        0.00%  (0/85)
+    [92mΓ£ô[0m UnmatchedBracket          100.00%  (63/63)
+    [91mΓ£ù[0m UnreachableCode             0.00%  (0/62)
+    [91mΓ£ù[0m UnusedVariable              0.00%  (0/123)
+    [91mΓ£ù[0m WildcardImport              0.00%  (0/35)
+[1m
+============================================================[0m
+[1m  FINAL SUMMARY[0m
+[1m============================================================[0m
+
+  Total samples tested : 4351
+  Total time           : 39.31s
+
+  [93mΓÜá∩╕Å [0m ML Engine Accuracy   : 98.18%  (target: 99.8%,  gap: -1.62%)
+  [92mΓ£à[0m Full Pipeline Accuracy: 97.43%
+  [93mΓÜá∩╕Å [0m Rule-Based Recall     : 9.59%  (Python syntax rules)
+
+[93m  ΓÜá∩╕Å  Model is 1.62% below the 99.80% target.[0m
+[93m     Consider retraining with: python scripts/optimize_model.py[0m
+

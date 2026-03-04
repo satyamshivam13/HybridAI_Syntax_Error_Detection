@@ -9,7 +9,7 @@ from .language_detector import detect_language
 from .ml_engine import detect_error_ml
 from .syntax_checker import detect_all
 from .tutor_explainer import explain_error
-from .error_engine import _braces_balanced, _has_missing_semicolons
+from .error_engine import _braces_balanced, _has_missing_semicolons, _has_unclosed_strings
 
 
 def detect_all_errors(code: str, filename: str | None = None):
@@ -68,22 +68,7 @@ def detect_all_errors(code: str, filename: str | None = None):
     # ------------------------------------------------
     if language in ["Java", "C", "C++"]:
         # Check for unclosed strings
-        in_single = False
-        in_double = False
-        escaped = False
-        for char in code:
-            if escaped:
-                escaped = False
-                continue
-            if char == '\\':
-                escaped = True
-                continue
-            if char == "'" and not in_double:
-                in_single = not in_single
-            elif char == '"' and not in_single:
-                in_double = not in_double
-
-        if in_single or in_double:
+        if _has_unclosed_strings(code):
             all_errors.append({
                 'type': 'UnclosedString',
                 'count': 1,

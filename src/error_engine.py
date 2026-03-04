@@ -95,6 +95,23 @@ def _braces_balanced(code):
             stack.pop()
     return len(stack) == 0
 
+def _has_unclosed_strings(code: str) -> bool:
+    in_single = False
+    in_double = False
+    escaped = False
+    for char in code:
+        if escaped:
+            escaped = False
+            continue
+        if char == '\\':
+            escaped = True
+            continue
+        if char == "'" and not in_double:
+            in_single = not in_single
+        elif char == '"' and not in_single:
+            in_double = not in_double
+    return in_single or in_double
+
 def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
     """Light heuristics to avoid obvious semantic false positives.
     (Currently bypassed to trust the high-accuracy ML model)."""
@@ -282,23 +299,7 @@ def detect_errors(code: str, filename: str | None = None):
     elif language in ["Java", "C", "C++"]:
 
         # Check for unclosed strings first (higher priority than other errors)
-        in_single = False
-        in_double = False
-        escaped = False
-        
-        for char in code:
-            if escaped:
-                escaped = False
-                continue
-            if char == '\\':
-                escaped = True
-                continue
-            if char == "'" and not in_double:
-                in_single = not in_single
-            elif char == '"' and not in_single:
-                in_double = not in_double
-        
-        if in_single or in_double:
+        if _has_unclosed_strings(code):
             return {
                 "language": language,
                 "predicted_error": "UnclosedString",

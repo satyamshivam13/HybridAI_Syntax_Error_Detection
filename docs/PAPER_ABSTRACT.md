@@ -10,7 +10,7 @@
 
 Syntax errors remain a significant challenge for novice programmers, often leading to frustration and discouragement in learning programming. Traditional compiler error messages are typically cryptic and lack pedagogical context, making them difficult for beginners to understand. This paper presents a novel hybrid artificial intelligence system that combines rule-based static analysis with machine learning for detecting and explaining syntax errors across multiple programming languages (Python, Java, C, C++, and JavaScript).
 
-Our approach leverages Abstract Syntax Tree (AST) parsing and token analysis for deterministic error detection in Python, while employing TF-IDF vectorization with Gradient Boosting for pattern-based classification across multiple languages. The system was trained on a curated dataset of 4,351 unique error samples across 18 distinct error categories, achieving an overall accuracy of **98.16%** with consistent performance across all supported languages.
+Our approach leverages Abstract Syntax Tree (AST) parsing and token analysis for deterministic error detection in Python, while employing TF-IDF vectorization with Gradient Boosting for pattern-based classification across multiple languages. The system was trained on a curated dataset of 4,351 unique error samples across 18 distinct error categories, achieving an overall ML accuracy of **98.18%** and a full pipeline accuracy of **97.43%** with consistent performance across all supported languages.
 
 Key contributions include: (1) a hybrid architecture that combines symbolic and statistical AI techniques achieving near-perfect accuracy, (2) language-agnostic error pattern recognition using machine learning with enhanced feature engineering, (3) beginner-friendly error explanations with contextual fix suggestions, (4) automatic error correction for 12 common error types, (5) code quality analysis with complexity metrics, and (6) production-ready REST API, web UI, and CLI interfaces for educational deployment. 
 
@@ -20,7 +20,7 @@ The system is designed for integration into programming education platforms, CI/
 
 **Keywords**: Syntax Error Detection, Programming Education, Hybrid AI, Multi-Language Support, Educational Technology, Machine Learning, Gradient Boosting, Code Analysis, Automated Code Repair
 
-**Current Status**: Production Ready (March 2026) - 98.16% Genuine Accuracy on 4,351 Unique Samples
+**Current Status**: Production Ready (March 2026) - 98.18% Genuine Accuracy on 4,351 Unique Samples
 
 ---
 
@@ -72,7 +72,7 @@ The system is designed for integration into programming education platforms, CI/
 - Fallback mechanisms
 
 ### 6. Experimental Results
-- Overall performance: 98.16% accuracy
+- Overall performance: 98.18% ML accuracy, 97.43% Full Pipeline accuracy
 - Per-language breakdown: Consistently high across all 5 languages
 - Per-error-type analysis
 - Confusion matrix analysis
