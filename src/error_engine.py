@@ -23,6 +23,7 @@ Key insight:
 """
 
 import ast as _ast
+import builtins
 import re
 
 from .language_detector import detect_language
@@ -119,8 +120,131 @@ def _has_unclosed_strings(code: str) -> bool:
     return in_single or in_double
 
 def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
-    """Light heuristics to avoid obvious semantic false positives.
-    (Currently bypassed to trust the high-accuracy ML model)."""
+    """
+    Guardrail heuristics to reduce semantic false positives on structurally valid code.
+    """
+    lines = [line for line in code.splitlines() if line.strip()]
+    code_text = "\n".join(lines)
+
+    if error_type == "InvalidAssignment":
+        # Structurally-valid code should not be tagged as invalid assignment.
+        return False
+
+    if error_type == "DivisionByZero":
+        return bool(re.search(r"[/%]\s*0(\.0+)?\b", code_text))
+
+    if error_type in {"ImportError", "MissingImport", "WildcardImport"}:
+        return bool(re.search(r"^\s*(import|from)\s+", code_text, flags=re.MULTILINE))
+
+    if error_type == "MissingInclude":
+        return bool(re.search(r"^\s*#include\s+", code_text, flags=re.MULTILINE))
+
+    if error_type == "InfiniteLoop":
+        return bool(
+            re.search(r"\bwhile\s*\(\s*true\s*\)|\bwhile\s+true\b|\bwhile\s*\(\s*1\s*\)|\bfor\s*\(\s*;\s*;\s*\)", code_text, flags=re.IGNORECASE)
+        )
+
+    if error_type == "UnreachableCode":
+        return bool(
+            re.search(
+                r"\b(return|break|continue|raise|throw)\b[^\n]*\n\s*[A-Za-z_#]",
+                code_text,
+                flags=re.IGNORECASE,
+            )
+        )
+
+    if error_type == "MutableDefault":
+        if language != "Python":
+            return False
+        return bool(
+            re.search(
+                r"def\s+\w+\s*\([^)]*=\s*(\[\]|\{\}|set\(|dict\(|list\()",
+                code_text,
+            )
+        )
+
+    if error_type == "LineTooLong":
+        return any(len(line) > 120 for line in lines)
+
+    if error_type == "DuplicateDefinition":
+        if language != "Python":
+            return bool(re.search(r"\b(class|interface|struct|void|int|float|double|char)\s+\w+\s*\(", code_text))
+        try:
+            tree = _ast.parse(code)
+        except Exception:
+            return False
+        seen = set()
+        for node in _ast.walk(tree):
+            if isinstance(node, (_ast.FunctionDef, _ast.ClassDef)):
+                name = node.name
+                if name in seen:
+                    return True
+                seen.add(name)
+        return False
+
+    if error_type == "UnusedVariable":
+        if language != "Python":
+            return bool(re.search(r"\b(int|float|double|char|string|bool|auto|var|let|const)\b", code_text, flags=re.IGNORECASE))
+        try:
+            tree = _ast.parse(code)
+        except Exception:
+            return False
+        assigned = set()
+        loaded = set()
+        for node in _ast.walk(tree):
+            if isinstance(node, _ast.Name):
+                if isinstance(node.ctx, _ast.Store):
+                    assigned.add(node.id)
+                elif isinstance(node.ctx, _ast.Load):
+                    loaded.add(node.id)
+        return len(assigned - loaded) > 0
+
+    if error_type in {"NameError", "UndeclaredIdentifier"} and language == "Python":
+        try:
+            tree = _ast.parse(code)
+        except Exception:
+            return False
+
+        defined = set()
+        used = set()
+        for node in _ast.walk(tree):
+            if isinstance(node, _ast.Name):
+                if isinstance(node.ctx, _ast.Store):
+                    defined.add(node.id)
+                elif isinstance(node.ctx, _ast.Load):
+                    used.add(node.id)
+            elif isinstance(node, (_ast.FunctionDef, _ast.ClassDef)):
+                defined.add(node.name)
+                for arg in node.args.args:
+                    defined.add(arg.arg)
+                if hasattr(node.args, "posonlyargs"):
+                    for arg in node.args.posonlyargs:
+                        defined.add(arg.arg)
+                for arg in node.args.kwonlyargs:
+                    defined.add(arg.arg)
+                if node.args.vararg:
+                    defined.add(node.args.vararg.arg)
+                if node.args.kwarg:
+                    defined.add(node.args.kwarg.arg)
+            elif isinstance(node, (_ast.Import, _ast.ImportFrom)):
+                for alias in node.names:
+                    defined.add(alias.asname or alias.name.split(".")[0])
+
+        builtin_names = set(dir(builtins))
+        unresolved = {
+            name for name in used
+            if name not in defined and name not in builtin_names
+        }
+        return len(unresolved) > 0
+
+    if error_type == "TypeMismatch":
+        return bool(
+            re.search(
+                r"\b(int|float|double|char|bool|String|string)\b|int\(|float\(|str\(|bool\(",
+                code_text,
+            )
+        )
+
     return True
 
 
@@ -275,48 +399,8 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
         if strong_issues:
             rb_error = strong_issues[0].get("type", "SyntaxError")
 
-            # Authoritative types never overridden by ML
-            if rb_error in RULE_BASED_AUTHORITATIVE:
-                return _attach_metadata({
-                    "language": language,
-                    "predicted_error": rb_error,
-                    "confidence": 1.0,
-                    "tutor": explain_error(rb_error),
-                    "rule_based_issues": rule_based_issues
-                }, warnings)
-
-            # Other rule-based types — ML can override if very confident
-            ml_result = _safe_ml_prediction(code, warnings)
-            if ml_result is None:
-                return _attach_metadata({
-                    "language": language,
-                    "predicted_error": rb_error,
-                    "confidence": 1.0,
-                    "tutor": explain_error(rb_error),
-                    "rule_based_issues": rule_based_issues
-                }, warnings)
-            ml_error, confidence = ml_result
-            ml_error = _normalize(ml_error)
-            code_lines = len([l for l in code.splitlines() if l.strip()])
-            min_conf = (SHORT_CODE_SEMANTIC_THRESHOLD
-                        if code_lines < MIN_CODE_LINES_FOR_SEMANTIC
-                        else SEMANTIC_ERROR_THRESHOLD)
-            per_type = SEMANTIC_ERROR_THRESHOLDS.get(ml_error, 0.0)
-            min_conf = max(min_conf, per_type)
-            # Only allow ML override for semantic errors with very high confidence
-            if (ml_error in SEMANTIC_ERROR_TYPES
-                    and confidence >= min_conf
-                    and ml_error != "NoError"
-                    and ml_error != rb_error
-                    and _semantic_heuristic_ok(ml_error, code, language)):
-                return _attach_metadata({
-                    "language": language,
-                    "predicted_error": ml_error,
-                    "confidence": confidence,
-                    "tutor": explain_error(ml_error),
-                    "rule_based_issues": rule_based_issues
-                }, warnings)
-
+            # AST already failed and rule-based found concrete syntax issue(s).
+            # Keep syntax findings authoritative to prevent semantic false overrides.
             return _attach_metadata({
                 "language": language,
                 "predicted_error": rb_error,
