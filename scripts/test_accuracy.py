@@ -1,8 +1,7 @@
 """
 test_accuracy.py
 ================
-Comprehensive accuracy test for the Hybrid AI-Based Multi-Language
-Syntax Error Detection System.
+Comprehensive accuracy test for OmniSyntax: A Hybrid AI Code Tutor.
 
 Tests three layers:
   1. ML Engine alone        — raw model predictions vs ground truth
@@ -334,7 +333,7 @@ def print_summary(ml_acc, pipeline_acc, rule_recall, total_samples, elapsed_tota
 
 # ─── Main ─────────────────────────────────────────────────────────────────────
 def main():
-    parser = argparse.ArgumentParser(description="Accuracy test for Syntax Error Detection System")
+    parser = argparse.ArgumentParser(description="Accuracy test for OmniSyntax")
     parser.add_argument('--samples', type=int, default=None,
                         help='Number of random samples to test (default: all)')
     parser.add_argument('--lang', type=str, default=None,
@@ -346,7 +345,7 @@ def main():
     args = parser.parse_args()
 
     print(bold(cyan("\n" + "="*60)))
-    print(bold(cyan("  Accuracy Test — Syntax Error Detection System")))
+    print(bold(cyan("  Accuracy Test — OmniSyntax")))
     print(bold(cyan("="*60)))
 
     # Load dataset

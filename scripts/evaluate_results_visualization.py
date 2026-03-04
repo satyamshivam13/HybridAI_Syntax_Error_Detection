@@ -1,6 +1,6 @@
 ﻿"""
 Evaluation & Visualization Script
-Hybrid AI-Based Multi-Language Syntax Error Detection System
+OmniSyntax: A Hybrid AI Code Tutor
 
 Generates:
   results/01_confusion_matrix.png
@@ -38,7 +38,7 @@ os.makedirs(RESULTS, exist_ok=True)
 sns.set_theme(style="whitegrid", palette="muted")
 
 print("=" * 70)
-print("  EVALUATION & VISUALIZATION — Hybrid AI Syntax Error Detection")
+print("  EVALUATION & VISUALIZATION — OmniSyntax: A Hybrid AI Code Tutor")
 print("  5 Languages | 18 Error Types | March 2026")
 print("=" * 70)
 

@@ -1,5 +1,5 @@
 """
-Comprehensive Unit Tests for Syntax Error Detection System
+Comprehensive Unit Tests for OmniSyntax
 Covers: language detection, syntax checker, error engine, auto-fix,
         quality analyzer, multi-error detector, and feature utils.
 """

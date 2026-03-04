@@ -1,4 +1,4 @@
-# REST API Documentation - Syntax Error Detection System
+# REST API Documentation - OmniSyntax
 
 ## 🚀 Quick Start
 

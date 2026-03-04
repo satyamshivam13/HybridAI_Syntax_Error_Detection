@@ -331,7 +331,7 @@ def smoke_test(clf, le, tfidf):
 
 # ─── Main ────────────────────────────────────────────────────────────────────
 def main():
-    parser = argparse.ArgumentParser(description="Retrain the syntax error detection model")
+    parser = argparse.ArgumentParser(description="Retrain OmniSyntax model")
     parser.add_argument('--dataset', type=str, default=None,
                         help='Path to training CSV (default: auto-detect)')
     parser.add_argument('--model-dir', type=str, default=None,
@@ -343,7 +343,7 @@ def main():
     args = parser.parse_args()
 
     print(bold(cyan(f"\n{'='*60}")))
-    print(bold(cyan(f"  Model Retraining — Syntax Error Detection System")))
+    print(bold(cyan(f"  Model Retraining — OmniSyntax")))
     print(bold(cyan(f"{'='*60}")))
 
     # Find dataset

@@ -1,4 +1,4 @@
-# 🧠 Hybrid AI-Based Multi-Language Syntax Error Detection System
+# 🧠 OmniSyntax: A Hybrid AI Code Tutor
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)

@@ -1,5 +1,5 @@
 """
-Start script for the Multi-Language Syntax Error Detection REST API
+Start script for OmniSyntax REST API
 """
 
 import uvicorn
@@ -9,7 +9,7 @@ import sys
 def main():
     """Start the API server"""
     print("="* 60)
-    print("🚀 Starting Multi-Language Syntax Error Detection REST API")
+    print("🚀 Starting OmniSyntax REST API")
     print("=" * 60)
     print("\n📡 API will be available at:")
     print("   - Main: http://localhost:8000")

@@ -14,11 +14,11 @@ from src.multi_error_detector import detect_all_errors
 # ------------------------------------------------------------
 
 st.set_page_config(
-    page_title="Live Multi-Language Syntax Error Checker",
+    page_title="OmniSyntax: Live Code Tutor",
     layout="centered"
 )
 
-st.title("🧠 Live Multi-Language Syntax Error Checker")
+st.title("🧠 OmniSyntax: Live Code Tutor")
 
 st.write(
     """

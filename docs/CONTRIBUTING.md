@@ -1,4 +1,4 @@
-# Contributing to Hybrid AI-Based Multi-Language Syntax Error Detection System
+# Contributing to OmniSyntax: A Hybrid AI Code Tutor
 
 Thank you for your interest in contributing! This document provides guidelines for contributing to the project.
 

@@ -1,4 +1,4 @@
-# Project Summary: Hybrid AI-Based Multi-Language Syntax Error Detection System
+# Project Summary: OmniSyntax: A Hybrid AI Code Tutor
 
 ## Executive Summary
 

@@ -1,4 +1,4 @@
-# Core modules for Hybrid AI-Based Multi-Language Syntax Error Detection System
+# Core modules for OmniSyntax: A Hybrid AI Code Tutor
 from .error_engine import detect_errors
 from .language_detector import detect_language
 from .ml_engine import detect_error_ml

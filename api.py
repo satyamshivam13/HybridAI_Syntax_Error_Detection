@@ -1,5 +1,5 @@
 """
-REST API for Hybrid AI-Based Multi-Language Syntax Error Detection System
+REST API for OmniSyntax: A Hybrid AI Code Tutor
 FastAPI-based API for integration with external tools and CI/CD pipelines
 """
 
@@ -35,7 +35,7 @@ load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="Multi-Language Syntax Error Detection API",
+    title="OmniSyntax API",
     description="AI-powered multi-language syntax error detection and auto-fix API",
     version="1.0.0",
     docs_url="/docs",
@@ -145,7 +145,7 @@ class HealthResponse(BaseModel):
 async def root():
     """Root endpoint with API information"""
     return {
-        "message": "Multi-Language Syntax Error Detection API",
+        "message": "OmniSyntax API",
         "version": "1.0.0",
         "docs": "/docs",
         "health": "/health"
@@ -307,7 +307,7 @@ async def check_and_fix(request: CodeCheckRequest):
 # Run the API
 if __name__ == "__main__":
     logger.info("=" * 80)
-    logger.info("🚀 Starting Multi-Language Syntax Error Detection API")
+    logger.info("🚀 Starting OmniSyntax API")
     logger.info("=" * 80)
     logger.info("\n📡 API Documentation: http://localhost:8000/docs")
     logger.info("📊 Interactive Docs: http://localhost:8000/redoc")
