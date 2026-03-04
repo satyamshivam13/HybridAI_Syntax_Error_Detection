@@ -22,6 +22,8 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Run test suite
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           pytest tests/ -v -p no:cacheprovider
 
