@@ -22,11 +22,15 @@ OmniSyntax/
 │   ├── multi_error_detector.py
 │   ├── quality_analyzer.py
 │   ├── syntax_checker.py
-│   └── tutor_explainer.py
+│   ├── tutor_explainer.py
+│   └── utils/
+│       ├── __init__.py
+│       └── cli_colors.py
 ├── scripts/
 │   ├── advanced_metrics.py
 │   ├── augment_dataset.py
 │   ├── check_links.py
+│   ├── evaluate_exhaustive_accuracy.py
 │   ├── evaluate_results_visualization.py
 │   ├── generate_results.py
 │   ├── retrain_model.py
@@ -34,11 +38,13 @@ OmniSyntax/
 │   ├── test_false_positives.py
 │   └── utils/
 │       ├── __init__.py
-│       └── data_utils.py
+│       └── ml_utils.py
 ├── tests/
+│   ├── conftest.py
 │   ├── Test.java
 │   ├── test_api_and_regressions.py
 │   ├── test_detection.py
+│   ├── test_multi_error_detector.py
 │   └── test_script_smoke.py
 ├── docs/
 │   ├── API_DOCUMENTATION.md
@@ -48,10 +54,17 @@ OmniSyntax/
 │   ├── PROJECT_SUMMARY.md
 │   └── QUICKSTART.md
 ├── dataset/
+│   ├── active/
+│   ├── archive/
+│   └── merged/
 ├── models/
+├── artifacts/
+│   ├── accuracy/
+│   └── accuracy_final/
 └── results/
 ```
 
 ## Notes
-- `samples/` may be empty depending on snapshot; this is expected.
+- `src/utils/` contains shared CLI color utilities used by multiple scripts.
+- `scripts/utils/` contains shared ML and data utilities for evaluation scripts.
 - CI workflow is in `.github/workflows/ci.yml`.

@@ -26,7 +26,7 @@ from sklearn.metrics import (
     accuracy_score, precision_score, recall_score,
     f1_score, confusion_matrix, classification_report
 )
-import joblib
+from scripts.utils.ml_utils import load_model_bundle
 
 # ── Paths ───────────────────────────────────────────────────────────────────
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -47,9 +47,10 @@ df = pd.read_csv(DATA)
 print(f"\n  Dataset loaded: {len(df):,} samples, {df['error_type'].nunique()} error types")
 print(f"  Languages: {sorted(df['language'].unique())}")
 
-model = joblib.load(os.path.join(MODELS, "syntax_error_model.pkl"))
-vec   = joblib.load(os.path.join(MODELS, "tfidf_vectorizer.pkl"))
-le    = joblib.load(os.path.join(MODELS, "label_encoder.pkl"))
+model, vec, le, load_err = load_model_bundle(MODELS)
+if load_err:
+    print(f"  ⚠️ Model loading issue: {load_err}")
+    sys.exit(1)
 
 # Import feature extractor
 sys.path.insert(0, ROOT)
