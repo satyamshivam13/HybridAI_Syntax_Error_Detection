@@ -38,43 +38,10 @@ for _p in (_project_root, os.getcwd()):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-try:
-    from src.feature_utils import extract_numerical_features, NUMERICAL_FEATURE_NAMES
-except ImportError:
-    # Inline fallback — matches feature_utils.py exactly so models stay compatible
-    NUMERICAL_FEATURE_NAMES = [
-        'code_length', 'num_lines', 'has_division', 'has_type_conv',
-        'missing_colon', 'missing_semicolon', 'compares_zero',
-        'has_string_ops', 'has_type_decl', 'bracket_diff'
-    ]
-    import re as _re
-    def extract_numerical_features(code: str) -> list:
-        lines = code.split('\n')
-        return [
-            len(code),
-            len(lines),
-            int('/' in code and '0' in code),
-            int(any(t in code for t in ['int(', 'float(', 'str(', 'bool(', 'Number(', 'String('])),
-            int(':' not in code and any(kw in code for kw in ['def ', 'if ', 'for ', 'while ', 'class '])),
-            int(';' not in code and any(kw in code for kw in ['printf', 'cout', 'System.out', 'fprintf', 'console.log'])),
-            int(_re.search(r'===?\s*0|!==?\s*0|/\s*0', code) is not None),
-            int(any(op in code for op in ['.upper()', '.lower()', '.split()', '.join(', '.strip()'])),
-            int(any(t in code for t in ['int ', 'float ', 'double ', 'String ', 'char ', 'bool ', 'let ', 'const ', 'var '])),
-            code.count('(') - code.count(')'),
-        ]
+from src.feature_utils import extract_numerical_features, NUMERICAL_FEATURE_NAMES
 
 # ─── Colour helpers ──────────────────────────────────────────────────────────
-GREEN  = "\033[92m"
-RED    = "\033[91m"
-YELLOW = "\033[93m"
-CYAN   = "\033[96m"
-BOLD   = "\033[1m"
-RESET  = "\033[0m"
-def green(s):  return f"{GREEN}{s}{RESET}"
-def red(s):    return f"{RED}{s}{RESET}"
-def yellow(s): return f"{YELLOW}{s}{RESET}"
-def bold(s):   return f"{BOLD}{s}{RESET}"
-def cyan(s):   return f"{CYAN}{s}{RESET}"
+from src.utils.cli_colors import GREEN, RED, YELLOW, CYAN, BOLD, RESET, green, red, yellow, bold, cyan
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
 DATASET_PATHS = [

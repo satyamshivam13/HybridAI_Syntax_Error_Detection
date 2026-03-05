@@ -1,0 +1,49 @@
+{
+  "seed": 20260305,
+  "grammar_per_language": 200,
+  "mutation_per_language": 50,
+  "quality_sample_size": 50,
+  "fix_sample_size": 50,
+  "compare_sample_size": 100,
+  "output_dir": "artifacts\\accuracy_smoke3",
+  "total_corpus_samples": 5552,
+  "labels": [
+    "DivisionByZero",
+    "DuplicateDefinition",
+    "ImportError",
+    "IndentationError",
+    "InfiniteLoop",
+    "InvalidAssignment",
+    "LineTooLong",
+    "MissingDelimiter",
+    "MissingInclude",
+    "MutableDefault",
+    "NoError",
+    "SyntaxError",
+    "TypeMismatch",
+    "UnclosedString",
+    "UndeclaredIdentifier",
+    "UnmatchedBracket",
+    "UnreachableCode",
+    "UnusedVariable",
+    "WildcardImport"
+  ],
+  "elapsed_seconds": 47.647112131118774,
+  "command": "python scripts/evaluate_exhaustive_accuracy.py --seed 20260305 --grammar-per-language 200 --mutation-per-language 50 --quality-sample-size 50 --fix-sample-size 50 --compare-sample-size 100",
+  "report_path": "artifacts\\accuracy_smoke3\\evaluation_report_available.md",
+  "critical_labels": [
+    "MissingDelimiter",
+    "UnmatchedBracket",
+    "UnclosedString",
+    "IndentationError"
+  ],
+  "assumptions": [
+    "Primary run uses the real model availability state of the environment.",
+    "forced_unavailable mode monkeypatches engine and API model status to compare behavior when ML is unavailable.",
+    "fix and quality endpoints are evaluated on deterministic subsets for runtime practicality."
+  ],
+  "verification_steps": [
+    "Run once in a real unavailable-model environment and compare against forced_unavailable for parity.",
+    "Increase --quality-sample-size and --fix-sample-size to total corpus size to fully exhaust /quality and /fix routes."
+  ]
+}

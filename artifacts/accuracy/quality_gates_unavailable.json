@@ -1,0 +1,33 @@
+{
+  "gate_noerror_false_positive_rate_le_1pct": {
+    "pass": true,
+    "value": 5.926511260371395e-05,
+    "threshold": 0.01
+  },
+  "gate_critical_label_recall_ge_95pct": {
+    "pass": false,
+    "failures": [
+      {
+        "label": "MissingDelimiter",
+        "recall": 0.2949705482555505,
+        "support": 2207
+      },
+      {
+        "label": "UnclosedString",
+        "recall": 0.802735402419779,
+        "support": 1901
+      },
+      {
+        "label": "UnmatchedBracket",
+        "recall": 0.776257938446507,
+        "support": 2047
+      }
+    ],
+    "threshold": 0.95
+  },
+  "gate_api_core_agreement": {
+    "pass": true,
+    "mismatch_count": 0
+  },
+  "release_recommendation": "NO-GO"
+}

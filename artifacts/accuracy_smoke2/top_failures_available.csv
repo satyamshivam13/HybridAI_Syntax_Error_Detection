@@ -1,0 +1,21 @@
+sample_id,language,expected_label_norm,core_predicted,core_confidence,snippet,source_path,source_line,corpus_type,generator,seed
+e748067d30a6d49688a5,C,MissingDelimiter,NoError,1.0,continue,dataset\merged\all_errors_v2.csv,3,dataset,dataset/merged/all_errors_v2.csv,20260305
+9609f0cadec6468ae328,Java,DuplicateDefinition,NoError,1.0,int width = 3;\nint width = 96;,dataset\merged\all_errors_v2.csv,2016,dataset,dataset/merged/all_errors_v2.csv,20260305
+3254e96ea1b4cfbf3786,Java,InvalidAssignment,NoError,1.0,12 = distance;,dataset\merged\all_errors_v2.csv,2080,dataset,dataset/merged/all_errors_v2.csv,20260305
+9ea5c9b88749bac4e103,Java,InvalidAssignment,NoError,1.0,21 = sum_val;,dataset\merged\all_errors_v2.csv,2079,dataset,dataset/merged/all_errors_v2.csv,20260305
+5e49f1a5605baf418a7c,Java,InvalidAssignment,NoError,1.0,"int age = ""debug"";",dataset\merged\all_errors_v2.csv,2078,dataset,dataset/merged/all_errors_v2.csv,20260305
+c3321304c61fe4f78dbf,Java,InvalidAssignment,NoError,1.0,57 = sum_val;,dataset\merged\all_errors_v2.csv,2077,dataset,dataset/merged/all_errors_v2.csv,20260305
+9472738852770ef66aa5,Java,InvalidAssignment,NoError,1.0,28 = length;,dataset\merged\all_errors_v2.csv,2076,dataset,dataset/merged/all_errors_v2.csv,20260305
+b74a5027b4056bda2f9c,Java,InvalidAssignment,NoError,1.0,"int price = ""omega"";",dataset\merged\all_errors_v2.csv,2075,dataset,dataset/merged/all_errors_v2.csv,20260305
+174790d5405293ddc722,Java,InvalidAssignment,NoError,1.0,"int n = ""hello"";",dataset\merged\all_errors_v2.csv,2074,dataset,dataset/merged/all_errors_v2.csv,20260305
+48af4379f9b441eb20c4,Java,InvalidAssignment,NoError,1.0,"int length = ""phi"";",dataset\merged\all_errors_v2.csv,2073,dataset,dataset/merged/all_errors_v2.csv,20260305
+e6d8a6f2f0dcb83df37b,Java,InvalidAssignment,NoError,1.0,"int price = ""status"";",dataset\merged\all_errors_v2.csv,2072,dataset,dataset/merged/all_errors_v2.csv,20260305
+1cfaae34e5aad07f707c,Java,InvalidAssignment,NoError,1.0,"int y = ""debug"";",dataset\merged\all_errors_v2.csv,2071,dataset,dataset/merged/all_errors_v2.csv,20260305
+78b59d96e20430690e86,Java,InvalidAssignment,NoError,1.0,24 = amount;,dataset\merged\all_errors_v2.csv,2070,dataset,dataset/merged/all_errors_v2.csv,20260305
+41e5027dc1dc63ce1233,Java,InvalidAssignment,NoError,1.0,10 = volume;,dataset\merged\all_errors_v2.csv,2069,dataset,dataset/merged/all_errors_v2.csv,20260305
+cfe318a0ffca58498e8c,Java,InvalidAssignment,NoError,1.0,"int b = ""beta"";",dataset\merged\all_errors_v2.csv,2068,dataset,dataset/merged/all_errors_v2.csv,20260305
+c2702a507656c4da8bc2,Java,InvalidAssignment,NoError,1.0,69 = time_val;,dataset\merged\all_errors_v2.csv,2067,dataset,dataset/merged/all_errors_v2.csv,20260305
+3e7e96a35f84a571ec97,Java,InvalidAssignment,NoError,1.0,66 = width;,dataset\merged\all_errors_v2.csv,2066,dataset,dataset/merged/all_errors_v2.csv,20260305
+04d3d316bee3c0e58214,Java,InvalidAssignment,NoError,1.0,16 = area;,dataset\merged\all_errors_v2.csv,2065,dataset,dataset/merged/all_errors_v2.csv,20260305
+421136d885ce8ef3bbe8,Java,InvalidAssignment,NoError,1.0,"int sum_val = ""name"";",dataset\merged\all_errors_v2.csv,2064,dataset,dataset/merged/all_errors_v2.csv,20260305
+c5142458d3b4a6058030,Java,InvalidAssignment,NoError,1.0,90 = price;,dataset\merged\all_errors_v2.csv,2063,dataset,dataset/merged/all_errors_v2.csv,20260305

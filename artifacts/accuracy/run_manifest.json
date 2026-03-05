@@ -1,0 +1,48 @@
+{
+  "seed": 20260305,
+  "grammar_per_language": 10000,
+  "mutation_per_language": 2500,
+  "quality_sample_size": 5000,
+  "compare_sample_size": 5000,
+  "output_dir": "artifacts\\accuracy",
+  "total_corpus_samples": 61580,
+  "labels": [
+    "DivisionByZero",
+    "DuplicateDefinition",
+    "ImportError",
+    "IndentationError",
+    "InfiniteLoop",
+    "InvalidAssignment",
+    "LineTooLong",
+    "MissingDelimiter",
+    "MissingInclude",
+    "MutableDefault",
+    "NoError",
+    "SyntaxError",
+    "TypeMismatch",
+    "UnclosedString",
+    "UndeclaredIdentifier",
+    "UnmatchedBracket",
+    "UnreachableCode",
+    "UnusedVariable",
+    "WildcardImport"
+  ],
+  "elapsed_seconds": 1249.2804055213928,
+  "command": "python scripts/evaluate_exhaustive_accuracy.py --seed 20260305 --grammar-per-language 10000 --mutation-per-language 2500 --quality-sample-size 5000 --compare-sample-size 5000",
+  "report_path": "artifacts\\accuracy\\evaluation_report_unavailable.md",
+  "critical_labels": [
+    "MissingDelimiter",
+    "UnmatchedBracket",
+    "UnclosedString",
+    "IndentationError"
+  ],
+  "assumptions": [
+    "Model load is unavailable in this environment due sklearn version mismatch.",
+    "simulated_available mode monkeypatches ML predictions with deterministic heuristics for behavior comparison only.",
+    "quality endpoint is evaluated on a deterministic sample for runtime practicality."
+  ],
+  "verification_steps": [
+    "Install scikit-learn 1.1.x compatible with models/ and rerun this script to replace simulated_available comparison.",
+    "Increase --quality-sample-size to total corpus size to fully exhaust /quality route."
+  ]
+}

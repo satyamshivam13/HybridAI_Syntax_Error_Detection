@@ -1,0 +1,432 @@
+sample_id,language,expected_label,code,filename,source_path,source_line,corpus_type,generator,seed,metadata,mode,expected_label_norm,core_predicted,core_confidence,core_degraded_mode,core_warning_count,api_status,api_predicted,api_confidence,api_warning_count,api_core_match,fix_status,fix_success,fix_changes_count,quality_status,quality_score,quality_complexity,quality_core_parity
+33741ea38dd003262f80,Java,NoError,"public class Main {
+  static int f_23(int x) {
+    int total = x + 1397;
+    for (int j = 0; j < 4; j++) {
+      total += j;
+    }
+    return total;
+  }
+  public static void main(String[] args) {
+    int v23 = f_23(526);
+    System.out.println(v23 + 932);
+  }
+}
+",eval_java.java,generated://grammar/Java,24,grammar_valid,grammar_v1,20260317,{'index': 23},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,90.0,2.0,True
+e396b924abb3c8bd47a1,Java,InfiniteLoop,"public class Main {
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println(""forever"");
+        }
+    }
+}",eval_java.java,dataset\merged\all_errors_v2.csv,63,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 61},forced_unavailable,InfiniteLoop,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,200.0,90.0,2.0,True
+28f406fed2501363837e,Python,UndeclaredIdentifier,print(len(y)),eval_python.py,dataset\merged\all_errors_v2.csv,1333,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 1331},forced_unavailable,UndeclaredIdentifier,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,,,,
+5ac9ba56609a6780aae8,Python,NoError,"def f_33(x):
+    total = x + 1994
+    for j in range(3):
+        total += j
+    return total
+v107 = f_33(1441)
+print(v107 + 929)
+",eval_python.py,generated://grammar/Python,108,grammar_valid,grammar_v1,20260316,{'index': 107},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+ecb5b3b725ff4b0d9678,C,DivisionByZero,float limit = 13.0f / 0;,eval_c.c,dataset\merged\all_errors_v2.csv,2335,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2333},forced_unavailable,DivisionByZero,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,,,,
+866803b26da254d6b88c,JavaScript,NoError,"function f_31(x) {
+  let total = x + 205;
+  for (let j = 0; j < 3; j++) {
+    total += j;
+  }
+  return total;
+}
+const v29 = f_31(1616);
+console.log(v29 + 1893);
+",eval_javascript.js,generated://grammar/JavaScript,143,grammar_valid,grammar_v1,20260320,{'index': 142},forced_unavailable,NoError,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,,,,
+70dbb3000737d2164dc9,C,MissingDelimiter,"unsigned int u = 100
+int i = (int)u;",eval_c.c,dataset\merged\all_errors_v2.csv,804,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 802},forced_unavailable,MissingDelimiter,MissingDelimiter,1.0,True,2,200,MissingDelimiter,1.0,2,True,,,,,,,
+43ec7b9a5898285e1fef,Python,ImportError,"print(json.dumps({'a':1}))
+",eval_python.py,generated://mutation/Python/import_variant,45,mutation_invalid,mutation:import_variant,20260406,"{'base_id': '885e8b14693ef91100e5', 'mutation': 'import_variant', 'index': 44}",forced_unavailable,ImportError,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,200.0,90.0,1.0,True
+92512219fc0c91d517bc,C++,InfiniteLoop,"while (true) {
+    cout << ""status"" << endl;
+}",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,2973,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2971},forced_unavailable,InfiniteLoop,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,200.0,90.0,2.0,True
+a7fe820cbfc154cc77f4,Python,NoError,"def f_5(x):
+    total = x + 135
+    for j in range(1):
+        total += j
+    return total
+v5 = f_5(1668)
+print(v5 + 243)
+",eval_python.py,generated://grammar/Python,6,grammar_valid,grammar_v1,20260316,{'index': 5},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,90.0,2.0,True
+a417691de464d63c6bb0,Python,UnmatchedBracket,"matrix = [[1, 2, 3], [4, 5, 6]
+print(matrix)",eval_python.py,dataset\merged\all_errors_v2.csv,489,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 487},forced_unavailable,UnmatchedBracket,UnmatchedBracket,1.0,True,1,200,UnmatchedBracket,1.0,1,True,200.0,True,1.0,200.0,90.0,1.0,True
+f4c5460ef623e1245208,C++,UnreachableCode,"return 0;
+cout << ""hello"" << endl;",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,2992,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2990},forced_unavailable,UnreachableCode,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,,,,
+948032f6b1097e6486a2,C,DivisionByZero,"int cost = 200;
+int items = 0;
+int cpi = cost / items;",eval_c.c,dataset\merged\all_errors_v2.csv,214,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 212},forced_unavailable,DivisionByZero,NoError,1.0,True,1,200,NoError,1.0,1,True,,,,200.0,90.0,1.0,True
+0d4e585a9f02b2d6cca7,Python,NoError,"def f_2(x):
+    total = x + 177
+    for j in range(5):
+        total += j
+    return total
+v39 = f_2(629)
+print(v39 + 1416)
+",eval_python.py,generated://grammar/Python,40,grammar_valid,grammar_v1,20260316,{'index': 39},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+5d6a55ee5cdd12e0eff2,Java,NoError,"public class Main {
+  static int f_3(int x) {
+    int total = x + 1625;
+    for (int j = 0; j < 1; j++) {
+      total += j;
+    }
+    return total;
+  }
+  public static void main(String[] args) {
+    int v40 = f_3(1820);
+    System.out.println(v40 + 481);
+  }
+}
+",eval_java.java,generated://grammar/Java,41,grammar_valid,grammar_v1,20260317,{'index': 40},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+28fcf9350fd414dd5510,C++,MissingDelimiter,"float f = 3.14f
+double d = 2.5;",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,729,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 727},forced_unavailable,MissingDelimiter,MissingDelimiter,1.0,True,2,200,MissingDelimiter,1.0,2,True,200.0,False,0.0,,,,
+b4d12ed295bcd37f4deb,C++,InfiniteLoop,"while (true) {
+    cout << ""name"" << endl;
+}",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,2983,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2981},forced_unavailable,InfiniteLoop,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,90.0,2.0,True
+08a52afb77582cc44b90,C,InfiniteLoop,"while (1) {
+    printf(""body"");
+}",eval_c.c,dataset\merged\all_errors_v2.csv,2535,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2533},forced_unavailable,InfiniteLoop,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,,,,
+9c2f46b29eee8790fa75,Java,NoError,"for (int i = 0; i < 98; i++) {
+    System.out.println(i);
+}",eval_java.java,dataset\merged\all_errors_v2.csv,2289,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2287},forced_unavailable,NoError,NoError,1.0,True,1,200,NoError,1.0,1,True,,,,200.0,90.0,2.0,True
+b1d4913d0f3e969acbb1,Python,ImportError,"import invalid_package
+print(invalid_package.VERSION)",eval_python.py,dataset\merged\all_errors_v2.csv,949,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 947},forced_unavailable,ImportError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,90.0,1.0,True
+a79e2735307824649217,JavaScript,NoError,"function f_3(x) {
+  let total = x + 1490;
+  for (let j = 0; j < 2; j++) {
+    total += j;
+  }
+  return total;
+}
+const v38 = f_3(779);
+console.log(v38 + 795);
+",eval_javascript.js,generated://grammar/JavaScript,152,grammar_valid,grammar_v1,20260320,{'index': 151},forced_unavailable,NoError,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,200.0,90.0,2.0,True
+cc83438c48aa86df2622,C++,NoError,"#include <iostream>
+using namespace std;
+int f_1(int x) {
+    int total = x + 1280;
+    for (int j = 0; j < 4; j++) {
+        total += j;
+    }
+    return total;
+}
+int main() {
+    int v38 = f_1(913);
+    cout << (v38 + 1942) << endl;
+    return 0;
+}
+",eval_cpp.cpp,generated://grammar/C++,39,grammar_valid,grammar_v1,20260319,{'index': 38},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+86c21e11374661ef71e2,JavaScript,NoError,"const data = 88;
+console.log(data);",eval_javascript.js,dataset\merged\all_errors_v2.csv,4086,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 4084},forced_unavailable,NoError,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,200.0,90.0,1.0,True
+69ad43753c272c071ef3,C++,DivisionByZero,int time_val = 31 / 0;,eval_cpp.cpp,dataset\merged\all_errors_v2.csv,2766,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2764},forced_unavailable,DivisionByZero,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,90.0,1.0,True
+d8d5cdb16d60bf3f2a4f,Python,UnusedVariable,"class Temp:
+    def __init__(self):
+        self.height = 10
+        self.score = 'temp'
+    def show(self):
+        print(self.height)",eval_python.py,dataset\merged\all_errors_v2.csv,3259,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3257},forced_unavailable,UnusedVariable,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,200.0,90.0,1.0,True
+e1829bd4b4997f5839fa,JavaScript,DivisionByZero,"let item = 73 / 0;
+console.log(item);",eval_javascript.js,dataset\merged\all_errors_v2.csv,3598,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3596},forced_unavailable,DivisionByZero,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,,,,
+3447ff83cb8bf7bd30db,Java,NoError,"public class Main {
+  static int f_21(int x) {
+    int total = x + 90;
+    for (int j = 0; j < 2; j++) {
+      total += j;
+    }
+    return total;
+  }
+  public static void main(String[] args) {
+    int v21 = f_21(789);
+    System.out.println(v21 + 1682);
+  }
+}
+",eval_java.java,generated://grammar/Java,22,grammar_valid,grammar_v1,20260317,{'index': 21},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,90.0,2.0,True
+749408f2362a32db5b4c,JavaScript,UndeclaredIdentifier,fetchUser(name); // name is not defined,eval_javascript.js,dataset\merged\all_errors_v2.csv,3870,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3868},forced_unavailable,UndeclaredIdentifier,NoError,0.0,True,2,200,NoError,0.0,2,True,200.0,False,0.0,,,,
+c0a62644e1ca971144b9,C,MissingDelimiter,"double d = 3.14159
+int i = (int)d;",eval_c.c,dataset\merged\all_errors_v2.csv,390,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 388},forced_unavailable,MissingDelimiter,MissingDelimiter,1.0,True,2,200,MissingDelimiter,1.0,2,True,,,,,,,
+9371c2526dfb23c1d09a,Java,NoError,"public class Main {
+  static int f_22(int x) {
+    int total = x + 1887;
+    for (int j = 0; j < 4; j++) {
+      total += j;
+    }
+    return total;
+  }
+  public static void main(String[] args) {
+    int v20 = f_22(390);
+    System.out.println(v20 + 1970);
+  }
+}
+",eval_java.java,generated://grammar/Java,134,grammar_valid,grammar_v1,20260317,{'index': 133},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+c7dad921cc3b4ff0a3a3,Python,IndentationError,"if a > b:
+    result = a
+  else:
+    result = b",eval_python.py,dataset\merged\all_errors_v2.csv,587,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 585},forced_unavailable,IndentationError,IndentationError,1.0,True,1,200,IndentationError,1.0,1,True,200.0,True,1.0,200.0,90.0,3.0,True
+921949d2a1d6d3bd999b,C,TypeMismatch,"int val = ""delta"";",eval_c.c,dataset\merged\all_errors_v2.csv,2367,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2365},forced_unavailable,TypeMismatch,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,200.0,90.0,1.0,True
+d9f53bd917ebc1df583c,C++,DuplicateDefinition,"int calc() { return 14; }
+int show() { return 76; }",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,3118,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3116},forced_unavailable,DuplicateDefinition,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+34d51b97b8706189d160,Python,NoError,"def f_4(x):
+    total = x + 428
+    for j in range(3):
+        total += j
+    return total
+v39 = f_4(1203)
+print(v39 + 1947)
+",eval_python.py,generated://grammar/Python,153,grammar_valid,grammar_v1,20260316,{'index': 152},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+c6af892852a3eefa9a05,C++,InfiniteLoop,"#include <iostream>
+using namespace std;
+int main() {
+    while (true) {
+        cout << ""forever"" << endl;
+    }
+    return 0;
+}",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,59,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 57},forced_unavailable,InfiniteLoop,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,,,,
+07903665c51f93c956a9,Python,NoError,"class MyClass:
+    def __init__(self):
+        self.score = 35
+
+    def get_score(self):
+        return self.score",eval_python.py,dataset\merged\all_errors_v2.csv,3192,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3190},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+aa2daf8be3f3a20a8ca5,JavaScript,UnusedVariable,"function updateState() {
+  let result = 5;
+  return 10;
+}",eval_javascript.js,dataset\merged\all_errors_v2.csv,3791,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3789},forced_unavailable,UnusedVariable,NoError,0.0,True,2,200,NoError,0.0,2,True,200.0,False,0.0,200.0,90.0,1.0,True
+24b17eb37c367805cb73,C++,NoError,"#include <iostream>
+using namespace std;
+int f_35(int x) {
+    int total = x + 892;
+    for (int j = 0; j < 3; j++) {
+        total += j;
+    }
+    return total;
+}
+int main() {
+    int v72 = f_35(1719);
+    cout << (v72 + 1061) << endl;
+    return 0;
+}
+",eval_cpp.cpp,generated://grammar/C++,73,grammar_valid,grammar_v1,20260319,{'index': 72},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,90.0,2.0,True
+bb5ebf54df939e657fd1,C,InvalidAssignment,55 = sum_val;,eval_c.c,dataset\merged\all_errors_v2.csv,2512,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2510},forced_unavailable,InvalidAssignment,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,,,,
+d2252d96620d09885c13,JavaScript,UnusedVariable,"function fetchUser() {
+  let data = 5;
+  return 10;
+}",eval_javascript.js,dataset\merged\all_errors_v2.csv,3880,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3878},forced_unavailable,UnusedVariable,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,200.0,90.0,1.0,True
+f2bd8f59c4ab2d77da38,Python,IndentationError,"if True:
+    radius = 1
+  radius += 1",eval_python.py,dataset\merged\all_errors_v2.csv,1262,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 1260},forced_unavailable,IndentationError,IndentationError,1.0,True,1,200,IndentationError,1.0,1,True,200.0,True,1.0,,,,
+738311ef3e284fe7e835,Python,ImportError,from maths import *,eval_python.py,dataset\merged\all_errors_v2.csv,1297,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 1295},forced_unavailable,ImportError,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,,,,
+096c4601c78949121bee,Python,ImportError,"df = pd.DataFrame({'a': [1,2,3]})
+print(df)",eval_python.py,dataset\merged\all_errors_v2.csv,913,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 911},forced_unavailable,ImportError,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,200.0,90.0,1.0,True
+8307d9446ecaec664e5d,C++,MissingInclude,"cout << ""phi"" << endl;",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,2905,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2903},forced_unavailable,MissingInclude,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,200.0,90.0,1.0,True
+df35c91c7cfd7926ade5,C++,MissingInclude,"int main() {
+    cout << ""Hello"" << endl;
+    return 0;
+}",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,811,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 809},forced_unavailable,MissingInclude,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,200.0,90.0,1.0,True
+2a0de49c96dbd7049587,C,UnclosedString,"printf(""title);",eval_c.c,dataset\merged\all_errors_v2.csv,2599,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2597},forced_unavailable,UnclosedString,UnclosedString,1.0,False,0,200,UnclosedString,1.0,0,True,200.0,True,1.0,,,,
+4f1edab128025b1ed36d,JavaScript,NoError,"function f_33(x) {
+  let total = x + 1343;
+  for (let j = 0; j < 2; j++) {
+    total += j;
+  }
+  return total;
+}
+const v68 = f_33(148);
+console.log(v68 + 333);
+",eval_javascript.js,generated://grammar/JavaScript,182,grammar_valid,grammar_v1,20260320,{'index': 181},forced_unavailable,NoError,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,200.0,90.0,2.0,True
+37061110dce98fb174c5,JavaScript,UnclosedString,"const count = 'unclosed string;
+console.log(count);",eval_javascript.js,dataset\merged\all_errors_v2.csv,3336,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3334},forced_unavailable,UnclosedString,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,,,,
+0423c6d0392222a8978c,C,UnreachableCode,"return 0;
+printf(""gamma"");",eval_c.c,dataset\merged\all_errors_v2.csv,2564,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2562},forced_unavailable,UnreachableCode,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,200.0,90.0,1.0,True
+e82d1468f3024d8746d4,Python,WildcardImport,"from os import *
+files = listdir('.')",eval_python.py,dataset\merged\all_errors_v2.csv,766,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 764},forced_unavailable,WildcardImport,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,,,,
+64869007ca4b74a65b09,Java,NoError,"public class Main {
+  static int f_11(int x) {
+    int total = x + 1521;
+    for (int j = 0; j < 5; j++) {
+      total += j;
+    }
+    return total;
+  }
+  public static void main(String[] args) {
+    int v46 = f_11(1668);
+    System.out.println(v46 + 490);
+  }
+}
+",eval_java.java,generated://grammar/Java,160,grammar_valid,grammar_v1,20260317,{'index': 159},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,90.0,2.0,True
+2cca877ae8c8e49285c6,JavaScript,UnmatchedBracket,"if (user > 5) {
+  index = 10;
+} else {
+",eval_javascript.js,dataset\merged\all_errors_v2.csv,3961,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3959},forced_unavailable,UnmatchedBracket,NoError,0.0,True,2,200,NoError,0.0,2,True,200.0,False,0.0,,,,
+41909d795d737bdb58fa,C++,UnclosedString,"#include <iostream>
+using namespace std;
+int f_5(int x) {
+    int total = x + 392;
+    for (int j = 0; j < 3; j++) {
+        total += j;
+    }
+    return total;
+}
+int main() {
+    int v42 = f_5(1956);
+    cout << (v42 + 616) << endl;
+    return 0;
+}
+
+printf(""unterminated);",eval_cpp.cpp,generated://mutation/C++/quote_break,27,mutation_invalid,mutation:quote_break,20260406,"{'base_id': '8033fd8cdf578c349c28', 'mutation': 'quote_break', 'index': 26}",forced_unavailable,UnclosedString,UnclosedString,1.0,False,0,200,UnclosedString,1.0,0,True,200.0,True,1.0,200.0,90.0,2.0,True
+c472813fa54b38dd6947,JavaScript,NoError,const value = () => { return 'id'; };,eval_javascript.js,dataset\merged\all_errors_v2.csv,3503,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3501},forced_unavailable,NoError,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,,,,
+cd6532dbb8259aa94984,Python,NoError,"def f_29(x):
+    total = x + 2
+    for j in range(3):
+        total += j
+    return total
+v64 = f_29(161)
+print(v64 + 142)
+",eval_python.py,generated://grammar/Python,178,grammar_valid,grammar_v1,20260316,{'index': 177},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+ee7d87331dddb8eebd5e,Python,NoError,"def f():
+    return 1
+",eval_python.py,generated://curated/invalid_per_label,10,curated_invalid,curated_label_v1,20261214,{'index': 10},forced_unavailable,NoError,NoError,1.0,True,1,200,NoError,1.0,1,True,,,,200.0,90.0,1.0,True
+2252e59f618e3a46e3ad,JavaScript,UnmatchedBracket,"if (name > 5) {
+  total = 10;
+} else {
+",eval_javascript.js,dataset\merged\all_errors_v2.csv,3492,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3490},forced_unavailable,UnmatchedBracket,NoError,0.0,True,2,200,NoError,0.0,2,True,200.0,False,0.0,,,,
+1d0b349231c4a641f55d,Java,InfiniteLoop,"while (true) { System.out.println(""loop""); }",eval_java.java,dataset\merged\all_errors_v2.csv,234,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 232},forced_unavailable,InfiniteLoop,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,,,,
+73f99e27c89d51435e8e,Python,MutableDefault,"def evaluate(y={}):
+    y['warning'] = 55
+    return y",eval_python.py,dataset\merged\all_errors_v2.csv,1744,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 1742},forced_unavailable,MutableDefault,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+8a441965c6c455fe5ffd,C++,InvalidAssignment,26 = radius;,eval_cpp.cpp,dataset\merged\all_errors_v2.csv,2941,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2939},forced_unavailable,InvalidAssignment,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,200.0,90.0,1.0,True
+1a3cced9e567a6df7416,C++,InfiniteLoop,"while (true) {
+    cout << ""delta"" << endl;
+}",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,2980,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2978},forced_unavailable,InfiniteLoop,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,200.0,90.0,2.0,True
+950aaa4ee95264a4aea4,Java,NoError,"public class Main {
+  static int f_4(int x) {
+    int total = x + 532;
+    for (int j = 0; j < 5; j++) {
+      total += j;
+    }
+    return total;
+  }
+  public static void main(String[] args) {
+    int v4 = f_4(1449);
+    System.out.println(v4 + 805);
+  }
+}
+",eval_java.java,generated://grammar/Java,5,grammar_valid,grammar_v1,20260317,{'index': 4},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,90.0,2.0,True
+8154011b991629db132c,Python,NoError,"def f_23(x):
+    total = x + 1510
+    for j in range(3):
+        total += j
+    return total
+v97 = f_23(989)
+print(v97 + 1608)
+",eval_python.py,generated://grammar/Python,98,grammar_valid,grammar_v1,20260316,{'index': 97},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,90.0,2.0,True
+12792166387c6899f188,Python,ImportError,"from nonexist_utils import transform
+data = transform(raw)",eval_python.py,dataset\merged\all_errors_v2.csv,736,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 734},forced_unavailable,ImportError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,90.0,1.0,True
+3e4e29e8095a0280ef09,Python,InvalidAssignment,None = count,eval_python.py,dataset\merged\all_errors_v2.csv,1495,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 1493},forced_unavailable,InvalidAssignment,SyntaxError,0.0,True,2,200,SyntaxError,0.0,2,True,200.0,False,0.0,,,,
+ee5bed9708b17e9956e2,Python,InvalidAssignment,"[1, 2, 3] = items",eval_python.py,dataset\merged\all_errors_v2.csv,93,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 91},forced_unavailable,InvalidAssignment,SyntaxError,0.0,True,2,200,SyntaxError,0.0,2,True,,,,200.0,90.0,1.0,True
+64917c6121d2da44f527,Java,ImportError,"public class Main { public static void main(String[] args){ ArrayList x = new ArrayList(); } }
+",eval_java.java,generated://mutation/Java/import_variant,7,mutation_invalid,mutation:import_variant,20260406,"{'base_id': 'a70afb5270f5de5d9daa', 'mutation': 'import_variant', 'index': 6}",forced_unavailable,ImportError,MissingDelimiter,1.0,True,2,200,MissingDelimiter,1.0,2,True,200.0,False,0.0,200.0,90.0,1.0,True
+6b84adba94383287293f,C++,NoError,"#include <iostream>
+using namespace std;
+int f_11(int x) {
+    int total = x + 514;
+    for (int j = 0; j < 1; j++) {
+        total += j;
+    }
+    return total;
+}
+int main() {
+    int v85 = f_11(319);
+    cout << (v85 + 1180) << endl;
+    return 0;
+}
+",eval_cpp.cpp,generated://grammar/C++,86,grammar_valid,grammar_v1,20260319,{'index': 85},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+2d4f6931c58b4bc2824b,C++,NoError,"#include <iostream>\nusing namespace std;\nint main() {\n    cout << ""Hello, World!"" << endl;\n    return 0;\n}",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,142,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 140},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,200.0,87.8,1.0,True
+4a2d7be7b6e3c4b2b8b8,Python,NoError,"def f_29(x):
+    total = x + 975
+    for j in range(2):
+        total += j
+    return total
+v66 = f_29(953)
+print(v66 + 254)
+",eval_python.py,generated://grammar/Python,67,grammar_valid,grammar_v1,20260316,{'index': 66},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+bef89c2f2db679f5306e,C,TypeMismatch,char c = 80.5;,eval_c.c,dataset\merged\all_errors_v2.csv,626,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 624},forced_unavailable,TypeMismatch,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,200.0,90.0,1.0,True
+8fd80967cc98b0949ca9,Python,NoError,for item in items:\n    process(item),eval_python.py,dataset\merged\all_errors_v2.csv,292,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 290},forced_unavailable,NoError,NoError,1.0,True,1,200,NoError,1.0,1,True,,,,,,,
+9397f8ce162e1b09380d,JavaScript,MissingDelimiter,"let name = 5
+let value = 10",eval_javascript.js,dataset\merged\all_errors_v2.csv,3898,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3896},forced_unavailable,MissingDelimiter,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,,,,
+4b46b32ad8897679875d,JavaScript,NoError,"function renderView(value) {
+  return value * 2;
+}",eval_javascript.js,dataset\merged\all_errors_v2.csv,3694,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3692},forced_unavailable,NoError,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,200.0,90.0,1.0,True
+0a4397730d00ec8f014a,JavaScript,DivisionByZero,"let value = 80 / 0;
+console.log(value);",eval_javascript.js,dataset\merged\all_errors_v2.csv,3722,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3720},forced_unavailable,DivisionByZero,NoError,0.0,True,2,200,NoError,0.0,2,True,200.0,False,0.0,,,,
+24ad8e719540f7729744,Java,TypeMismatch,char c = 8;,eval_java.java,dataset\merged\all_errors_v2.csv,853,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 851},forced_unavailable,TypeMismatch,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,,,,
+d5dacc6c14cf8e0b5957,C,DuplicateDefinition,"#include <stdio.h>
+void greet() { printf(""Hello\n""); }
+void greet() { printf(""Hi\n""); }
+int main() {
+    greet();
+    return 0;
+}",eval_c.c,dataset\merged\all_errors_v2.csv,212,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 210},forced_unavailable,DuplicateDefinition,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+54b8229a96044399db92,Python,NoError,"price = [1, 49, 50]
+for item in price:
+    print(item)",eval_python.py,dataset\merged\all_errors_v2.csv,3183,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3181},forced_unavailable,NoError,NoError,1.0,True,1,200,NoError,1.0,1,True,,,,,,,
+647a150789266ff20ac8,Java,UndeclaredIdentifier,int result = limit + 17;,eval_java.java,dataset\merged\all_errors_v2.csv,1987,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 1985},forced_unavailable,UndeclaredIdentifier,NoError,1.0,True,1,200,NoError,1.0,1,True,,,,,,,
+aad180d806dcfe0e2b54,Python,UndeclaredIdentifier,print(len(area)),eval_python.py,dataset\merged\all_errors_v2.csv,1355,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 1353},forced_unavailable,UndeclaredIdentifier,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,200.0,90.0,1.0,True
+8f6d06099a4c2266b7c8,Python,TypeMismatch,price = 57 + 'test',eval_python.py,dataset\merged\all_errors_v2.csv,1160,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 1158},forced_unavailable,TypeMismatch,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,200.0,90.0,1.0,True
+fb56e4231bd217cd77aa,Python,UnusedVariable,"class Temp:
+    def __init__(self):
+        self.name = 69
+        self.buffer = 'age'
+    def show(self):
+        print(self.name)",eval_python.py,dataset\merged\all_errors_v2.csv,3265,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3263},forced_unavailable,UnusedVariable,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,200.0,90.0,1.0,True
+1a4c0953462f88e910b9,JavaScript,NoError,"const user = 57;
+console.log(user);",eval_javascript.js,dataset\merged\all_errors_v2.csv,3742,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3740},forced_unavailable,NoError,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,200.0,90.0,1.0,True
+cce7753ed4a9e9359482,Python,NoError,"def f_31(x):
+    total = x + 477
+    for j in range(3):
+        total += j
+    return total
+v29 = f_31(847)
+print(v29 + 600)
+",eval_python.py,generated://grammar/Python,143,grammar_valid,grammar_v1,20260316,{'index': 142},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+5491e7b422bec3714842,C,InfiniteLoop,"while (1) {
+    printf(""content"");
+}",eval_c.c,dataset\merged\all_errors_v2.csv,2540,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2538},forced_unavailable,InfiniteLoop,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,,,,
+fd066f1ef686308eb6a2,JavaScript,DivisionByZero,"function init() {
+  return 14 / (5 - 5);
+}",eval_javascript.js,dataset\merged\all_errors_v2.csv,4023,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 4021},forced_unavailable,DivisionByZero,NoError,0.0,True,2,200,NoError,0.0,2,True,200.0,False,0.0,,,,
+0779c4afdd64cc79f77b,JavaScript,UndeclaredIdentifier,updateState(count); // count is not defined,eval_javascript.js,dataset\merged\all_errors_v2.csv,4173,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 4171},forced_unavailable,UndeclaredIdentifier,NoError,0.0,True,2,200,NoError,0.0,2,True,,,,200.0,90.0,1.0,True
+5dc32411a7f81de52564,Python,MutableDefault,"def f(x, items=[]):
+    items.append(x)
+    return items
+",eval_python.py,generated://curated/invalid_per_label,9,curated_invalid,curated_label_v1,20261214,{'index': 9},forced_unavailable,MutableDefault,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,200.0,90.0,1.0,True
+974000fba16c9eb01441,C,LineTooLong,"printf(""status result name sigma beta name result header header text value test output label message warning warning status test test"");",eval_c.c,dataset\merged\all_errors_v2.csv,2710,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2708},forced_unavailable,LineTooLong,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,,,,
+192c3809ce37e2a13bd5,C++,UnmatchedBracket,"int main() {
+    cout << ""omega"" << endl;
+",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,3019,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3017},forced_unavailable,UnmatchedBracket,UnmatchedBracket,1.0,True,1,200,UnmatchedBracket,1.0,1,True,200.0,True,1.0,200.0,90.0,1.0,True
+c9f17f8bbef35d3cd06c,C,TypeMismatch,"int c = ""info"";",eval_c.c,dataset\merged\all_errors_v2.csv,2350,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2348},forced_unavailable,TypeMismatch,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,,,,
+dc9de3a55496e477802a,JavaScript,MissingDelimiter,"let value = 5
+let id = 10",eval_javascript.js,dataset\merged\all_errors_v2.csv,3709,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3707},forced_unavailable,MissingDelimiter,NoError,0.0,True,2,200,NoError,0.0,2,True,200.0,False,0.0,,,,
+819fb20d35766cdcc422,Python,NoError,"def f_33(x):
+    total = x + 1402
+    for j in range(4):
+        total += j
+    return total
+v33 = f_33(1524)
+print(v33 + 1215)
+",eval_python.py,generated://grammar/Python,34,grammar_valid,grammar_v1,20260316,{'index': 33},forced_unavailable,NoError,NoError,1.0,True,2,200,NoError,1.0,2,True,,,,,,,
+e370f810a00e990d33e1,C++,NoError,"vector<int> v = {28, 94, 47};",eval_cpp.cpp,dataset\merged\all_errors_v2.csv,3177,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 3175},forced_unavailable,NoError,NoError,1.0,True,1,200,NoError,1.0,1,True,,,,200.0,90.0,1.0,True
+d65b967097d6d40046cf,Java,UndeclaredIdentifier,int result = radius + 42;,eval_java.java,dataset\merged\all_errors_v2.csv,1965,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 1963},forced_unavailable,UndeclaredIdentifier,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,,,,
+2340c8f180e2bf260d57,Python,DivisionByZero,"numbers = [1, 2, 10, 5, 10]
+result = 51 / numbers[4]",eval_python.py,dataset\merged\all_errors_v2.csv,77,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 75},forced_unavailable,DivisionByZero,NoError,1.0,True,1,200,NoError,1.0,1,True,,,,200.0,90.0,1.0,True
+66f55f7288a94c8586dd,Python,LineTooLong,distance = 80 + 41 + 48 + 11 + 88 + 53 + 65 + 58 + 34 + 88 + 6 + 80 + 83 + 8 + 95,eval_python.py,dataset\merged\all_errors_v2.csv,1789,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 1787},forced_unavailable,LineTooLong,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,200.0,90.0,1.0,True
+23ea053a67a724fbdf5c,C,TypeMismatch,"float speed = ""test"";",eval_c.c,dataset\merged\all_errors_v2.csv,2372,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2370},forced_unavailable,TypeMismatch,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,200.0,90.0,1.0,True
+bd8fcb944c5f51a32548,C,DuplicateDefinition,"int load() { return 99; }
+int print_val() { return 12; }",eval_c.c,dataset\merged\all_errors_v2.csv,2676,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2674},forced_unavailable,DuplicateDefinition,NoError,1.0,True,2,200,NoError,1.0,2,True,200.0,False,0.0,200.0,90.0,1.0,True
+b4e9b444ef324795bf64,Java,UnusedVariable,"int m = 30;
+System.out.println(""done"");",eval_java.java,dataset\merged\all_errors_v2.csv,2238,dataset,dataset/merged/all_errors_v2.csv,20260305,{'dataset_index': 2236},forced_unavailable,UnusedVariable,NoError,1.0,True,1,200,NoError,1.0,1,True,200.0,False,0.0,,,,

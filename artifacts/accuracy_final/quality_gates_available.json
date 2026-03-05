@@ -1,0 +1,23 @@
+{
+  "gate_noerror_false_positive_rate_le_1pct": {
+    "pass": true,
+    "value": 0.0,
+    "threshold": 0.01
+  },
+  "gate_critical_label_recall_ge_95pct": {
+    "pass": false,
+    "failures": [
+      {
+        "label": "MissingDelimiter",
+        "recall": 0.8241957408246489,
+        "support": 2207
+      }
+    ],
+    "threshold": 0.95
+  },
+  "gate_api_core_agreement": {
+    "pass": true,
+    "mismatch_count": 0
+  },
+  "release_recommendation": "NO-GO"
+}

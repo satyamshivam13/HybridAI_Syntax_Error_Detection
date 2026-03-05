@@ -1,0 +1,27 @@
+{
+  "health": {
+    "status": "degraded",
+    "version": "1.1.0",
+    "supported_languages": [
+      "Python",
+      "Java",
+      "C",
+      "C++",
+      "JavaScript"
+    ],
+    "ml_model_loaded": false,
+    "degraded_reason": "syntax_error_model.pkl: No module named 'sklearn.ensemble._gb_losses' | error_classifier.pkl: [Errno 2] No such file or directory: 'models\\\\tfidf.pkl'",
+    "max_code_size": 200000,
+    "rate_limit_per_minute": 0
+  },
+  "check_status_counts": {
+    "200": 5000
+  },
+  "fix_status_counts": {
+    "200": 5000
+  },
+  "quality_status_counts": {
+    "NaN": 3500,
+    "200.0": 1500
+  }
+}

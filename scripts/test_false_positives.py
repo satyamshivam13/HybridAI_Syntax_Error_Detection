@@ -21,17 +21,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
 
 sys.path.insert(0, os.path.abspath('.'))
 
-GREEN  = "\033[92m"
-RED    = "\033[91m"
-YELLOW = "\033[93m"
-BOLD   = "\033[1m"
-RESET  = "\033[0m"
-
-def green(s):  return f"{GREEN}{s}{RESET}"
-def red(s):    return f"{RED}{s}{RESET}"
-def yellow(s): return f"{YELLOW}{s}{RESET}"
-def bold(s):   return f"{BOLD}{s}{RESET}"
-
+from src.utils.cli_colors import GREEN, RED, YELLOW, BOLD, RESET, green, red, yellow, bold
 
 # ─── Valid Python test cases ───────────────────────────────────────────────────
 VALID_PYTHON = [

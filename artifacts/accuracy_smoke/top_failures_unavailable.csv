@@ -1,0 +1,21 @@
+sample_id,language,expected_label_norm,core_predicted,core_confidence,snippet,source_path,source_line,corpus_type,generator,seed
+deb6f5f885684c82116f,Python,DivisionByZero,NoError,1.0,x = 10 / 0,dataset\merged\all_errors_v2.csv,2,dataset,dataset/merged/all_errors_v2.csv,20260305
+e901626dbf65c74ea47b,Java,UnreachableCode,NoError,1.0,return 54;\nSystem.out.println(86);,dataset\merged\all_errors_v2.csv,2129,dataset,dataset/merged/all_errors_v2.csv,20260305
+0b091af0ee1431be773c,Java,UnreachableCode,NoError,1.0,break;\nSystem.out.println(63);,dataset\merged\all_errors_v2.csv,2131,dataset,dataset/merged/all_errors_v2.csv,20260305
+ab272f0db53b3f7c85ef,Java,UnreachableCode,NoError,1.0,return 78;\nSystem.out.println(67);,dataset\merged\all_errors_v2.csv,2132,dataset,dataset/merged/all_errors_v2.csv,20260305
+d7a57dfff78ba3b82d03,Java,UnreachableCode,NoError,1.0,return 76;\nSystem.out.println(83);,dataset\merged\all_errors_v2.csv,2133,dataset,dataset/merged/all_errors_v2.csv,20260305
+5774e41f0fd4364980f4,Java,UnreachableCode,NoError,1.0,break;\nSystem.out.println(78);,dataset\merged\all_errors_v2.csv,2134,dataset,dataset/merged/all_errors_v2.csv,20260305
+d7f6ce667b6ae885dc4b,Java,UnreachableCode,NoError,1.0,break;\nSystem.out.println(83);,dataset\merged\all_errors_v2.csv,2135,dataset,dataset/merged/all_errors_v2.csv,20260305
+1af34d15a082d9697938,Java,UnreachableCode,NoError,1.0,break;\nSystem.out.println(81);,dataset\merged\all_errors_v2.csv,2136,dataset,dataset/merged/all_errors_v2.csv,20260305
+e49936cb73db0f6b0e42,Java,UnreachableCode,NoError,1.0,break;\nSystem.out.println(24);,dataset\merged\all_errors_v2.csv,2137,dataset,dataset/merged/all_errors_v2.csv,20260305
+c5ce9ba19145d27316e9,Java,UnusedVariable,NoError,1.0,"int sum_val = 64;\nSystem.out.println(""done"");",dataset\merged\all_errors_v2.csv,2199,dataset,dataset/merged/all_errors_v2.csv,20260305
+9fb7b4414adc67157446,Java,UnusedVariable,NoError,1.0,"int sum_val = 74;\nSystem.out.println(""done"");",dataset\merged\all_errors_v2.csv,2200,dataset,dataset/merged/all_errors_v2.csv,20260305
+c366ee386e3d906bb9a1,Java,UnusedVariable,NoError,1.0,"int x = 6;\nSystem.out.println(""done"");",dataset\merged\all_errors_v2.csv,2201,dataset,dataset/merged/all_errors_v2.csv,20260305
+34f1dd297c4a25f427d6,Java,UnusedVariable,NoError,1.0,"int height = 27;\nSystem.out.println(""done"");",dataset\merged\all_errors_v2.csv,2202,dataset,dataset/merged/all_errors_v2.csv,20260305
+8aef5e5585de2fe1cc4f,Java,UnusedVariable,NoError,1.0,"int m = 38;\nSystem.out.println(""done"");",dataset\merged\all_errors_v2.csv,2203,dataset,dataset/merged/all_errors_v2.csv,20260305
+8b44748150909339475b,Java,UnusedVariable,NoError,1.0,"int x = 31;\nSystem.out.println(""done"");",dataset\merged\all_errors_v2.csv,2204,dataset,dataset/merged/all_errors_v2.csv,20260305
+0d8f72bc4aed4b5e9d99,Java,UnusedVariable,NoError,1.0,"int amount = 23;\nSystem.out.println(""done"");",dataset\merged\all_errors_v2.csv,2205,dataset,dataset/merged/all_errors_v2.csv,20260305
+ea984a37255f9bbd875e,Java,UnusedVariable,NoError,1.0,"int height = 30;\nSystem.out.println(""done"");",dataset\merged\all_errors_v2.csv,2206,dataset,dataset/merged/all_errors_v2.csv,20260305
+f1369463d5904aafb979,Java,UnreachableCode,NoError,1.0,break;\nSystem.out.println(64);,dataset\merged\all_errors_v2.csv,2130,dataset,dataset/merged/all_errors_v2.csv,20260305
+dd4afcc531ad029f3344,Java,UnreachableCode,NoError,1.0,break;\nSystem.out.println(82);,dataset\merged\all_errors_v2.csv,2128,dataset,dataset/merged/all_errors_v2.csv,20260305
+4f9a7390c1f673c8ae2f,Java,UnusedVariable,NoError,1.0,"int z = 20;\nSystem.out.println(""done"");",dataset\merged\all_errors_v2.csv,2208,dataset,dataset/merged/all_errors_v2.csv,20260305

@@ -1,0 +1,7 @@
+{
+  "actual_unavailable_model_loaded": false,
+  "simulated_available_model_loaded": false,
+  "subset_size": 5000,
+  "accuracy_unavailable_subset": 0.8928,
+  "accuracy_simulated_available_subset": 0.9022
+}

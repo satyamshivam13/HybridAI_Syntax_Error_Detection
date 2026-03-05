@@ -63,7 +63,7 @@ SEMANTIC_ERROR_THRESHOLDS = {
 }
 
 # Rule-based types that are always authoritative
-RULE_BASED_AUTHORITATIVE = {"MissingColon", "MissingDelimiter", "IndentationError"}
+
 
 # All types the rule-based detector covers
 RULE_BASED_TYPES = {
@@ -90,10 +90,99 @@ LABEL_ALIASES = {
 def _normalize(label):
     return LABEL_ALIASES.get(label, label)
 
+
+def _strip_c_like_comments_and_strings(code: str) -> str:
+    """
+    Return a code-shaped string where comments/strings are replaced with spaces.
+    Newlines are preserved so line-based checks remain stable.
+    """
+    out: list[str] = []
+    i = 0
+    n = len(code)
+    in_single = False
+    in_double = False
+    in_line_comment = False
+    in_block_comment = False
+
+    while i < n:
+        ch = code[i]
+        nxt = code[i + 1] if i + 1 < n else ""
+
+        if in_line_comment:
+            if ch == "\n":
+                in_line_comment = False
+                out.append("\n")
+            else:
+                out.append(" ")
+            i += 1
+            continue
+
+        if in_block_comment:
+            if ch == "*" and nxt == "/":
+                out.extend([" ", " "])
+                i += 2
+                in_block_comment = False
+                continue
+            out.append("\n" if ch == "\n" else " ")
+            i += 1
+            continue
+
+        if in_single:
+            if ch == "\\" and i + 1 < n:
+                out.append(" ")
+                out.append("\n" if code[i + 1] == "\n" else " ")
+                i += 2
+                continue
+            if ch == "'":
+                in_single = False
+            out.append("\n" if ch == "\n" else " ")
+            i += 1
+            continue
+
+        if in_double:
+            if ch == "\\" and i + 1 < n:
+                out.append(" ")
+                out.append("\n" if code[i + 1] == "\n" else " ")
+                i += 2
+                continue
+            if ch == '"':
+                in_double = False
+            out.append("\n" if ch == "\n" else " ")
+            i += 1
+            continue
+
+        if ch == "/" and nxt == "/":
+            in_line_comment = True
+            out.extend([" ", " "])
+            i += 2
+            continue
+        if ch == "/" and nxt == "*":
+            in_block_comment = True
+            out.extend([" ", " "])
+            i += 2
+            continue
+        if ch == "'":
+            in_single = True
+            out.append(" ")
+            i += 1
+            continue
+        if ch == '"':
+            in_double = True
+            out.append(" ")
+            i += 1
+            continue
+
+        out.append(ch)
+        i += 1
+
+    return "".join(out)
+
+
 def _braces_balanced(code):
+    sanitized = _strip_c_like_comments_and_strings(code)
     stack = []
     pairs = {')': '(', ']': '[', '}': '{'}
-    for ch in code:
+    for ch in sanitized:
         if ch in "([{":
             stack.append(ch)
         elif ch in ")]}":
@@ -105,6 +194,7 @@ def _braces_balanced(code):
 def _has_unclosed_strings(code: str) -> bool:
     in_single = False
     in_double = False
+    in_backtick = False
     escaped = False
     for char in code:
         if escaped:
@@ -113,11 +203,13 @@ def _has_unclosed_strings(code: str) -> bool:
         if char == '\\':
             escaped = True
             continue
-        if char == "'" and not in_double:
+        if char == "'" and not in_double and not in_backtick:
             in_single = not in_single
-        elif char == '"' and not in_single:
+        elif char == '"' and not in_single and not in_backtick:
             in_double = not in_double
-    return in_single or in_double
+        elif char == "`" and not in_single and not in_double:
+            in_backtick = not in_backtick
+    return in_single or in_double or in_backtick
 
 def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
     """
@@ -199,7 +291,9 @@ def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
                     loaded.add(node.id)
         return len(assigned - loaded) > 0
 
-    if error_type in {"NameError", "UndeclaredIdentifier"} and language == "Python":
+    if error_type in {"NameError", "UndeclaredIdentifier"}:
+        if language != "Python":
+            return False
         try:
             tree = _ast.parse(code)
         except Exception:
@@ -213,7 +307,7 @@ def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
                     defined.add(node.id)
                 elif isinstance(node.ctx, _ast.Load):
                     used.add(node.id)
-            elif isinstance(node, (_ast.FunctionDef, _ast.ClassDef)):
+            elif isinstance(node, _ast.FunctionDef):
                 defined.add(node.name)
                 for arg in node.args.args:
                     defined.add(arg.arg)
@@ -226,6 +320,8 @@ def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
                     defined.add(node.args.vararg.arg)
                 if node.args.kwarg:
                     defined.add(node.args.kwarg.arg)
+            elif isinstance(node, _ast.ClassDef):
+                defined.add(node.name)
             elif isinstance(node, (_ast.Import, _ast.ImportFrom)):
                 for alias in node.names:
                     defined.add(alias.asname or alias.name.split(".")[0])
@@ -246,6 +342,52 @@ def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
         )
 
     return True
+
+
+def _should_run_semantic_ml(code: str, language: str) -> bool:
+    """
+    Fast pre-filter to avoid expensive ML calls on obviously clean snippets.
+    """
+    lines = [line for line in code.splitlines() if line.strip()]
+    if not lines:
+        return False
+    code_text = "\n".join(lines)
+
+    if any(len(line) > 120 for line in lines):
+        return True
+    if re.search(r"[/%]\s*0(\.0+)?\b", code_text):
+        return True
+    if re.search(r"\bwhile\s*\(\s*true\s*\)|\bwhile\s+true\b|\bwhile\s*\(\s*1\s*\)|\bfor\s*\(\s*;\s*;\s*\)", code_text, flags=re.IGNORECASE):
+        return True
+    if re.search(r"\b(return|break|continue|raise|throw)\b[^\n]*\n\s*[A-Za-z_#]", code_text, flags=re.IGNORECASE):
+        return True
+
+    if language == "Python":
+        if re.search(r"^\s*(import|from)\s+", code_text, flags=re.MULTILINE):
+            return True
+        if re.search(r"\bfrom\s+\w+\s+import\s+\*", code_text):
+            return True
+        if re.search(r"def\s+\w+\s*\([^)]*=\s*(\[\]|\{\}|set\(|dict\(|list\()", code_text):
+            return True
+        if code_text.count("def ") > 1 or code_text.count("class ") > 1:
+            return True
+        return False
+
+    if language in {"Java", "C", "C++"}:
+        if re.search(r"^\s*#include\s+", code_text, flags=re.MULTILINE):
+            return True
+        if re.search(r"^\s*import\s+", code_text, flags=re.MULTILINE):
+            return True
+        if re.search(r"\b(class|interface|struct)\s+\w+", code_text):
+            return True
+        return False
+
+    if language == "JavaScript":
+        if re.search(r"^\s*import\s+", code_text, flags=re.MULTILINE):
+            return True
+        return False
+
+    return False
 
 
 def _append_warning(warnings: list[str], message: str) -> None:
@@ -273,14 +415,64 @@ def _attach_metadata(payload: dict, warnings: list[str]) -> dict:
     payload["warnings"] = list(warnings)
     return payload
 
+def _has_statement_glued_after_assignment(line: str) -> bool:
+    """
+    Detect missing ';' between two statements on a single line, e.g.:
+      int x = 1 System.out.println(x);
+    """
+    if "=" not in line:
+        return False
+    if "for(" in line or "for (" in line:
+        return False
+
+    declaration_then_stmt = re.search(
+        r"(?:^|[;{}])\s*(?:[A-Za-z_][\w<>\[\]]*\s+)+[A-Za-z_]\w*\s*=\s*[^;{}]+?\s*"
+        r"(?:System\.out|console\.log|printf|fprintf|puts|cout|std::cout|cin|std::cin|[A-Za-z_]\w+\s*=)",
+        line,
+    )
+    if declaration_then_stmt:
+        return True
+
+    assignment_then_known_stmt = re.search(
+        r"(?:^|[;{}])\s*[A-Za-z_]\w*\s*=\s*[^;{}]+?\s*"
+        r"(?:System\.out|console\.log|printf|fprintf|puts|cout|std::cout|cin|std::cin|return\b|if\b|while\b|switch\b|throw\b|[A-Za-z_]\w+\s*=)",
+        line,
+    )
+    return bool(assignment_then_known_stmt)
+
+
 def _has_missing_semicolons(code):
     import re
+    sanitized = _strip_c_like_comments_and_strings(code)
     simple_statements = [
         r'^return\s+.+$', r'^cout\s*<<.*$', r'^cin\s*>>.*$',
         r'^printf\s*\(.*\)$', r'^fprintf\s*\(.*\)$', r'^puts\s*\(.*\)$',
         r'^std::cout\s*<<.*$', r'^std::cin\s*>>.*$',
+        r'^(break|continue)\s*$', r'^\w+(\.\w+)?\s*(\+\+|--)$',
+        r'^throw\s+.+$',
     ]
-    for l in [l.strip() for l in code.splitlines() if l.strip()]:
+    for raw, clean in zip(code.splitlines(), sanitized.splitlines()):
+        l = clean.strip()
+        if not l:
+            continue
+
+        if l.startswith("using namespace") and not l.endswith(";"):
+            return True
+
+        if re.match(r"^(struct|enum)\b.*}\s*$", l) and not l.endswith("};"):
+            return True
+
+        if re.match(
+            r"^(?:unsigned|signed|long|short|int|float|double|char|bool|auto|string|"
+            r"vector<[^>]+>|map<[^>]+>|set<[^>]+>|[A-Za-z_]\w*(?:::\w+)?)\s+"
+            r"[A-Za-z_]\w*(?:\s*\[[^\]]*\])?$",
+            l,
+        ):
+            return True
+
+        if _has_statement_glued_after_assignment(l):
+            return True
+
         if (l.startswith('//') or l.startswith('/*') or l.startswith('*') or
             l.startswith('#') or l.endswith('{') or l.endswith('}') or
             l.startswith('import') or l.startswith('package') or
@@ -373,9 +565,25 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
         if ast_passed:
             # Code is syntactically valid Python.
             # Still check for semantic/runtime errors via ML.
-            semantic = _ml_semantic_check(code, language, [], warnings)
-            if semantic:
-                return _attach_metadata(semantic, warnings)
+            if _should_run_semantic_ml(code, language):
+                semantic = _ml_semantic_check(code, language, [], warnings)
+                if semantic:
+                    return _attach_metadata(semantic, warnings)
+                    
+            # Fallback for Python DivisionByZero if ML is missing/offline
+            if re.search(r"[/%]\s*0(\.0+)?\b", code):
+                rule_based_issues.append({
+                    "type": "DivisionByZero",
+                    "line": 0, "col": 0, "message": "Division by zero detected"
+                })
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "DivisionByZero",
+                    "confidence": 1.0,
+                    "tutor": explain_error("DivisionByZero"),
+                    "rule_based_issues": rule_based_issues
+                }, warnings)
+                
             # No semantic error detected either
             return _attach_metadata({
                 "language": language,
@@ -441,9 +649,9 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
         }, warnings)
 
     # =========================================================================
-    # JAVA / C / C++
+    # JAVA / C / C++ / JAVASCRIPT
     # =========================================================================
-    elif language in ["Java", "C", "C++"]:
+    elif language in ["Java", "C", "C++", "JavaScript"]:
 
         # Check for unclosed strings first (higher priority than other errors)
         if _has_unclosed_strings(code):
@@ -460,9 +668,10 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
 
         if not has_missing_semi and not has_unbalanced:
             # Structurally valid — check for semantic errors via ML
-            semantic = _ml_semantic_check(code, language, [], warnings)
-            if semantic:
-                return _attach_metadata(semantic, warnings)
+            if _should_run_semantic_ml(code, language):
+                semantic = _ml_semantic_check(code, language, [], warnings)
+                if semantic:
+                    return _attach_metadata(semantic, warnings)
             return _attach_metadata({
                 "language": language,
                 "predicted_error": "NoError",
@@ -471,6 +680,15 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
                     "why": "The code follows valid syntax rules for this language.",
                     "fix": "No changes are required."
                 },
+                "rule_based_issues": []
+            }, warnings)
+
+        if has_unbalanced:
+            return _attach_metadata({
+                "language": language,
+                "predicted_error": "UnmatchedBracket",
+                "confidence": 1.0,
+                "tutor": explain_error("UnmatchedBracket"),
                 "rule_based_issues": []
             }, warnings)
 
@@ -486,15 +704,6 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
                 "predicted_error": ml_error,
                 "confidence": confidence,
                 "tutor": explain_error(ml_error),
-                "rule_based_issues": []
-            }, warnings)
-
-        if has_unbalanced:
-            return _attach_metadata({
-                "language": language,
-                "predicted_error": "UnmatchedBracket",
-                "confidence": 1.0,
-                "tutor": explain_error("UnmatchedBracket"),
                 "rule_based_issues": []
             }, warnings)
 

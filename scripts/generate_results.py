@@ -14,14 +14,7 @@ sys.path.insert(0, os.path.abspath("."))
 from src.feature_utils import extract_numerical_features
 
 
-def _load_model_bundle(models_dir: str):
-    try:
-        model = joblib.load(os.path.join(models_dir, "syntax_error_model.pkl"))
-        vectorizer = joblib.load(os.path.join(models_dir, "tfidf_vectorizer.pkl"))
-        label_encoder = joblib.load(os.path.join(models_dir, "label_encoder.pkl"))
-    except Exception as exc:  # noqa: BLE001
-        return None, None, None, f"Model bundle unavailable: {exc}"
-    return model, vectorizer, label_encoder, None
+from scripts.utils.ml_utils import load_model_bundle
 
 
 def main() -> int:
@@ -36,7 +29,7 @@ def main() -> int:
         print(f"Dataset not found: {args.dataset}")
         return 1
 
-    model, vectorizer, label_encoder, load_error = _load_model_bundle(args.models_dir)
+    model, vectorizer, label_encoder, load_error = load_model_bundle(args.models_dir)
     if load_error:
         print(f"Skipping generation: {load_error}")
         return 0

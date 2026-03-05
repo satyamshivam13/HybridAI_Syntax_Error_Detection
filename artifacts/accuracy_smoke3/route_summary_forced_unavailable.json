@@ -1,0 +1,28 @@
+{
+  "health": {
+    "status": "degraded",
+    "version": "1.1.0",
+    "supported_languages": [
+      "Python",
+      "Java",
+      "C",
+      "C++",
+      "JavaScript"
+    ],
+    "ml_model_loaded": false,
+    "degraded_reason": "forced unavailable mode for evaluation",
+    "max_code_size": 200000,
+    "rate_limit_per_minute": 0
+  },
+  "check_status_counts": {
+    "200": 100
+  },
+  "fix_status_counts": {
+    "NaN": 50,
+    "200.0": 50
+  },
+  "quality_status_counts": {
+    "200.0": 50,
+    "NaN": 50
+  }
+}

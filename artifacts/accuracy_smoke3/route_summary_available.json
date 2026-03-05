@@ -1,0 +1,28 @@
+{
+  "health": {
+    "status": "healthy",
+    "version": "1.1.0",
+    "supported_languages": [
+      "Python",
+      "Java",
+      "C",
+      "C++",
+      "JavaScript"
+    ],
+    "ml_model_loaded": true,
+    "degraded_reason": null,
+    "max_code_size": 200000,
+    "rate_limit_per_minute": 0
+  },
+  "check_status_counts": {
+    "200": 5552
+  },
+  "fix_status_counts": {
+    "NaN": 5502,
+    "200.0": 50
+  },
+  "quality_status_counts": {
+    "NaN": 5502,
+    "200.0": 50
+  }
+}
