@@ -12,7 +12,7 @@ Overwrites the existing model files so the app immediately uses new model.
 
 Usage:
     python retrain_model.py                    # full retrain, auto-find dataset
-    python retrain_model.py --dataset dataset/merged/all_errors_v2.csv
+    python retrain_model.py --dataset dataset/merged/all_errors_v3.csv
     python retrain_model.py --preview          # show dataset stats only, no train
     python retrain_model.py --compare          # compare old vs new model accuracy
 """
@@ -45,9 +45,9 @@ from src.utils.cli_colors import GREEN, RED, YELLOW, CYAN, BOLD, RESET, green, r
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
 DATASET_PATHS = [
-    "dataset/merged/all_errors_v2.csv",
+    "dataset/merged/all_errors_v3.csv",
     "dataset/merged/all_errors.csv",
-    "all_errors_v2.csv",
+    "all_errors_v3.csv",
     "all_errors.csv",
 ]
 
@@ -319,7 +319,7 @@ def main():
         print(red("\n❌ No dataset found. Tried:"))
         for p in DATASET_PATHS:
             print(f"   {p}")
-        print(f"\nRun: python augment_dataset.py  first to generate all_errors_v2.csv")
+        print(f"\nRun: python augment_dataset.py  first to generate all_errors_v3.csv")
         sys.exit(1)
 
     # Find model dir

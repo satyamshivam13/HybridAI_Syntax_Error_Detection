@@ -125,7 +125,7 @@ def load_dataset_samples(dataset_path: Path, seed: int) -> list[Sample]:
                 source_path=str(dataset_path),
                 source_line=int(i + 2),
                 corpus_type="dataset",
-                generator="dataset/merged/all_errors_v2.csv",
+                generator="dataset/merged/all_errors_v3.csv",
                 seed=seed,
                 metadata={"dataset_index": int(i)},
             )
@@ -823,7 +823,7 @@ def main() -> int:
     started = time.time()
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    dataset_path = Path("dataset/merged/all_errors_v2.csv")
+    dataset_path = Path("dataset/merged/all_errors_v3.csv")
     model_label_path = Path("models/label_encoder.pkl")
     command = (
         f"python scripts/evaluate_exhaustive_accuracy.py --seed {args.seed} "

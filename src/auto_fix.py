@@ -219,6 +219,36 @@ class AutoFixer:
         """
         self.fixes_applied.append("Suggestion: Ensure you're assigning to valid variables, not literals or constants")
         return code  # Manual fix required
+        
+    def fix_infinite_loop(self, code: str) -> str:
+        """ Suggest an exit condition for infinite loops """
+        self.fixes_applied.append("Suggestion: Add a break condition or modify the loop expression to prevent an infinite loop")
+        return code
+        
+    def fix_type_mismatch(self, code: str) -> str:
+        """ Suggest fixing type mismatches """
+        self.fixes_applied.append("Suggestion: Ensure assigned values match their declared variable types or cast appropriately")
+        return code
+        
+    def fix_name_error(self, code: str) -> str:
+        """ Suggest fixing undeclared variables """
+        self.fixes_applied.append("Suggestion: Declare the variable before using it, or check for typos in the variable name")
+        return code
+        
+    def fix_division_by_zero(self, code: str) -> str:
+        """ Suggest fixing division by zero """
+        self.fixes_applied.append("Suggestion: Avoid dividing by zero or wrap the division in a condition checking if denominator != 0")
+        return code
+        
+    def fix_mutable_default(self, code: str) -> str:
+        """ Suggest fixing mutable default arguments (Python) """
+        self.fixes_applied.append("Suggestion: Use None as default value and initialize the mutable object (e.g. lists/dicts) inside the function")
+        return code
+        
+    def fix_line_too_long(self, code: str) -> str:
+        """ Suggest formatting for long lines """
+        self.fixes_applied.append("Suggestion: Break long lines into multiple lines for better readability and PEP8 compliance")
+        return code
     
     def apply_fixes(self, code: str, error_type: str, line_num: int = None, language: str = None) -> dict:
         """
@@ -245,14 +275,14 @@ class AutoFixer:
             if error_type == "MissingDelimiter":
                 if language == "Python" and line_num is not None:
                     fixed_code = self.fix_missing_colon(code, line_num)
-                elif language in ["Java", "C", "C++", "JavaScript"] and line_num is not None:
+                elif language in ["Java", "C", "C++", "JavaScript"]:
                     fixed_code = self.fix_missing_semicolon(code, line_num)
             
             # Specific error types
             elif error_type == "MissingColon" and line_num is not None:
                 fixed_code = self.fix_missing_colon(code, line_num)
             
-            elif error_type == "MissingSemicolon" and line_num is not None:
+            elif error_type == "MissingSemicolon":
                 fixed_code = self.fix_missing_semicolon(code, line_num)
             
             elif error_type == "IndentationError":
@@ -285,6 +315,24 @@ class AutoFixer:
             
             elif error_type == "InvalidAssignment":
                 fixed_code = self.fix_invalid_assignment(code)
+                
+            elif error_type == "InfiniteLoop":
+                fixed_code = self.fix_infinite_loop(code)
+                
+            elif error_type == "TypeMismatch":
+                fixed_code = self.fix_type_mismatch(code)
+                
+            elif error_type in ["NameError", "UndeclaredIdentifier"]:
+                fixed_code = self.fix_name_error(code)
+                
+            elif error_type == "DivisionByZero":
+                fixed_code = self.fix_division_by_zero(code)
+                
+            elif error_type == "MutableDefault":
+                fixed_code = self.fix_mutable_default(code)
+                
+            elif error_type == "LineTooLong":
+                fixed_code = self.fix_line_too_long(code)
             
             return {
                 'fixed_code': fixed_code,

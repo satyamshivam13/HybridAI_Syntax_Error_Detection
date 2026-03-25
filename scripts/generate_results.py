@@ -19,7 +19,7 @@ from scripts.utils.ml_utils import load_model_bundle
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate prediction results CSV")
-    parser.add_argument("--dataset", default="dataset/merged/all_errors_v2.csv")
+    parser.add_argument("--dataset", default="dataset/merged/all_errors_v3.csv")
     parser.add_argument("--models-dir", default="models")
     parser.add_argument("--output", default="results/results_generated.csv")
     parser.add_argument("--smoke", action="store_true", help="Quick check without writing output")

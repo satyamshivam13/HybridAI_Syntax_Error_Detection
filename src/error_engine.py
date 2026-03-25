@@ -46,16 +46,16 @@ MIN_CODE_LINES_FOR_SEMANTIC = 4        # Below this, use SHORT_CODE_SEMANTIC_THR
 # Per-type minimum confidence for semantic errors (reduce false positives)
 SEMANTIC_ERROR_THRESHOLDS = {
     "DivisionByZero": 0.85,
-    "ImportError": 0.85,
-    "InfiniteLoop": 0.85,
+    "ImportError": 0.75,
+    "InfiniteLoop": 0.75,
     "UnreachableCode": 0.85,
     "InvalidAssignment": 0.85,
     "DuplicateDefinition": 0.85,
-    "NameError": 0.85,
-    "UndeclaredIdentifier": 0.85,
-    "TypeMismatch": 0.85,
-    "MissingImport": 0.85,
-    "MissingInclude": 0.85,
+    "NameError": 0.75,
+    "UndeclaredIdentifier": 0.75,
+    "TypeMismatch": 0.75,
+    "MissingImport": 0.75,
+    "MissingInclude": 0.75,
     "LineTooLong": 0.85,
     "WildcardImport": 0.85,
     "MutableDefault": 0.85,
@@ -226,10 +226,17 @@ def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
         return bool(re.search(r"[/%]\s*0(\.0+)?\b", code_text))
 
     if error_type in {"ImportError", "MissingImport", "WildcardImport"}:
-        return bool(re.search(r"^\s*(import|from)\s+", code_text, flags=re.MULTILINE))
+        if language in {"C", "C++"}:
+            return False
+        has_import = bool(re.search(r"^\s*(import|from)\s+", code_text, flags=re.MULTILINE))
+        if error_type == "MissingImport":
+            return not has_import
+        return has_import
 
     if error_type == "MissingInclude":
-        return bool(re.search(r"^\s*#include\s+", code_text, flags=re.MULTILINE))
+        if language not in {"C", "C++"}:
+            return False
+        return not bool(re.search(r"^\s*#include\s+", code_text, flags=re.MULTILINE))
 
     if error_type == "InfiniteLoop":
         return bool(
@@ -388,6 +395,23 @@ def _should_run_semantic_ml(code: str, language: str) -> bool:
         return False
 
     return False
+
+
+def _has_infinite_loop(code: str) -> bool:
+    """
+    Rule-based detector for obvious infinite-loop patterns.
+    Works for Java, C, C++, and JavaScript.
+    """
+    sanitized = _strip_c_like_comments_and_strings(code)
+    return bool(
+        re.search(
+            r"\bwhile\s*\(\s*true\s*\)"
+            r"|\bwhile\s*\(\s*1\s*\)"
+            r"|\bfor\s*\(\s*;\s*;\s*\)",
+            sanitized,
+            flags=re.IGNORECASE,
+        )
+    )
 
 
 def _append_warning(warnings: list[str], message: str) -> None:
@@ -667,6 +691,16 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
         has_unbalanced   = not _braces_balanced(code)
 
         if not has_missing_semi and not has_unbalanced:
+            # Rule-based infinite-loop check (authoritative for all C-like langs + JS)
+            if _has_infinite_loop(code):
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "InfiniteLoop",
+                    "confidence": 1.0,
+                    "tutor": explain_error("InfiniteLoop"),
+                    "rule_based_issues": []
+                }, warnings)
+
             # Structurally valid — check for semantic errors via ML
             if _should_run_semantic_ml(code, language):
                 semantic = _ml_semantic_check(code, language, [], warnings)

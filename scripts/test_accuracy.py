@@ -43,8 +43,8 @@ def pct_bar(pct):
 
 # ─── Load dataset ─────────────────────────────────────────────────────────────
 DATASET_PATHS = [
-    "dataset/merged/all_errors_v2.csv",
-    "all_errors_v2.csv",
+    "dataset/merged/all_errors_v3.csv",
+    "all_errors_v3.csv",
 ]
 
 def load_dataset(lang_filter=None, max_samples=None):

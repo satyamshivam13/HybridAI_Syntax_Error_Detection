@@ -24,7 +24,7 @@ Targets (samples needed):
 
 Usage:
     python augment_dataset.py
-    python augment_dataset.py --output dataset/merged/all_errors_v2.csv
+    python augment_dataset.py --output dataset/merged/all_errors_v3.csv
     python augment_dataset.py --preview   # show counts without writing
 """
 
@@ -618,7 +618,7 @@ def main():
         output_path = args.output
     else:
         base = os.path.dirname(dataset_path)
-        output_path = os.path.join(base, "all_errors_v2.csv") if base else "all_errors_v2.csv"
+        output_path = os.path.join(base, "all_errors_v3.csv") if base else "all_errors_v3.csv"
 
     # Build new rows
     new_rows = []
