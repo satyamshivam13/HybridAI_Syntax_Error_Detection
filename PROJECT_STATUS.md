@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-03-04
+Last updated: 2026-03-26
 
 ## Summary
 - Runtime hardening completed for model-unavailable behavior.
@@ -10,6 +10,7 @@ Last updated: 2026-03-04
 
 ## Verified locally
 - `pytest tests/ -v -p no:cacheprovider` passes.
+- Latest run in project `.venv`: 76 passed, 1 skipped, 1 xfailed.
 - Script smoke tests run under UTF-8 and cp1252 console settings.
 - Link checker validates markdown references.
 
