@@ -111,7 +111,55 @@ JAVA_IMPORT_HINTS = {
     "Scanner": "java.util.Scanner",
 }
 
-C_STDIO_SYMBOLS = {"printf", "fprintf", "scanf", "puts", "FILE"}
+C_STDIO_SYMBOLS = {
+    # stdio.h
+    "printf", "fprintf", "sprintf", "scanf", "fscanf", "puts", "gets", "fgets",
+    "FILE", "fopen", "fclose", "fread", "fwrite", "fputs", "fputc", "getc",
+    # stdlib.h
+    "malloc", "calloc", "realloc", "free", "exit", "abort", "system",
+    "atoi", "atof", "strtol", "strtod", "rand", "srand",
+    # string.h
+    "strlen", "strcpy", "strncpy", "strcat", "strcmp", "strncmp",
+    "strchr", "strrchr", "strstr", "strtok", "strdup",
+    # math.h
+    "sin", "cos", "tan", "sqrt", "pow", "abs", "ceil", "floor",
+    # ctype.h
+    "isalpha", "isdigit", "isspace", "toupper", "tolower",
+    # time.h
+    "time", "clock", "difftime", "mktime", "localtime",
+    # assert.h
+    "assert",
+}
+
+C_SYMBOL_TO_HEADER = {
+    # stdio.h
+    "printf": "stdio.h", "fprintf": "stdio.h", "sprintf": "stdio.h",
+    "scanf": "stdio.h", "fscanf": "stdio.h", "puts": "stdio.h", "gets": "stdio.h",
+    "fgets": "stdio.h", "FILE": "stdio.h", "fopen": "stdio.h", "fclose": "stdio.h",
+    "fread": "stdio.h", "fwrite": "stdio.h", "fputs": "stdio.h", "fputc": "stdio.h",
+    "getc": "stdio.h",
+    # stdlib.h
+    "malloc": "stdlib.h", "calloc": "stdlib.h", "realloc": "stdlib.h",
+    "free": "stdlib.h", "exit": "stdlib.h", "abort": "stdlib.h", "system": "stdlib.h",
+    "atoi": "stdlib.h", "atof": "stdlib.h", "strtol": "stdlib.h",
+    "strtod": "stdlib.h", "rand": "stdlib.h", "srand": "stdlib.h",
+    # string.h
+    "strlen": "string.h", "strcpy": "string.h", "strncpy": "string.h",
+    "strcat": "string.h", "strcmp": "string.h", "strncmp": "string.h",
+    "strchr": "string.h", "strrchr": "string.h", "strstr": "string.h",
+    "strtok": "string.h", "strdup": "string.h",
+    # math.h
+    "sin": "math.h", "cos": "math.h", "tan": "math.h", "sqrt": "math.h",
+    "pow": "math.h", "abs": "math.h", "ceil": "math.h", "floor": "math.h",
+    # ctype.h
+    "isalpha": "ctype.h", "isdigit": "ctype.h", "isspace": "ctype.h",
+    "toupper": "ctype.h", "tolower": "ctype.h",
+    # time.h
+    "time": "time.h", "clock": "time.h", "difftime": "time.h",
+    "mktime": "time.h", "localtime": "time.h",
+    # assert.h
+    "assert": "assert.h",
+}
 
 JS_GLOBALS = {
     "console", "Math", "Number", "String", "Boolean", "Array", "Object",
@@ -815,17 +863,20 @@ def _find_missing_include_issues(code: str, language: str) -> list[dict]:
             pattern = rf"\b{symbol}\s*\("
         if not re.search(pattern, includes):
             continue
-        if re.search(r"^\s*#include\s*<stdio\.h>", includes, flags=re.MULTILINE):
+        # Get the correct header for this symbol
+        required_header = C_SYMBOL_TO_HEADER.get(symbol, "stdio.h")
+        header_include_pattern = rf"^\s*#include\s*<{re.escape(required_header)}>"
+        if re.search(header_include_pattern, includes, flags=re.MULTILINE):
             continue
         for lineno, line in enumerate(sanitized_lines, start=1):
             if re.search(pattern, line):
                 issues.append(_make_issue(
                     "MissingInclude",
-                    f"{symbol} is used without including <stdio.h>.",
+                    f"{symbol} is used without including <{required_header}>.",
                     line=lineno,
                     col=line.find(symbol) + 1,
                     snippet=original_lines[lineno - 1].strip(),
-                    suggestion="Add '#include <stdio.h>' at the top of the file.",
+                    suggestion=f"Add '#include <{required_header}>' at the top of the file.",
                 ))
                 break
     return issues
@@ -947,13 +998,14 @@ def _collect_declared_names(code: str, language: str) -> set[str]:
             r"(?:unsigned|signed|long|short|int|float|double|char|bool|void|size_t|"
             r"FILE|struct\s+[A-Za-z_]\w*|[A-Z][A-Za-z0-9_]*)"
         )
+        ptr_type_pattern = rf"{type_pattern}(?:\s*\*+\s*)?"
         for line in sanitized_lines:
-            function_match = re.search(rf"\b{type_pattern}\s+([A-Za-z_]\w*)\s*\(([^)]*)\)", line)
+            function_match = re.search(rf"\b{ptr_type_pattern}\s*([A-Za-z_]\w*)\s*\(([^)]*)\)", line)
             if function_match:
                 declared.add(function_match.group(1))
-                params = re.findall(rf"\b{type_pattern}\s+\*?\s*([A-Za-z_]\w*)\b", function_match.group(2))
+                params = re.findall(rf"\b{ptr_type_pattern}\s*([A-Za-z_]\w*)\b", function_match.group(2))
                 declared.update(params)
-            for match in re.finditer(rf"\b{type_pattern}\s+\*?\s*([A-Za-z_]\w*)\b", line):
+            for match in re.finditer(rf"\b{ptr_type_pattern}\s*([A-Za-z_]\w*)\b", line):
                 declared.add(match.group(1))
         return declared
 
@@ -1015,7 +1067,7 @@ def _find_undeclared_identifier_issues(code: str, language: str) -> list[dict]:
             if re.search(rf"\b(?:let|const|var|function|class|interface|struct|enum)\s+{re.escape(name)}\b", line):
                 continue
             if language in {"Java", "C", "C++"} and re.search(
-                rf"\b(?:unsigned|signed|long|short|int|float|double|char|bool|boolean|String|void)\s+\*?\s*{re.escape(name)}\b",
+                rf"\b(?:unsigned|signed|long|short|int|float|double|char|bool|boolean|String|void)(?:\s*\*+\s*)?\s*{re.escape(name)}\b",
                 line,
             ):
                 continue

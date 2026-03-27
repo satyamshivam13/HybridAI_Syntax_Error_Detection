@@ -1,0 +1,5 @@
+{
+  "artifact_format": "tfidf+numerical+gradient_boosting",
+  "sklearn_major_minor": "1.7",
+  "sklearn_version": "1.7.2"
+}

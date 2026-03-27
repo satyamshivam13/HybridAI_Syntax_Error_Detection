@@ -1,4 +1,4 @@
-"""
+﻿"""
 Multi-error detection for OmniSyntax.
 
 Python keeps its AST-backed path. C-like languages reuse the richer rule engine
@@ -9,7 +9,13 @@ import ast as _ast
 
 from .error_engine import _collect_c_like_rule_based_issues
 from .language_detector import detect_language
-from .ml_engine import ModelInferenceError, ModelUnavailableError, detect_error_ml
+from .ml_engine import (
+    ModelInferenceError,
+    ModelUnavailableError,
+    detect_error_ml,
+    get_model_status,
+    is_model_available,
+)
 from .syntax_checker import detect_all
 from .tutor_explainer import explain_error
 
@@ -47,12 +53,22 @@ def detect_all_errors(code: str, filename: str | None = None):
             "total_errors": int,
             "has_errors": bool,
             "rule_based_issues": list[dict],
+            "degraded_mode": bool,
+            "warnings": list[str],
         }
     """
     language = detect_language(code, filename)
     all_errors = []
     rule_based_issues = []
     is_valid_python = False
+    warnings: list[str] = []
+
+    degraded_mode = not is_model_available()
+    if degraded_mode:
+        status = get_model_status()
+        warnings.append(
+            f"ML model unavailable; falling back to rule-based checks only ({status.get('error', 'unknown reason')})"
+        )
 
     if language == "Python":
         try:
@@ -102,4 +118,6 @@ def detect_all_errors(code: str, filename: str | None = None):
         "total_errors": sum(error["count"] for error in all_errors),
         "has_errors": len(all_errors) > 0,
         "rule_based_issues": rule_based_issues,
+        "degraded_mode": degraded_mode,
+        "warnings": warnings,
     }

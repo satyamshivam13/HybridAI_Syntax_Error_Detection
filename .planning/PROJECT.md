@@ -1,4 +1,4 @@
-# OmniSyntax
+﻿# OmniSyntax
 
 ## What This Is
 
@@ -12,10 +12,10 @@ Students should get accurate, actionable code-error feedback even when the ML la
 
 ### Validated
 
-- ✓ Multi-language code checking is already available through the API, CLI, and Streamlit app.
-- ✓ The system can explain detected errors and suggest fixes for supported scenarios.
-- ✓ The runtime now exposes degraded mode explicitly when ML artifacts cannot load.
-- ✓ Automated tests and CI already protect core detection, API behavior, and smoke scripts.
+- âœ“ Multi-language code checking is already available through the API, CLI, and Streamlit app.
+- âœ“ The system can explain detected errors and suggest fixes for supported scenarios.
+- âœ“ The runtime now exposes degraded mode explicitly when ML artifacts cannot load.
+- âœ“ Automated tests and CI already protect core detection, API behavior, and smoke scripts.
 
 ### Active
 
@@ -36,12 +36,12 @@ Students should get accurate, actionable code-error feedback even when the ML la
 
 OmniSyntax already contains a hybrid analysis pipeline with rule-based detection, ML-backed classification, auto-fix helpers, quality analysis, and student-oriented explanations. The repo includes working FastAPI, CLI, and Streamlit entry points, plus evaluation and reporting scripts, but recent QA work found that non-Python detection quality depends heavily on fallback heuristics when the serialized scikit-learn model bundle is unavailable.
 
-Recent verification confirmed that the test suite passes in degraded mode and that the public entry points still run, but the ML runtime remains incompatible in the current environment. This means the short-term roadmap should prioritize strong rule-based behavior, trustworthy diagnostics, and better verification around degraded-mode operation.
+Recent verification confirms the metadata-aware ML bundle now loads successfully in the current environment, while degraded mode remains a first-class fallback when compatibility drifts. The roadmap focus remains strong rule-based behavior, trustworthy diagnostics, and reliable verification for both healthy and degraded runtime states.
 
 ## Constraints
 
 - **Tech stack**: Existing Python codebase with FastAPI, Streamlit, and scikit-learn artifacts - improvements need to fit the current architecture rather than rewrite it.
-- **Compatibility**: Serialized ML models are tied to `scikit-learn==1.1.3` - incompatible environments must still produce useful results.
+- **Compatibility**: Runtime compatibility is driven by `models/bundle_metadata.json` and the active `scikit-learn==1.7.2` environment contract; incompatible environments must still produce useful degraded-mode results.
 - **Quality**: Student-facing diagnostics need exact locations and understandable explanations - vague or misleading feedback is not acceptable.
 - **Reliability**: API, CLI, and Streamlit flows must behave consistently in healthy and degraded mode - regressions across entry points are high impact.
 - **QA**: Production-grade regression coverage is required for C, Java, and JavaScript - known false negatives must stay fixed once addressed.
@@ -50,10 +50,11 @@ Recent verification confirmed that the test suite passes in degraded mode and th
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Keep the brownfield Python architecture | The repo already has stable entry points and tests, so focused improvements are lower risk than a rewrite | ✓ Good |
-| Treat degraded-mode correctness as a first-class requirement | ML compatibility is currently fragile, so fallback behavior must still be trustworthy | ✓ Good |
+| Keep the brownfield Python architecture | The repo already has stable entry points and tests, so focused improvements are lower risk than a rewrite | âœ“ Good |
+| Treat degraded-mode correctness as a first-class requirement | ML compatibility is currently fragile, so fallback behavior must still be trustworthy | âœ“ Good |
 | Organize work around detection reliability, feedback quality, ML recovery, and QA hardening | These areas map directly to observed failures and user goals | - Pending |
-| Use `.planning/codebase/` maps before deeper phase planning | Future GSD phases need reliable repo context instead of rediscovering structure each time | ✓ Good |
+| Use `.planning/codebase/` maps before deeper phase planning | Future GSD phases need reliable repo context instead of rediscovering structure each time | âœ“ Good |
 
 ---
 *Last updated: 2026-03-27 after GSD project initialization*
+

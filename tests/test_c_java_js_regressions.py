@@ -130,3 +130,23 @@ def test_multi_error_detector_keeps_primary_unclosed_string_without_bracket_nois
     error_types = {error["type"] for error in result["errors"]}
     assert "UnclosedString" in error_types
     assert "UnmatchedBracket" not in error_types
+
+
+def test_cpp_pointer_declarations_are_not_undeclared_identifiers():
+    code = (
+        "#include <iostream>\n"
+        "using namespace std;\n"
+        "\n"
+        "int* getValue() {\n"
+        "    int x = 10;\n"
+        "    return &x;\n"
+        "}\n"
+        "\n"
+        "int main() {\n"
+        "    int* ptr = getValue();\n"
+        "    cout << *ptr << endl;\n"
+        "}\n"
+    )
+    result = detect_errors(code, "main.cpp")
+    issue_types = {issue["type"] for issue in result["rule_based_issues"]}
+    assert "UndeclaredIdentifier" not in issue_types

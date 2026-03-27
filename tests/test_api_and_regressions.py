@@ -1,4 +1,5 @@
-import importlib
+﻿import importlib
+import json
 import os
 import sys
 
@@ -28,6 +29,33 @@ def test_model_unavailable_is_explicit():
         detect_error_ml("x = 1")
 
 
+def test_model_status_prefers_bundle_metadata(monkeypatch: pytest.MonkeyPatch, tmp_path):
+    import src.ml_engine as ml
+
+    metadata_path = tmp_path / "bundle_metadata.json"
+    metadata_path.write_text(
+        json.dumps(
+            {
+                "sklearn_version": "1.7.2",
+                "sklearn_major_minor": "1.7",
+                "artifact_format": "tfidf+numerical+gradient_boosting",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(ml, "MODEL_DIR", str(tmp_path))
+    monkeypatch.setattr(ml, "bundle_metadata", ml._load_bundle_metadata())
+    monkeypatch.setattr(ml, "model_loaded", False)
+    monkeypatch.setattr(ml, "model_error", "bundle missing")
+
+    status = ml.get_model_status()
+
+    assert status["bundle_metadata_present"] is True
+    assert status["bundle_sklearn_version"] == "1.7.2"
+    assert status["expected_sklearn_major_minor"] == "1.7"
+
+
 def test_quality_complexity_baseline():
     analyzer = CodeQualityAnalyzer("x=1", "python")
     assert analyzer.calculate_complexity() == 1
@@ -55,6 +83,56 @@ def test_autofix_semicolon_line_targeting():
     assert result["fixed_code"].splitlines()[0].endswith(";")
     assert not result["fixed_code"].splitlines()[1].endswith(";")
 
+
+
+def test_health_degraded_contract_has_reason(monkeypatch: pytest.MonkeyPatch):
+    api = _load_api(monkeypatch, rate_limit="100")
+
+    def _fake_status():
+        return {
+            "loaded": False,
+            "error": "forced-unavailable",
+            "bundle_metadata_present": True,
+            "bundle_sklearn_version": "1.7.2",
+            "expected_sklearn_major_minor": "1.7",
+        }
+
+    monkeypatch.setattr(api, "get_model_status", _fake_status)
+    client = TestClient(api.app)
+    response = client.get("/health")
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "degraded"
+    assert payload["ml_model_loaded"] is False
+    assert payload["degraded_reason"] == "forced-unavailable"
+
+
+def test_phase5_tutor_entries_are_not_generic():
+    from src.tutor_explainer import explain_error
+
+    generic = {
+        "why": "The code contains a structural or syntactic issue.",
+        "fix": "Review the code structure and correct the error.",
+    }
+    phase5_types = [
+        "MissingDelimiter",
+        "UnmatchedBracket",
+        "UnclosedString",
+        "DivisionByZero",
+        "MissingInclude",
+        "MissingImport",
+        "TypeMismatch",
+        "UndeclaredIdentifier",
+        "InfiniteLoop",
+        "UnreachableCode",
+        "DuplicateDefinition",
+    ]
+
+    for error_type in phase5_types:
+        explanation = explain_error(error_type)
+        assert explanation != generic
+        assert explanation["why"].strip()
+        assert explanation["fix"].strip()
 
 def test_health_reflects_model_state(monkeypatch: pytest.MonkeyPatch):
     api = _load_api(monkeypatch, rate_limit="100")
@@ -167,3 +245,6 @@ def test_java_missing_delimiter_false_negative_regression(monkeypatch: pytest.Mo
     )
     result = detect_errors(code, "Main.java")
     assert result["predicted_error"] == "MissingDelimiter"
+
+
+

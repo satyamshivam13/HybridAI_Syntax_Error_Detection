@@ -20,6 +20,7 @@ Usage:
 import os
 import sys
 import csv
+import json
 import pickle
 import argparse
 import warnings
@@ -34,14 +35,15 @@ warnings.filterwarnings('ignore')
 # ─── Ensure project root is on sys.path so `src` package is importable ─────
 _here = os.path.abspath(__file__)               # e.g. .../scripts/retrain_model.py
 _project_root = os.path.dirname(os.path.dirname(_here))  # .../project_root
-for _p in (_project_root, os.getcwd()):
+_src_root = os.path.join(_project_root, "src")
+for _p in (_src_root, _project_root, os.getcwd()):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from src.feature_utils import extract_numerical_features, NUMERICAL_FEATURE_NAMES
+from feature_utils import extract_numerical_features, NUMERICAL_FEATURE_NAMES
 
 # ─── Colour helpers ──────────────────────────────────────────────────────────
-from src.utils.cli_colors import GREEN, RED, YELLOW, CYAN, BOLD, RESET, green, red, yellow, bold, cyan
+from utils.cli_colors import GREEN, RED, YELLOW, CYAN, BOLD, RESET, green, red, yellow, bold, cyan
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
 DATASET_PATHS = [
@@ -64,6 +66,26 @@ MODEL_FILES = {
     "tfidf":      "tfidf_vectorizer.pkl",
     "num_feats":  "numerical_features.pkl",
 }
+MODEL_BUNDLE_METADATA = "bundle_metadata.json"
+
+
+def configure_console_output():
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
+
+def get_bundle_metadata():
+    import sklearn
+
+    version = sklearn.__version__
+    major_minor = ".".join(version.split(".")[:2])
+    return {
+        "sklearn_version": version,
+        "sklearn_major_minor": major_minor,
+        "artifact_format": "tfidf+numerical+gradient_boosting",
+    }
 
 
 def find_dataset(override=None):
@@ -256,12 +278,15 @@ def save_model(clf, le, tfidf, model_dir):
         "encoder":   os.path.join(model_dir, MODEL_FILES["encoder"]),
         "tfidf":     os.path.join(model_dir, MODEL_FILES["tfidf"]),
         "num_feats": os.path.join(model_dir, MODEL_FILES["num_feats"]),
+        "metadata":  os.path.join(model_dir, MODEL_BUNDLE_METADATA),
     }
 
     pickle.dump(clf,   open(paths["model"],    'wb'))
     pickle.dump(le,    open(paths["encoder"],  'wb'))
     pickle.dump(tfidf, open(paths["tfidf"],    'wb'))
     pickle.dump(NUMERICAL_FEATURE_NAMES, open(paths["num_feats"], 'wb'))
+    with open(paths["metadata"], "w", encoding="utf-8") as metadata_file:
+        json.dump(get_bundle_metadata(), metadata_file, indent=2, sort_keys=True)
 
     print(f"\n  {bold('Model files saved:')}")
     for k, p in paths.items():
@@ -298,6 +323,7 @@ def smoke_test(clf, le, tfidf):
 
 # ─── Main ────────────────────────────────────────────────────────────────────
 def main():
+    configure_console_output()
     parser = argparse.ArgumentParser(description="Retrain OmniSyntax model")
     parser.add_argument('--dataset', type=str, default=None,
                         help='Path to training CSV (default: auto-detect)')

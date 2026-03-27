@@ -1,5 +1,6 @@
 import logging
 import os
+import json
 from typing import Any
 
 import joblib
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 MODEL_DIR = "models"
 REQUIRED_SKLEARN_MAJOR_MINOR = "1.1"
+MODEL_BUNDLE_METADATA_FILENAME = "bundle_metadata.json"
 
 model: Any = None
 vectorizer: Any = None
@@ -19,6 +21,7 @@ label_encoder: Any = None
 use_enhanced_features = False
 model_loaded = False
 model_error: str | None = None
+bundle_metadata: dict[str, Any] = {}
 
 
 class ModelUnavailableError(RuntimeError):
@@ -36,6 +39,7 @@ def _load_model_bundle() -> None:
     global use_enhanced_features
     global model_loaded
     global model_error
+    global bundle_metadata
 
     candidates = [
         {
@@ -63,15 +67,38 @@ def _load_model_bundle() -> None:
                 use_enhanced_features = True
             else:
                 use_enhanced_features = False
+            bundle_metadata = _load_bundle_metadata()
             model_loaded = True
             model_error = None
             return
         except Exception as exc:  # noqa: BLE001
             errors.append(f"{candidate['model']}: {exc}")
 
+    bundle_metadata = _load_bundle_metadata()
     model_loaded = False
     model_error = " | ".join(errors) if errors else "Unknown model loading failure"
     logger.error("ML model load failed: %s", model_error)
+
+
+def _load_bundle_metadata() -> dict[str, Any]:
+    metadata_path = os.path.join(MODEL_DIR, MODEL_BUNDLE_METADATA_FILENAME)
+    if not os.path.exists(metadata_path):
+        return {}
+    try:
+        with open(metadata_path, encoding="utf-8") as handle:
+            data = json.load(handle)
+        if isinstance(data, dict):
+            return data
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Unable to read model bundle metadata from %s: %s", metadata_path, exc)
+    return {}
+
+
+def _expected_sklearn_major_minor() -> str:
+    expected = bundle_metadata.get("sklearn_major_minor")
+    if isinstance(expected, str) and expected:
+        return expected
+    return REQUIRED_SKLEARN_MAJOR_MINOR
 
 
 _load_model_bundle()
@@ -83,15 +110,18 @@ def is_model_available() -> bool:
 
 def get_model_status() -> dict[str, Any]:
     status: dict[str, Any] = {"loaded": model_loaded, "error": model_error}
+    status["bundle_metadata_present"] = bool(bundle_metadata)
+    status["bundle_sklearn_version"] = bundle_metadata.get("sklearn_version")
     try:
         import sklearn
 
         status["sklearn_version"] = sklearn.__version__
-        status["expected_sklearn_major_minor"] = REQUIRED_SKLEARN_MAJOR_MINOR
-        status["sklearn_compatible"] = sklearn.__version__.startswith(REQUIRED_SKLEARN_MAJOR_MINOR)
+        expected_major_minor = _expected_sklearn_major_minor()
+        status["expected_sklearn_major_minor"] = expected_major_minor
+        status["sklearn_compatible"] = sklearn.__version__.startswith(expected_major_minor)
     except Exception as exc:  # noqa: BLE001
         status["sklearn_version"] = None
-        status["expected_sklearn_major_minor"] = REQUIRED_SKLEARN_MAJOR_MINOR
+        status["expected_sklearn_major_minor"] = _expected_sklearn_major_minor()
         status["sklearn_compatible"] = False
         status["error"] = status["error"] or f"Unable to read scikit-learn version: {exc}"
     return status
