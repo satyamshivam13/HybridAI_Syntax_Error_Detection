@@ -59,20 +59,22 @@ def main():
 
     print(f"📂 File        : {file_path}")
     print(f"🗂 Language    : {result['language']}")
-    print(f"🤖 ML Error    : {result['predicted_error']}")
+    print(f"🤖 Detected    : {result['predicted_error']}")
     print("-" * 60)
 
     # --------------------------------------------------------
-    # 5. Rule-Based Issues (Python Only)
+    # 5. Rule-Based Issues
     # --------------------------------------------------------
     issues = result.get("rule_based_issues", [])
 
     if issues:
-        print("⚠️ Rule-Based Syntax Issues (Python):")
+        print("⚠️ Rule-Based Issues:")
         for i, issue in enumerate(issues, start=1):
             print(f"\n{i}. {issue.get('type')}")
             if issue.get("line"):
                 print(f"   Line      : {issue.get('line')}")
+            if issue.get("col"):
+                print(f"   Column    : {issue.get('col')}")
             print(f"   Message   : {issue.get('message')}")
             if issue.get("suggestion"):
                 print(f"   Suggestion: {issue.get('suggestion')}")

@@ -87,8 +87,119 @@ LABEL_ALIASES = {
     "MissingColon": "MissingDelimiter",
 }
 
+C_LIKE_ISSUE_PRIORITY = [
+    "UnclosedString",
+    "UnmatchedBracket",
+    "MissingDelimiter",
+    "TypeMismatch",
+    "MissingImport",
+    "MissingInclude",
+    "DuplicateDefinition",
+    "UndeclaredIdentifier",
+    "DivisionByZero",
+    "InfiniteLoop",
+    "UnreachableCode",
+]
+
+JAVA_IMPORT_HINTS = {
+    "ArrayList": "java.util.ArrayList",
+    "List": "java.util.List",
+    "Map": "java.util.Map",
+    "Set": "java.util.Set",
+    "HashMap": "java.util.HashMap",
+    "HashSet": "java.util.HashSet",
+    "Scanner": "java.util.Scanner",
+}
+
+C_STDIO_SYMBOLS = {"printf", "fprintf", "scanf", "puts", "FILE"}
+
+JS_GLOBALS = {
+    "console", "Math", "Number", "String", "Boolean", "Array", "Object",
+    "JSON", "Promise", "window", "document", "undefined", "NaN", "Infinity",
+    "parseInt", "parseFloat", "setTimeout", "clearTimeout", "setInterval",
+    "clearInterval", "require", "module", "exports",
+}
+
+C_LIKE_KEYWORDS = {
+    "if", "else", "for", "while", "switch", "case", "default", "do", "break",
+    "continue", "return", "throw", "try", "catch", "finally", "new", "class",
+    "public", "private", "protected", "static", "final", "void", "package",
+    "import", "namespace", "using", "struct", "enum", "typedef", "sizeof",
+    "const", "volatile", "unsigned", "signed", "long", "short", "int", "float",
+    "double", "char", "bool", "boolean", "String", "string", "var", "let",
+    "const", "function", "true", "false", "null",
+}
+
 def _normalize(label):
     return LABEL_ALIASES.get(label, label)
+
+
+def _make_issue(
+    issue_type: str,
+    message: str,
+    line: int | None = None,
+    col: int | None = None,
+    snippet: str | None = None,
+    suggestion: str | None = None,
+) -> dict:
+    return {
+        "type": issue_type,
+        "message": message,
+        "line": line,
+        "col": col,
+        "snippet": snippet,
+        "suggestion": suggestion,
+    }
+
+
+def _normalize_rule_issues(issues: list[dict]) -> list[dict]:
+    seen = set()
+    normalized = []
+    for issue in issues:
+        issue_type = _normalize(issue.get("type", "SyntaxError"))
+        key = (
+            issue_type,
+            issue.get("line"),
+            issue.get("col"),
+            issue.get("message"),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        normalized.append({
+            "type": issue_type,
+            "message": issue.get("message"),
+            "line": issue.get("line"),
+            "col": issue.get("col"),
+            "snippet": issue.get("snippet"),
+            "suggestion": issue.get("suggestion"),
+        })
+    return sorted(
+        normalized,
+        key=lambda item: (
+            C_LIKE_ISSUE_PRIORITY.index(item["type"])
+            if item["type"] in C_LIKE_ISSUE_PRIORITY else len(C_LIKE_ISSUE_PRIORITY),
+            item["line"] if item.get("line") is not None else 9999,
+            item["col"] if item.get("col") is not None else 9999,
+        ),
+    )
+
+
+def _pick_primary_issue(issues: list[dict]) -> dict | None:
+    normalized = _normalize_rule_issues(issues)
+    return normalized[0] if normalized else None
+
+
+def _suppress_cascading_syntax_noise(issues: list[dict]) -> list[dict]:
+    """
+    When an unclosed string exists, bracket findings are often a cascade from the
+    broken tokenizer state rather than independent student mistakes. Suppress the
+    follow-on bracket noise so the tutor can focus on the primary fix first.
+    """
+    has_unclosed_string = any(issue.get("type") == "UnclosedString" for issue in issues)
+    if not has_unclosed_string:
+        return issues
+    return [issue for issue in issues if issue.get("type") != "UnmatchedBracket"]
 
 
 def _strip_c_like_comments_and_strings(code: str) -> str:
@@ -179,37 +290,105 @@ def _strip_c_like_comments_and_strings(code: str) -> str:
 
 
 def _braces_balanced(code):
-    sanitized = _strip_c_like_comments_and_strings(code)
-    stack = []
-    pairs = {')': '(', ']': '[', '}': '{'}
-    for ch in sanitized:
-        if ch in "([{":
-            stack.append(ch)
-        elif ch in ")]}":
-            if not stack or stack[-1] != pairs[ch]:
-                return False
-            stack.pop()
-    return len(stack) == 0
+    return len(_find_unmatched_bracket_issues(code)) == 0
 
 def _has_unclosed_strings(code: str) -> bool:
+    return _find_unclosed_string_issue(code) is not None
+
+
+def _find_unclosed_string_issue(code: str) -> dict | None:
     in_single = False
     in_double = False
     in_backtick = False
     escaped = False
+    start_line = start_col = None
+    line = 1
+    col = 0
+
     for char in code:
+        if char == "\n":
+            line += 1
+            col = 0
+            if escaped:
+                escaped = False
+            continue
+
+        col += 1
+
         if escaped:
             escaped = False
             continue
-        if char == '\\':
+        if char == "\\":
             escaped = True
             continue
         if char == "'" and not in_double and not in_backtick:
+            if not in_single:
+                start_line, start_col = line, col
             in_single = not in_single
         elif char == '"' and not in_single and not in_backtick:
+            if not in_double:
+                start_line, start_col = line, col
             in_double = not in_double
         elif char == "`" and not in_single and not in_double:
+            if not in_backtick:
+                start_line, start_col = line, col
             in_backtick = not in_backtick
-    return in_single or in_double or in_backtick
+
+    if in_single or in_double or in_backtick:
+        line_text = code.splitlines()[start_line - 1] if start_line and code.splitlines() else ""
+        return _make_issue(
+            "UnclosedString",
+            "String literal is not closed before end of file.",
+            line=start_line,
+            col=start_col,
+            snippet=line_text.strip(),
+            suggestion="Add the missing closing quote.",
+        )
+    return None
+
+
+def _find_unmatched_bracket_issues(code: str) -> list[dict]:
+    sanitized = _strip_c_like_comments_and_strings(code)
+    stack = []
+    pairs = {")": "(", "]": "[", "}": "{"}
+    issues = []
+    line = 1
+    col = 0
+    lines = code.splitlines()
+
+    for ch in sanitized:
+        if ch == "\n":
+            line += 1
+            col = 0
+            continue
+        col += 1
+        if ch in "([{":
+            stack.append((ch, line, col))
+        elif ch in ")]}":
+            if not stack or stack[-1][0] != pairs[ch]:
+                snippet = lines[line - 1].strip() if line - 1 < len(lines) else ""
+                issues.append(_make_issue(
+                    "UnmatchedBracket",
+                    f"Found closing {ch} without a matching opening bracket.",
+                    line=line,
+                    col=col,
+                    snippet=snippet,
+                    suggestion="Remove the extra closing bracket or add the missing opening bracket.",
+                ))
+                continue
+            stack.pop()
+
+    for opening, opening_line, opening_col in stack:
+        snippet = lines[opening_line - 1].strip() if opening_line - 1 < len(lines) else ""
+        issues.append(_make_issue(
+            "UnmatchedBracket",
+            f"Opening {opening} is missing a matching closing bracket.",
+            line=opening_line,
+            col=opening_col,
+            snippet=snippet,
+            suggestion=f"Add a closing bracket for {opening}.",
+        ))
+    return issues
 
 def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
     """
@@ -402,16 +581,7 @@ def _has_infinite_loop(code: str) -> bool:
     Rule-based detector for obvious infinite-loop patterns.
     Works for Java, C, C++, and JavaScript.
     """
-    sanitized = _strip_c_like_comments_and_strings(code)
-    return bool(
-        re.search(
-            r"\bwhile\s*\(\s*true\s*\)"
-            r"|\bwhile\s*\(\s*1\s*\)"
-            r"|\bfor\s*\(\s*;\s*;\s*\)",
-            sanitized,
-            flags=re.IGNORECASE,
-        )
-    )
+    return len(_find_infinite_loop_issues(code)) > 0
 
 
 def _append_warning(warnings: list[str], message: str) -> None:
@@ -465,8 +635,7 @@ def _has_statement_glued_after_assignment(line: str) -> bool:
     return bool(assignment_then_known_stmt)
 
 
-def _has_missing_semicolons(code):
-    import re
+def _find_missing_semicolon_issues(code: str, language: str | None = None) -> list[dict]:
     sanitized = _strip_c_like_comments_and_strings(code)
     simple_statements = [
         r'^return\s+.+$', r'^cout\s*<<.*$', r'^cin\s*>>.*$',
@@ -475,16 +644,33 @@ def _has_missing_semicolons(code):
         r'^(break|continue)\s*$', r'^\w+(\.\w+)?\s*(\+\+|--)$',
         r'^throw\s+.+$',
     ]
-    for raw, clean in zip(code.splitlines(), sanitized.splitlines()):
+    issues = []
+    for lineno, (raw, clean) in enumerate(zip(code.splitlines(), sanitized.splitlines()), start=1):
         l = clean.strip()
         if not l:
             continue
 
         if l.startswith("using namespace") and not l.endswith(";"):
-            return True
+            issues.append(_make_issue(
+                "MissingDelimiter",
+                "Missing semicolon after namespace declaration.",
+                line=lineno,
+                col=max(len(raw.rstrip()), 1),
+                snippet=raw.strip(),
+                suggestion="Add ';' at the end of the statement.",
+            ))
+            continue
 
         if re.match(r"^(struct|enum)\b.*}\s*$", l) and not l.endswith("};"):
-            return True
+            issues.append(_make_issue(
+                "MissingDelimiter",
+                "Missing semicolon after struct or enum declaration.",
+                line=lineno,
+                col=max(len(raw.rstrip()), 1),
+                snippet=raw.strip(),
+                suggestion="Add ';' after the closing brace.",
+            ))
+            continue
 
         if re.match(
             r"^(?:unsigned|signed|long|short|int|float|double|char|bool|auto|string|"
@@ -492,10 +678,26 @@ def _has_missing_semicolons(code):
             r"[A-Za-z_]\w*(?:\s*\[[^\]]*\])?$",
             l,
         ):
-            return True
+            issues.append(_make_issue(
+                "MissingDelimiter",
+                "Missing semicolon after variable declaration.",
+                line=lineno,
+                col=max(len(raw.rstrip()), 1),
+                snippet=raw.strip(),
+                suggestion="Add ';' at the end of the declaration.",
+            ))
+            continue
 
         if _has_statement_glued_after_assignment(l):
-            return True
+            issues.append(_make_issue(
+                "MissingDelimiter",
+                "Two statements appear to be glued together without a semicolon.",
+                line=lineno,
+                col=max(len(raw.rstrip()), 1),
+                snippet=raw.strip(),
+                suggestion="Insert ';' between the statements.",
+            ))
+            continue
 
         if (l.startswith('//') or l.startswith('/*') or l.startswith('*') or
             l.startswith('#') or l.endswith('{') or l.endswith('}') or
@@ -503,16 +705,354 @@ def _has_missing_semicolons(code):
             l.startswith('using') or l.startswith('namespace') or
             'class ' in l[:20]):
             continue
+        if language == "JavaScript":
+            # JavaScript supports automatic semicolon insertion; only flag stronger patterns.
+            continue
         is_control = any(kw in l for kw in [
             'if (', 'if(', 'for (', 'for(', 'while (', 'while(',
             'else', 'try', 'catch', 'switch', 'case ', 'default:', 'do '
         ])
         if not is_control and not l.endswith(';') and not l.endswith('{') and not l.endswith('}'):
             if any(re.match(pat, l) for pat in simple_statements):
-                return True
+                issues.append(_make_issue(
+                    "MissingDelimiter",
+                    "Missing semicolon at the end of the statement.",
+                    line=lineno,
+                    col=max(len(raw.rstrip()), 1),
+                    snippet=raw.strip(),
+                    suggestion="Add ';' at the end of the statement.",
+                ))
             elif ('=' in l or ('(' in l and ')' in l)) and not l.startswith('}'):
-                return True
-    return False
+                issues.append(_make_issue(
+                    "MissingDelimiter",
+                    "Missing semicolon at the end of the statement.",
+                    line=lineno,
+                    col=max(len(raw.rstrip()), 1),
+                    snippet=raw.strip(),
+                    suggestion="Add ';' at the end of the statement.",
+                ))
+    return issues
+
+
+def _has_missing_semicolons(code):
+    return len(_find_missing_semicolon_issues(code)) > 0
+
+
+def _find_infinite_loop_issues(code: str) -> list[dict]:
+    sanitized = _strip_c_like_comments_and_strings(code)
+    issues = []
+    for lineno, line in enumerate(sanitized.splitlines(), start=1):
+        if re.search(r"\bwhile\s*\(\s*(true|1)\s*\)|\bfor\s*\(\s*;\s*;\s*\)", line, flags=re.IGNORECASE):
+            issues.append(_make_issue(
+                "InfiniteLoop",
+                "Loop condition is always true and has no visible exit path.",
+                line=lineno,
+                col=max(line.find("while"), line.find("for")) + 1,
+                snippet=code.splitlines()[lineno - 1].strip(),
+                suggestion="Add an exit condition or a break path inside the loop.",
+            ))
+    return issues
+
+
+def _find_division_by_zero_issues(code: str) -> list[dict]:
+    sanitized = _strip_c_like_comments_and_strings(code)
+    issues = []
+    for lineno, line in enumerate(sanitized.splitlines(), start=1):
+        match = re.search(r"[/%]\s*0(\.0+)?\b", line)
+        if not match:
+            continue
+        issues.append(_make_issue(
+            "DivisionByZero",
+            "Possible division or modulo by zero.",
+            line=lineno,
+            col=match.start() + 1,
+            snippet=code.splitlines()[lineno - 1].strip(),
+            suggestion="Guard the denominator or change it to a non-zero value.",
+        ))
+    return issues
+
+
+def _find_unreachable_code_issues(code: str) -> list[dict]:
+    sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
+    original_lines = code.splitlines()
+    issues = []
+    pending_after_jump = False
+
+    for lineno, clean in enumerate(sanitized_lines, start=1):
+        stripped = clean.strip()
+        if not stripped:
+            continue
+        if pending_after_jump:
+            if stripped.startswith("}") or stripped.startswith("case ") or stripped.startswith("default:"):
+                pending_after_jump = False
+            else:
+                issues.append(_make_issue(
+                    "UnreachableCode",
+                    "Statement appears after a control-flow jump and may never execute.",
+                    line=lineno,
+                    col=1,
+                    snippet=original_lines[lineno - 1].strip(),
+                    suggestion="Remove the dead statement or restructure the control flow.",
+                ))
+                pending_after_jump = False
+        if re.search(r"\b(return|break|continue|throw)\b", stripped):
+            pending_after_jump = True
+    return issues
+
+
+def _find_missing_include_issues(code: str, language: str) -> list[dict]:
+    if language not in {"C", "C++"}:
+        return []
+    issues = []
+    sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
+    includes = "\n".join(sanitized_lines)
+    original_lines = code.splitlines()
+
+    for symbol in C_STDIO_SYMBOLS:
+        if symbol == "FILE":
+            pattern = r"\bFILE\b"
+        else:
+            pattern = rf"\b{symbol}\s*\("
+        if not re.search(pattern, includes):
+            continue
+        if re.search(r"^\s*#include\s*<stdio\.h>", includes, flags=re.MULTILINE):
+            continue
+        for lineno, line in enumerate(sanitized_lines, start=1):
+            if re.search(pattern, line):
+                issues.append(_make_issue(
+                    "MissingInclude",
+                    f"{symbol} is used without including <stdio.h>.",
+                    line=lineno,
+                    col=line.find(symbol) + 1,
+                    snippet=original_lines[lineno - 1].strip(),
+                    suggestion="Add '#include <stdio.h>' at the top of the file.",
+                ))
+                break
+    return issues
+
+
+def _find_missing_import_issues(code: str, language: str) -> list[dict]:
+    if language != "Java":
+        return []
+    issues = []
+    sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
+    sanitized = "\n".join(sanitized_lines)
+    original_lines = code.splitlines()
+
+    for symbol, import_path in JAVA_IMPORT_HINTS.items():
+        if not re.search(rf"\b{symbol}\b", sanitized):
+            continue
+        if re.search(rf"^\s*import\s+{re.escape(import_path)}\s*;", sanitized, flags=re.MULTILINE):
+            continue
+        if re.search(r"^\s*import\s+java\.util\.\*\s*;", sanitized, flags=re.MULTILINE):
+            continue
+        if f"java.util.{symbol}" in sanitized:
+            continue
+        for lineno, line in enumerate(sanitized_lines, start=1):
+            if re.search(rf"\b{symbol}\b", line):
+                issues.append(_make_issue(
+                    "MissingImport",
+                    f"{symbol} is used without importing {import_path}.",
+                    line=lineno,
+                    col=line.find(symbol) + 1,
+                    snippet=original_lines[lineno - 1].strip(),
+                    suggestion=f"Add 'import {import_path};' near the top of the file.",
+                ))
+                break
+    return issues
+
+
+def _find_type_mismatch_issues(code: str, language: str) -> list[dict]:
+    if language not in {"Java", "C", "C++"}:
+        return []
+    issues = []
+    original_lines = code.splitlines()
+    sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
+
+    numeric_decl = re.compile(
+        r"\b(?:int|long|short|byte|float|double|char|bool|boolean)\s+([A-Za-z_]\w*)\s*=\s*\"[^\"]*\"\s*;?"
+    )
+    string_decl = re.compile(r"\bString\s+([A-Za-z_]\w*)\s*=\s*\d+\s*;?")
+
+    for lineno, raw in enumerate(original_lines, start=1):
+        if numeric_decl.search(raw) or string_decl.search(raw):
+            issues.append(_make_issue(
+                "TypeMismatch",
+                "Assigned value type does not match the declared variable type.",
+                line=lineno,
+                col=1,
+                snippet=raw.strip(),
+                suggestion="Convert the value to the correct type or change the variable declaration.",
+            ))
+        elif language in {"C", "C++"} and re.search(r"\b(?:int|long|short|float|double|char)\s+[A-Za-z_]\w*\s*=\s*'.{2,}'", raw):
+            issues.append(_make_issue(
+                "TypeMismatch",
+                "Assigned value type does not match the declared variable type.",
+                line=lineno,
+                col=1,
+                snippet=raw.strip(),
+                suggestion="Use a compatible scalar value or change the variable type.",
+            ))
+        elif language == "Java" and re.search(r"\bboolean\s+[A-Za-z_]\w*\s*=\s*\d+", sanitized_lines[lineno - 1]):
+            issues.append(_make_issue(
+                "TypeMismatch",
+                "Assigned value type does not match the declared variable type.",
+                line=lineno,
+                col=1,
+                snippet=raw.strip(),
+                suggestion="Assign a boolean literal or convert the expression.",
+            ))
+    return issues
+
+
+def _collect_declared_names(code: str, language: str) -> set[str]:
+    sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
+    declared = set()
+
+    if language == "JavaScript":
+        for line in sanitized_lines:
+            for match in re.finditer(r"\b(?:let|const|var)\s+([A-Za-z_]\w*)", line):
+                declared.add(match.group(1))
+            for match in re.finditer(r"\bfunction\s+([A-Za-z_]\w*)\s*\(([^)]*)\)", line):
+                declared.add(match.group(1))
+                params = [part.strip() for part in match.group(2).split(",") if part.strip()]
+                declared.update(params)
+        return declared
+
+    if language == "Java":
+        type_pattern = (
+            r"(?:byte|short|int|long|float|double|char|boolean|String(?:\[\])?|var|"
+            r"ArrayList(?:<[^>]+>)?|List(?:<[^>]+>)?|Map(?:<[^>]+>)?|Set(?:<[^>]+>)?|"
+            r"HashMap(?:<[^>]+>)?|HashSet(?:<[^>]+>)?|[A-Z][A-Za-z0-9_]*(?:<[^>]+>)?)"
+        )
+        for line in sanitized_lines:
+            class_match = re.search(r"\bclass\s+([A-Za-z_]\w*)", line)
+            if class_match:
+                declared.add(class_match.group(1))
+            for match in re.finditer(rf"\b{type_pattern}\s+([A-Za-z_]\w*)\b", line):
+                declared.add(match.group(1))
+            method_match = re.search(
+                rf"\b(?:public|private|protected|static|final|abstract|synchronized|\s)+"
+                rf"(?:void|{type_pattern})\s+([A-Za-z_]\w*)\s*\(([^)]*)\)",
+                line,
+            )
+            if method_match:
+                declared.add(method_match.group(1))
+                params = re.findall(rf"\b{type_pattern}\s+([A-Za-z_]\w*)\b", method_match.group(2))
+                declared.update(params)
+        return declared
+
+    if language in {"C", "C++"}:
+        type_pattern = (
+            r"(?:unsigned|signed|long|short|int|float|double|char|bool|void|size_t|"
+            r"FILE|struct\s+[A-Za-z_]\w*|[A-Z][A-Za-z0-9_]*)"
+        )
+        for line in sanitized_lines:
+            function_match = re.search(rf"\b{type_pattern}\s+([A-Za-z_]\w*)\s*\(([^)]*)\)", line)
+            if function_match:
+                declared.add(function_match.group(1))
+                params = re.findall(rf"\b{type_pattern}\s+\*?\s*([A-Za-z_]\w*)\b", function_match.group(2))
+                declared.update(params)
+            for match in re.finditer(rf"\b{type_pattern}\s+\*?\s*([A-Za-z_]\w*)\b", line):
+                declared.add(match.group(1))
+        return declared
+
+    return declared
+
+
+def _find_duplicate_definition_issues(code: str, language: str) -> list[dict]:
+    if language != "JavaScript":
+        return []
+    seen = {}
+    issues = []
+    for lineno, line in enumerate(_strip_c_like_comments_and_strings(code).splitlines(), start=1):
+        for match in re.finditer(r"\b(let|const)\s+([A-Za-z_]\w*)", line):
+            name = match.group(2)
+            if name in seen:
+                issues.append(_make_issue(
+                    "DuplicateDefinition",
+                    f"{name} is declared multiple times in the same scope.",
+                    line=lineno,
+                    col=match.start(2) + 1,
+                    snippet=code.splitlines()[lineno - 1].strip(),
+                    suggestion="Rename or remove the duplicate declaration.",
+                ))
+            else:
+                seen[name] = lineno
+    return issues
+
+
+def _find_undeclared_identifier_issues(code: str, language: str) -> list[dict]:
+    declared = _collect_declared_names(code, language)
+    sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
+    original_lines = code.splitlines()
+    issues = []
+
+    excluded = set(C_LIKE_KEYWORDS) | declared
+    if language == "JavaScript":
+        excluded |= JS_GLOBALS
+    if language == "Java":
+        excluded |= set(JAVA_IMPORT_HINTS)
+        excluded |= {"System", "out", "println", "print", "main", "args"}
+    if language in {"C", "C++"}:
+        excluded |= C_STDIO_SYMBOLS | {"main", "NULL", "stdin", "stdout", "stderr"}
+    if language == "C++":
+        excluded |= {"std", "cout", "cin", "endl", "vector", "map", "set", "string"}
+
+    for lineno, line in enumerate(sanitized_lines, start=1):
+        if language in {"C", "C++"} and line.strip().startswith("#include"):
+            continue
+        if language == "C++" and line.strip().startswith("using namespace"):
+            continue
+        for match in re.finditer(r"(?<!\.)\b([A-Za-z_]\w*)\b", line):
+            name = match.group(1)
+            if name in excluded:
+                continue
+            if language == "Java" and name[0].isupper():
+                continue
+            if match.start() > 0 and line[match.start() - 1] == "#":
+                continue
+            if re.search(rf"\b(?:let|const|var|function|class|interface|struct|enum)\s+{re.escape(name)}\b", line):
+                continue
+            if language in {"Java", "C", "C++"} and re.search(
+                rf"\b(?:unsigned|signed|long|short|int|float|double|char|bool|boolean|String|void)\s+\*?\s*{re.escape(name)}\b",
+                line,
+            ):
+                continue
+            if language == "Java" and re.search(rf"\bnew\s+{re.escape(name)}\b", line):
+                continue
+            issues.append(_make_issue(
+                "UndeclaredIdentifier",
+                f"{name} is used before it is declared.",
+                line=lineno,
+                col=match.start(1) + 1,
+                snippet=original_lines[lineno - 1].strip(),
+                suggestion="Declare the identifier before use or fix the name.",
+            ))
+            break
+    return issues
+
+
+def _collect_c_like_rule_based_issues(code: str, language: str) -> list[dict]:
+    issues = []
+    unclosed = _find_unclosed_string_issue(code)
+    if unclosed:
+        issues.append(unclosed)
+
+    issues.extend(_find_unmatched_bracket_issues(code))
+    issues.extend(_find_missing_semicolon_issues(code, language))
+
+    # Semantic checks remain useful even when the ML bundle is unavailable.
+    issues.extend(_find_type_mismatch_issues(code, language))
+    issues.extend(_find_missing_import_issues(code, language))
+    issues.extend(_find_missing_include_issues(code, language))
+    issues.extend(_find_duplicate_definition_issues(code, language))
+    issues.extend(_find_undeclared_identifier_issues(code, language))
+    issues.extend(_find_division_by_zero_issues(code))
+    issues.extend(_find_infinite_loop_issues(code))
+    issues.extend(_find_unreachable_code_issues(code))
+    issues = _suppress_cascading_syntax_noise(issues)
+    return _normalize_rule_issues(issues)
 
 def _ml_semantic_check(code, language, rule_based_issues, warnings):
     """
@@ -676,6 +1216,47 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
     # JAVA / C / C++ / JAVASCRIPT
     # =========================================================================
     elif language in ["Java", "C", "C++", "JavaScript"]:
+
+        rule_based_issues = _collect_c_like_rule_based_issues(code, language)
+        syntax_issues = [issue for issue in rule_based_issues if issue.get("type") in RULE_BASED_TYPES]
+        semantic_issues = [issue for issue in rule_based_issues if issue.get("type") in SEMANTIC_ERROR_TYPES]
+
+        if syntax_issues:
+            primary_issue = _pick_primary_issue(syntax_issues)
+            primary_type = primary_issue["type"] if primary_issue else "SyntaxError"
+            return _attach_metadata({
+                "language": language,
+                "predicted_error": primary_type,
+                "confidence": 1.0,
+                "tutor": explain_error(primary_type),
+                "rule_based_issues": rule_based_issues
+            }, warnings)
+
+        if semantic_issues:
+            primary_issue = _pick_primary_issue(semantic_issues)
+            primary_type = primary_issue["type"] if primary_issue else "NoError"
+            return _attach_metadata({
+                "language": language,
+                "predicted_error": primary_type,
+                "confidence": 1.0,
+                "tutor": explain_error(primary_type),
+                "rule_based_issues": rule_based_issues
+            }, warnings)
+
+        if _should_run_semantic_ml(code, language):
+            semantic = _ml_semantic_check(code, language, [], warnings)
+            if semantic:
+                return _attach_metadata(semantic, warnings)
+        return _attach_metadata({
+            "language": language,
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+                "why": "The code follows valid syntax rules for this language.",
+                "fix": "No changes are required."
+            },
+            "rule_based_issues": []
+        }, warnings)
 
         # Check for unclosed strings first (higher priority than other errors)
         if _has_unclosed_strings(code):
