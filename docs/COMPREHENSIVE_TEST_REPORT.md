@@ -1,8 +1,8 @@
 # Comprehensive Test Report
 
-Last updated: 2026-03-26
+Last updated: 2026-03-27
 
-Latest verified local run (`pytest tests/ -v -p no:cacheprovider`): 76 passed, 1 skipped, 1 xfailed.
+Latest verified local run (`pytest tests/ -v -p no:cacheprovider`): 87 passed, 1 xfailed (see test results for full details).
 
 ## Scope
 - Unit tests (`tests/test_detection.py`)
