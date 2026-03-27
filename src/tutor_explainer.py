@@ -83,6 +83,10 @@ EXPLANATIONS = {
         "why": "Using a mutable object (like a list or dict) as a default function argument can cause unexpected behavior.",
         "fix": "Use None as the default and initialize the mutable object inside the function."
     },
+    "DanglingPointer": {
+        "why": "Returning the address of a local stack variable leaves a dangling pointer after the function exits.",
+        "fix": "Return by value, or manage lifetime explicitly (for example, caller-owned storage or safe heap allocation)."
+    },
     "LineTooLong": {
         "why": "The line exceeds the recommended maximum length (typically 79-120 characters), affecting readability.",
         "fix": "Break the line into multiple lines using proper continuation or refactor to simplify the code."

@@ -2,9 +2,10 @@
 Start script for OmniSyntax REST API
 """
 
-import uvicorn
 import os
 import sys
+
+import uvicorn
 
 def main():
     """Start the API server"""

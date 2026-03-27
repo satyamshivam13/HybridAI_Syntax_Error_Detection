@@ -8,6 +8,7 @@ import html
 import streamlit as st
 from src.auto_fix import AutoFixer
 from src.error_engine import detect_errors
+from src.language_detector import detect_language
 from src.multi_error_detector import detect_all_errors
 from src.quality_analyzer import CodeQualityAnalyzer
 
@@ -87,9 +88,7 @@ if code_input.strip():
     filename = uploaded.name if uploaded else None
 
     # Detect language up front so quality analysis always uses the same guess.
-    from src.language_detector import detect_language as _detect_lang
-
-    detected_language = _detect_lang(code_input, filename)
+    detected_language = detect_language(code_input, filename)
 
     if st.session_state.show_all_errors:
         all_errors = detect_all_errors(code_input, filename)

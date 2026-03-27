@@ -60,6 +60,7 @@ SEMANTIC_ERROR_THRESHOLDS = {
     "WildcardImport": 0.85,
     "MutableDefault": 0.85,
     "UnusedVariable": 0.85,
+    "DanglingPointer": 0.85,
 }
 
 # Rule-based types that are always authoritative
@@ -78,7 +79,7 @@ SEMANTIC_ERROR_TYPES = {
     "MissingInclude", "InfiniteLoop", "InvalidAssignment", "LineTooLong",
     "DuplicateDefinition", "MutableDefault", "NameError",
     "UndeclaredIdentifier", "UnreachableCode", "UnusedVariable",
-    "WildcardImport",
+    "WildcardImport", "DanglingPointer",
 }
 
 LABEL_ALIASES = {
@@ -96,6 +97,7 @@ C_LIKE_ISSUE_PRIORITY = [
     "MissingInclude",
     "DuplicateDefinition",
     "UndeclaredIdentifier",
+    "DanglingPointer",
     "DivisionByZero",
     "InfiniteLoop",
     "UnreachableCode",
@@ -456,8 +458,24 @@ def _semantic_heuristic_ok(error_type: str, code: str, language: str) -> bool:
         if language in {"C", "C++"}:
             return False
         has_import = bool(re.search(r"^\s*(import|from)\s+", code_text, flags=re.MULTILINE))
+        has_wildcard_import = bool(
+            re.search(r"^\s*from\s+\w+(?:\.\w+)*\s+import\s+\*\s*$", code_text, flags=re.MULTILINE)
+        )
+        python_external_usage = bool(
+            re.search(
+                r"\b(?:sqrt|sin|cos|tan|pi|datetime|timedelta|Counter|defaultdict|deque|randint|choice)\b|"
+                r"\b(?:np|pd|plt|math|random|json|re|collections|datetime)\s*\.",
+                code_text,
+            )
+        )
         if error_type == "MissingImport":
+            if language == "Python":
+                return (not has_import) and python_external_usage
             return not has_import
+        if error_type == "WildcardImport":
+            if language == "Python":
+                return has_wildcard_import
+            return has_import
         return has_import
 
     if error_type == "MissingInclude":
@@ -599,6 +617,10 @@ def _should_run_semantic_ml(code: str, language: str) -> bool:
     if language == "Python":
         if re.search(r"^\s*(import|from)\s+", code_text, flags=re.MULTILINE):
             return True
+        if re.search(r"\b(?:np|pd|plt|math|random|json|re|collections|datetime)\s*\.", code_text):
+            return True
+        if re.search(r"\b(?:sqrt|sin|cos|tan|pi|Counter|defaultdict|deque|randint|choice)\b", code_text):
+            return True
         if re.search(r"\bfrom\s+\w+\s+import\s+\*", code_text):
             return True
         if re.search(r"def\s+\w+\s*\([^)]*=\s*(\[\]|\{\}|set\(|dict\(|list\()", code_text):
@@ -622,6 +644,70 @@ def _should_run_semantic_ml(code: str, language: str) -> bool:
         return False
 
     return False
+
+
+def _find_python_wildcard_import_issue(code: str) -> dict | None:
+    for lineno, line in enumerate(code.splitlines(), start=1):
+        if re.search(r"^\s*from\s+\w+(?:\.\w+)*\s+import\s+\*\s*$", line):
+            return {
+                "type": "WildcardImport",
+                "line": lineno,
+                "col": 1,
+                "message": "Wildcard import can pollute namespace and hide name collisions.",
+                "snippet": line.strip(),
+                "suggestion": "Import only the specific names you need.",
+            }
+    return None
+
+
+def _find_python_name_error_issue(code: str) -> dict | None:
+    try:
+        tree = _ast.parse(code)
+    except Exception:
+        return None
+
+    defined = set()
+    used = []
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Name):
+            if isinstance(node.ctx, _ast.Store):
+                defined.add(node.id)
+            elif isinstance(node.ctx, _ast.Load):
+                used.append((node.id, getattr(node, "lineno", 1), getattr(node, "col_offset", 0) + 1))
+        elif isinstance(node, _ast.FunctionDef):
+            defined.add(node.name)
+            for arg in node.args.args:
+                defined.add(arg.arg)
+            if hasattr(node.args, "posonlyargs"):
+                for arg in node.args.posonlyargs:
+                    defined.add(arg.arg)
+            for arg in node.args.kwonlyargs:
+                defined.add(arg.arg)
+            if node.args.vararg:
+                defined.add(node.args.vararg.arg)
+            if node.args.kwarg:
+                defined.add(node.args.kwarg.arg)
+        elif isinstance(node, _ast.ClassDef):
+            defined.add(node.name)
+        elif isinstance(node, (_ast.Import, _ast.ImportFrom)):
+            for alias in node.names:
+                defined.add(alias.asname or alias.name.split(".")[0])
+
+    builtin_names = set(dir(builtins))
+    snippet_lines = code.splitlines()
+    for name, line_no, col_no in used:
+        if name in defined or name in builtin_names:
+            continue
+        snippet = snippet_lines[line_no - 1].strip() if 0 < line_no <= len(snippet_lines) else ""
+        return {
+            "type": "NameError",
+            "line": line_no,
+            "col": col_no,
+            "message": f"{name} is used before assignment or import.",
+            "snippet": snippet,
+            "suggestion": "Define or import the name before using it.",
+        }
+    return None
 
 
 def _has_infinite_loop(code: str) -> bool:
@@ -805,18 +891,38 @@ def _find_infinite_loop_issues(code: str) -> list[dict]:
 def _find_division_by_zero_issues(code: str) -> list[dict]:
     sanitized = _strip_c_like_comments_and_strings(code)
     issues = []
-    for lineno, line in enumerate(sanitized.splitlines(), start=1):
-        match = re.search(r"[/%]\s*0(\.0+)?\b", line)
-        if not match:
+    sanitized_lines = sanitized.splitlines()
+    original_lines = code.splitlines()
+
+    # Track simple constant assignments so `x / y` can be flagged when y == 0.
+    zero_vars: set[str] = set()
+    for line in sanitized_lines:
+        for assign_match in re.finditer(r"\b([A-Za-z_]\w*)\s*=\s*0(?:\.0+)?\s*;?", line):
+            zero_vars.add(assign_match.group(1))
+
+    for lineno, line in enumerate(sanitized_lines, start=1):
+        literal_match = re.search(r"[/%]\s*0(\.0+)?\b", line)
+        if literal_match:
+            issues.append(_make_issue(
+                "DivisionByZero",
+                "Possible division or modulo by zero.",
+                line=lineno,
+                col=literal_match.start() + 1,
+                snippet=original_lines[lineno - 1].strip(),
+                suggestion="Guard the denominator or change it to a non-zero value.",
+            ))
             continue
-        issues.append(_make_issue(
-            "DivisionByZero",
-            "Possible division or modulo by zero.",
-            line=lineno,
-            col=match.start() + 1,
-            snippet=code.splitlines()[lineno - 1].strip(),
-            suggestion="Guard the denominator or change it to a non-zero value.",
-        ))
+
+        var_match = re.search(r"[/%]\s*([A-Za-z_]\w*)\b", line)
+        if var_match and var_match.group(1) in zero_vars:
+            issues.append(_make_issue(
+                "DivisionByZero",
+                f"Possible division or modulo by zero via variable '{var_match.group(1)}'.",
+                line=lineno,
+                col=var_match.start() + 1,
+                snippet=original_lines[lineno - 1].strip(),
+                suggestion="Guard the denominator or change it to a non-zero value.",
+            ))
     return issues
 
 
@@ -833,6 +939,13 @@ def _find_unreachable_code_issues(code: str) -> list[dict]:
         if pending_after_jump:
             if stripped.startswith("}") or stripped.startswith("case ") or stripped.startswith("default:"):
                 pending_after_jump = False
+            elif re.match(
+                r"^(?:[A-Za-z_]\w*(?:::[A-Za-z_]\w*)?|public|private|protected|static|final|virtual|inline|template)"
+                r"[\w\s:<>,*&\[\]]*\([^;]*\)\s*\{\s*$",
+                stripped,
+            ):
+                # New function/method scope: previous jump does not apply here.
+                pending_after_jump = False
             else:
                 issues.append(_make_issue(
                     "UnreachableCode",
@@ -843,8 +956,10 @@ def _find_unreachable_code_issues(code: str) -> list[dict]:
                     suggestion="Remove the dead statement or restructure the control flow.",
                 ))
                 pending_after_jump = False
-        if re.search(r"\b(return|break|continue|throw)\b", stripped):
-            pending_after_jump = True
+        jump_match = re.search(r"\b(return|break|continue|throw)\b", stripped)
+        if jump_match:
+            trailing = stripped[jump_match.end():]
+            pending_after_jump = "}" not in trailing
     return issues
 
 
@@ -877,6 +992,22 @@ def _find_missing_include_issues(code: str, language: str) -> list[dict]:
                     col=line.find(symbol) + 1,
                     snippet=original_lines[lineno - 1].strip(),
                     suggestion=f"Add '#include <{required_header}>' at the top of the file.",
+                ))
+                break
+
+    if language == "C++" and re.search(r"\b(?:std::)?(?:cout|cin|cerr|clog)\b", includes):
+        if not re.search(r"^\s*#include\s*<iostream>", includes, flags=re.MULTILINE):
+            for lineno, line in enumerate(sanitized_lines, start=1):
+                stream_match = re.search(r"\b(?:std::)?(cout|cin|cerr|clog)\b", line)
+                if not stream_match:
+                    continue
+                issues.append(_make_issue(
+                    "MissingInclude",
+                    f"{stream_match.group(1)} is used without including <iostream>.",
+                    line=lineno,
+                    col=stream_match.start(1) + 1,
+                    snippet=original_lines[lineno - 1].strip(),
+                    suggestion="Add '#include <iostream>' at the top of the file.",
                 ))
                 break
     return issues
@@ -924,6 +1055,11 @@ def _find_type_mismatch_issues(code: str, language: str) -> list[dict]:
         r"\b(?:int|long|short|byte|float|double|char|bool|boolean)\s+([A-Za-z_]\w*)\s*=\s*\"[^\"]*\"\s*;?"
     )
     string_decl = re.compile(r"\bString\s+([A-Za-z_]\w*)\s*=\s*\d+\s*;?")
+    java_narrowing_numeric = re.compile(
+        r"\b(?:int|long|short|byte|char)\s+[A-Za-z_]\w*\s*=\s*\d+\.\d+\s*;?"
+    )
+    java_string_bool = re.compile(r"\bString\s+[A-Za-z_]\w*\s*=\s*(?:true|false)\s*;?")
+    java_bool_string = re.compile(r"\bboolean\s+[A-Za-z_]\w*\s*=\s*\"[^\"]*\"\s*;?")
 
     for lineno, raw in enumerate(original_lines, start=1):
         if numeric_decl.search(raw) or string_decl.search(raw):
@@ -934,6 +1070,19 @@ def _find_type_mismatch_issues(code: str, language: str) -> list[dict]:
                 col=1,
                 snippet=raw.strip(),
                 suggestion="Convert the value to the correct type or change the variable declaration.",
+            ))
+        elif language == "Java" and (
+            java_narrowing_numeric.search(sanitized_lines[lineno - 1])
+            or java_string_bool.search(sanitized_lines[lineno - 1])
+            or java_bool_string.search(sanitized_lines[lineno - 1])
+        ):
+            issues.append(_make_issue(
+                "TypeMismatch",
+                "Assigned value type does not match the declared variable type.",
+                line=lineno,
+                col=1,
+                snippet=raw.strip(),
+                suggestion="Use an explicit conversion or assign a compatible type.",
             ))
         elif language in {"C", "C++"} and re.search(r"\b(?:int|long|short|float|double|char)\s+[A-Za-z_]\w*\s*=\s*'.{2,}'", raw):
             issues.append(_make_issue(
@@ -956,6 +1105,106 @@ def _find_type_mismatch_issues(code: str, language: str) -> list[dict]:
     return issues
 
 
+def _find_dangling_pointer_return_issues(code: str, language: str) -> list[dict]:
+    if language not in {"C", "C++"}:
+        return []
+
+    sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
+    original_lines = code.splitlines()
+    issues: list[dict] = []
+
+    func_start = re.compile(
+        r"^\s*(?:[A-Za-z_][\w:\s<>]*?)\*+\s*([A-Za-z_]\w*)\s*\(([^)]*)\)\s*\{\s*$"
+    )
+    local_decl = re.compile(
+        r"^\s*(?:unsigned|signed|long|short|int|float|double|char|bool|size_t|auto|"
+        r"[A-Za-z_]\w*(?:::[A-Za-z_]\w*)?(?:<[^>]+>)?)\s+\**\s*([A-Za-z_]\w*)\b"
+    )
+    return_addr = re.compile(r"\breturn\s*&\s*([A-Za-z_]\w*)\s*;")
+    ptr_decl_from_call = re.compile(
+        r"\b(?:unsigned|signed|long|short|int|float|double|char|bool|size_t|auto|"
+        r"[A-Za-z_]\w*(?:::[A-Za-z_]\w*)?(?:<[^>]+>)?)\s*\*+\s*([A-Za-z_]\w*)\s*=\s*([A-Za-z_]\w*)\s*\("
+    )
+    assign_from_call = re.compile(r"\b([A-Za-z_]\w*)\s*=\s*([A-Za-z_]\w*)\s*\(")
+
+    brace_depth = 0
+    in_ptr_function = False
+    current_func_name: str | None = None
+    locals_in_function: set[str] = set()
+    dangling_pointer_funcs: set[str] = set()
+
+    for lineno, line in enumerate(sanitized_lines, start=1):
+        stripped = line.strip()
+
+        if not in_ptr_function:
+            start_match = func_start.match(stripped)
+            if start_match:
+                in_ptr_function = True
+                current_func_name = start_match.group(1)
+                locals_in_function = set()
+                brace_depth = stripped.count("{") - stripped.count("}")
+            continue
+
+        decl_match = local_decl.match(stripped)
+        if decl_match:
+            locals_in_function.add(decl_match.group(1))
+
+        ret_match = return_addr.search(stripped)
+        if ret_match and ret_match.group(1) in locals_in_function:
+            if current_func_name:
+                dangling_pointer_funcs.add(current_func_name)
+            issues.append(_make_issue(
+                "DanglingPointer",
+                "Returning address of a local variable creates a dangling pointer.",
+                line=lineno,
+                col=ret_match.start(1) + 1,
+                snippet=original_lines[lineno - 1].strip(),
+                suggestion="Return by value, allocate on heap safely, or pass storage from caller.",
+            ))
+
+        brace_depth += stripped.count("{") - stripped.count("}")
+        if brace_depth <= 0:
+            in_ptr_function = False
+            current_func_name = None
+
+    # Track pointers assigned from dangling-pointer-return functions and flag unsafe dereferences.
+    derived_pointer_vars: set[str] = set()
+    for lineno, line in enumerate(sanitized_lines, start=1):
+        stripped = line.strip()
+
+        decl_match = ptr_decl_from_call.search(stripped)
+        if decl_match and decl_match.group(2) in dangling_pointer_funcs:
+            derived_pointer_vars.add(decl_match.group(1))
+
+        assign_match = assign_from_call.search(stripped)
+        if assign_match and assign_match.group(2) in dangling_pointer_funcs:
+            derived_pointer_vars.add(assign_match.group(1))
+
+        for var_name in sorted(derived_pointer_vars):
+            decl_pattern = re.compile(
+                rf"\b(?:unsigned|signed|long|short|int|float|double|char|bool|size_t|auto|"
+                rf"[A-Za-z_]\w*(?:::[A-Za-z_]\w*)?(?:<[^>]+>)?)\s*\*+\s*{re.escape(var_name)}\b"
+            )
+            if decl_pattern.search(stripped):
+                continue
+
+            deref_match = re.search(rf"\*\s*{re.escape(var_name)}\b", stripped)
+            if not deref_match:
+                continue
+
+            issues.append(_make_issue(
+                "DanglingPointer",
+                "Dereferencing a pointer derived from invalid stack memory is undefined behavior.",
+                line=lineno,
+                col=deref_match.start() + 1,
+                snippet=original_lines[lineno - 1].strip(),
+                suggestion="Avoid dereferencing this pointer; fix the source function to return valid lifetime storage.",
+            ))
+            break
+
+    return issues
+
+
 def _collect_declared_names(code: str, language: str) -> set[str]:
     sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
     declared = set()
@@ -967,6 +1216,11 @@ def _collect_declared_names(code: str, language: str) -> set[str]:
             for match in re.finditer(r"\bfunction\s+([A-Za-z_]\w*)\s*\(([^)]*)\)", line):
                 declared.add(match.group(1))
                 params = [part.strip() for part in match.group(2).split(",") if part.strip()]
+                declared.update(params)
+            for match in re.finditer(r"\b([A-Za-z_]\w*)\s*=>", line):
+                declared.add(match.group(1))
+            for match in re.finditer(r"\(([^)]*)\)\s*=>", line):
+                params = [part.strip() for part in match.group(1).split(",") if part.strip()]
                 declared.update(params)
         return declared
 
@@ -996,7 +1250,8 @@ def _collect_declared_names(code: str, language: str) -> set[str]:
     if language in {"C", "C++"}:
         type_pattern = (
             r"(?:unsigned|signed|long|short|int|float|double|char|bool|void|size_t|"
-            r"FILE|struct\s+[A-Za-z_]\w*|[A-Z][A-Za-z0-9_]*)"
+            r"FILE|struct\s+[A-Za-z_]\w*|[A-Z][A-Za-z0-9_]*|[a-z_]\w*<[^>]+>|"
+            r"[A-Za-z_]\w*::[A-Za-z_]\w*(?:<[^>]+>)?)"
         )
         ptr_type_pattern = rf"{type_pattern}(?:\s*\*+\s*)?"
         for line in sanitized_lines:
@@ -1047,7 +1302,7 @@ def _find_undeclared_identifier_issues(code: str, language: str) -> list[dict]:
         excluded |= set(JAVA_IMPORT_HINTS)
         excluded |= {"System", "out", "println", "print", "main", "args"}
     if language in {"C", "C++"}:
-        excluded |= C_STDIO_SYMBOLS | {"main", "NULL", "stdin", "stdout", "stderr"}
+        excluded |= C_STDIO_SYMBOLS | {"main", "NULL", "stdin", "stdout", "stderr", "size_t"}
     if language == "C++":
         excluded |= {"std", "cout", "cin", "endl", "vector", "map", "set", "string"}
 
@@ -1056,8 +1311,15 @@ def _find_undeclared_identifier_issues(code: str, language: str) -> list[dict]:
             continue
         if language == "C++" and line.strip().startswith("using namespace"):
             continue
+        if language == "Java" and line.strip().startswith("import "):
+            continue
         for match in re.finditer(r"(?<!\.)\b([A-Za-z_]\w*)\b", line):
             name = match.group(1)
+            if language == "JavaScript":
+                tail = line[match.end(1):]
+                if tail.lstrip().startswith(":"):
+                    # Object literal key: { key: value }
+                    continue
             if name in excluded:
                 continue
             if language == "Java" and name[0].isupper():
@@ -1085,6 +1347,50 @@ def _find_undeclared_identifier_issues(code: str, language: str) -> list[dict]:
     return issues
 
 
+def _find_incomplete_assignment_issues(code: str, language: str) -> list[dict]:
+    if language not in {"Java", "C", "C++", "JavaScript"}:
+        return []
+    issues = []
+    original_lines = code.splitlines()
+
+    for lineno, raw in enumerate(original_lines, start=1):
+        line = raw.strip()
+        if re.search(
+            r"^(?:let|const|var|int|long|short|byte|float|double|char|bool|boolean|String)\s+[A-Za-z_]\w*\s*=\s*;\s*$",
+            line,
+        ):
+            issues.append(_make_issue(
+                "MissingDelimiter",
+                "Assignment is missing a value expression.",
+                line=lineno,
+                col=1,
+                snippet=line,
+                suggestion="Provide a value on the right-hand side of '='.",
+            ))
+    return issues
+
+
+def _find_invalid_member_access_issues(code: str, language: str) -> list[dict]:
+    if language != "JavaScript":
+        return []
+    issues = []
+    original_lines = code.splitlines()
+    sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
+
+    for lineno, line in enumerate(sanitized_lines, start=1):
+        for match in re.finditer(r"\.\.(?!\.)", line):
+            issues.append(_make_issue(
+                "MissingDelimiter",
+                "Invalid member access syntax '..'.",
+                line=lineno,
+                col=match.start() + 1,
+                snippet=original_lines[lineno - 1].strip(),
+                suggestion="Use a single '.' for property access.",
+            ))
+            break
+    return issues
+
+
 def _collect_c_like_rule_based_issues(code: str, language: str) -> list[dict]:
     issues = []
     unclosed = _find_unclosed_string_issue(code)
@@ -1093,6 +1399,8 @@ def _collect_c_like_rule_based_issues(code: str, language: str) -> list[dict]:
 
     issues.extend(_find_unmatched_bracket_issues(code))
     issues.extend(_find_missing_semicolon_issues(code, language))
+    issues.extend(_find_incomplete_assignment_issues(code, language))
+    issues.extend(_find_invalid_member_access_issues(code, language))
 
     # Semantic checks remain useful even when the ML bundle is unavailable.
     issues.extend(_find_type_mismatch_issues(code, language))
@@ -1100,6 +1408,7 @@ def _collect_c_like_rule_based_issues(code: str, language: str) -> list[dict]:
     issues.extend(_find_missing_include_issues(code, language))
     issues.extend(_find_duplicate_definition_issues(code, language))
     issues.extend(_find_undeclared_identifier_issues(code, language))
+    issues.extend(_find_dangling_pointer_return_issues(code, language))
     issues.extend(_find_division_by_zero_issues(code))
     issues.extend(_find_infinite_loop_issues(code))
     issues.extend(_find_unreachable_code_issues(code))
@@ -1180,6 +1489,49 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
 
         if ast_passed:
             # Code is syntactically valid Python.
+            wildcard_issue = _find_python_wildcard_import_issue(code)
+            if wildcard_issue:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "WildcardImport",
+                    "confidence": 1.0,
+                    "tutor": explain_error("WildcardImport"),
+                    "rule_based_issues": [wildcard_issue],
+                }, warnings)
+
+            mutable_match = re.search(
+                r"def\s+\w+\s*\([^)]*=\s*(\[\]|\{\}|set\(|dict\(|list\()",
+                code,
+            )
+            if mutable_match:
+                line_num = code[:mutable_match.start()].count("\n") + 1
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "MutableDefault",
+                    "confidence": 1.0,
+                    "tutor": explain_error("MutableDefault"),
+                    "rule_based_issues": [
+                        {
+                            "type": "MutableDefault",
+                            "line": line_num,
+                            "col": 1,
+                            "message": "Mutable default argument can leak state across calls.",
+                            "snippet": code.splitlines()[line_num - 1].strip() if code.splitlines() else "",
+                            "suggestion": "Use None as default and initialize the mutable object inside the function.",
+                        }
+                    ],
+                }, warnings)
+
+            name_issue = _find_python_name_error_issue(code)
+            if name_issue:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "NameError",
+                    "confidence": 1.0,
+                    "tutor": explain_error("NameError"),
+                    "rule_based_issues": [name_issue],
+                }, warnings)
+
             # Still check for semantic/runtime errors via ML.
             if _should_run_semantic_ml(code, language):
                 semantic = _ml_semantic_check(code, language, [], warnings)
@@ -1187,10 +1539,18 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
                     return _attach_metadata(semantic, warnings)
                     
             # Fallback for Python DivisionByZero if ML is missing/offline
-            if re.search(r"[/%]\s*0(\.0+)?\b", code):
+            div_match = re.search(r"[/%]\s*0(\.0+)?\b", code)
+            if div_match:
+                line_num = code[:div_match.start()].count("\n") + 1
+                line_text = code.splitlines()[line_num - 1] if code.splitlines() else ""
+                col_num = div_match.start() - code.rfind("\n", 0, div_match.start())
                 rule_based_issues.append({
                     "type": "DivisionByZero",
-                    "line": 0, "col": 0, "message": "Division by zero detected"
+                    "line": line_num,
+                    "col": col_num,
+                    "message": "Division by zero detected",
+                    "snippet": line_text.strip(),
+                    "suggestion": "Guard the denominator or change it to a non-zero value.",
                 })
                 return _attach_metadata({
                     "language": language,
@@ -1304,8 +1664,8 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
             "predicted_error": "NoError",
             "confidence": 1.0,
             "tutor": {
-                "why": "The code follows valid syntax rules for this language.",
-                "fix": "No changes are required."
+                "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+                "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
             },
             "rule_based_issues": []
         }, warnings)

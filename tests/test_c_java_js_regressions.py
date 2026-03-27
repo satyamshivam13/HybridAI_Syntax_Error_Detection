@@ -150,3 +150,93 @@ def test_cpp_pointer_declarations_are_not_undeclared_identifiers():
     result = detect_errors(code, "main.cpp")
     issue_types = {issue["type"] for issue in result["rule_based_issues"]}
     assert "UndeclaredIdentifier" not in issue_types
+
+
+def test_cpp_returning_local_address_detected_as_dangling_pointer():
+    code = (
+        "#include <iostream>\n"
+        "using namespace std;\n"
+        "\n"
+        "int* getValue() {\n"
+        "    int x = 10;\n"
+        "    return &x;\n"
+        "}\n"
+        "\n"
+        "int main() {\n"
+        "    int* ptr = getValue();\n"
+        "    cout << *ptr << endl;\n"
+        "}\n"
+    )
+    result = detect_errors(code, "main.cpp")
+    assert result["predicted_error"] == "DanglingPointer"
+    dangling_lines = {
+        issue["line"]
+        for issue in result["rule_based_issues"]
+        if issue["type"] == "DanglingPointer"
+    }
+    assert 6 in dangling_lines
+    assert 11 in dangling_lines
+
+
+def test_java_narrowing_numeric_assignment_detected_as_type_mismatch():
+    code = (
+        "public class T {\n"
+        "    public static void main(String[] args) {\n"
+        "        int x = 1.5;\n"
+        "    }\n"
+        "}\n"
+    )
+    result = detect_errors(code, "T.java")
+    assert result["predicted_error"] == "TypeMismatch"
+
+
+def test_java_string_from_boolean_detected_as_type_mismatch():
+    code = (
+        "public class T {\n"
+        "    public static void main(String[] args) {\n"
+        "        String s = true;\n"
+        "    }\n"
+        "}\n"
+    )
+    result = detect_errors(code, "T.java")
+    assert result["predicted_error"] == "TypeMismatch"
+
+
+def test_javascript_incomplete_assignment_detected():
+    code = (
+        "function x() {\n"
+        "    const a = ;\n"
+        "}\n"
+    )
+    result = detect_errors(code, "x.js")
+    assert result["predicted_error"] == "MissingDelimiter"
+
+
+def test_javascript_arrow_parameter_not_flagged_undeclared():
+    code = (
+        "function x() {\n"
+        "    [1, 2].forEach(n => console.log(n));\n"
+        "}\n"
+    )
+    result = detect_errors(code, "x.js")
+    issue_types = {issue["type"] for issue in result["rule_based_issues"]}
+    assert "UndeclaredIdentifier" not in issue_types
+
+
+def test_javascript_object_literal_key_not_flagged_undeclared():
+    code = (
+        "const obj = { a: 1 };\n"
+        "console.log(obj.a);\n"
+    )
+    result = detect_errors(code, "x.js")
+    issue_types = {issue["type"] for issue in result["rule_based_issues"]}
+    assert "UndeclaredIdentifier" not in issue_types
+
+
+def test_javascript_invalid_member_access_double_dot_detected():
+    code = (
+        "const obj = { a: 1 };\n"
+        "console.log(obj..a);\n"
+    )
+    result = detect_errors(code, "x.js")
+    assert result["predicted_error"] == "MissingDelimiter"

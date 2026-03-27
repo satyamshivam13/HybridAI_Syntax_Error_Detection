@@ -2,13 +2,12 @@
 REST API for OmniSyntax.
 """
 
+import logging
+import os
 from collections import defaultdict, deque
 from threading import Lock
 from time import time
 from typing import Any, Dict, List, Optional
-
-import logging
-import os
 
 import uvicorn
 from dotenv import load_dotenv
@@ -18,29 +17,42 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from src.auto_fix import AutoFixer
 from src.error_engine import detect_errors
-from src.quality_analyzer import CodeQualityAnalyzer
 from src.ml_engine import get_model_status
+from src.quality_analyzer import CodeQualityAnalyzer
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 load_dotenv()
 
-SUPPORTED_LANGUAGES = ["Python", "Java", "C", "C++", "JavaScript"]
-MAX_CODE_SIZE = int(os.getenv("MAX_CODE_SIZE", "100000"))
-RATE_LIMIT_PER_MINUTE = int(os.getenv("RATE_LIMIT_PER_MINUTE", "100"))
-API_VERSION = "1.1.0"
+# Configuration - read at runtime to support testing
+_API_VERSION = "1.1.0"
+_SUPPORTED_LANGUAGES = ["Python", "Java", "C", "C++", "JavaScript"]
 
 _REQUEST_LOG: dict[tuple[str, str], deque[float]] = defaultdict(deque)
 _REQUEST_LOCK = Lock()
 
 
-def _parse_cors_origins() -> tuple[list[str], bool]:
-    raw = os.getenv(
+def _get_max_code_size() -> int:
+    """Get MAX_CODE_SIZE from config or environment."""
+    return int(os.getenv("MAX_CODE_SIZE", "100000"))
+
+
+def _get_rate_limit_per_minute() -> int:
+    """Get rate limit from config or environment."""
+    return int(os.getenv("RATE_LIMIT_PER_MINUTE", "100"))
+
+
+def _get_cors_origins_str() -> str:
+    """Get CORS_ORIGINS from config or environment."""
+    return os.getenv(
         "CORS_ORIGINS",
         "http://localhost:3000,http://localhost:8501,http://localhost:8000",
     )
-    origins = [origin.strip() for origin in raw.split(",") if origin.strip()]
+
+
+def _parse_cors_origins() -> tuple[list[str], bool]:
+    origins = [origin.strip() for origin in _get_cors_origins_str().split(",") if origin.strip()]
     if not origins:
         origins = ["http://localhost:3000"]
     has_wildcard = "*" in origins
@@ -60,18 +72,20 @@ def _raise_api_error(status_code: int, error_code: str, message: str) -> None:
 
 
 def _validate_code_payload(code: str, field_name: str = "code") -> None:
+    max_size = _get_max_code_size()
     if not code or not code.strip():
         _raise_api_error(400, "EMPTY_CODE", f"{field_name} cannot be empty")
-    if len(code) > MAX_CODE_SIZE:
+    if len(code) > max_size:
         _raise_api_error(
             413,
             "PAYLOAD_TOO_LARGE",
-            f"{field_name} exceeds maximum allowed size ({MAX_CODE_SIZE} characters)",
+            f"{field_name} exceeds maximum allowed size ({max_size} characters)",
         )
 
 
 def _enforce_rate_limit(request: Request, scope: str) -> None:
-    if RATE_LIMIT_PER_MINUTE <= 0:
+    rate_limit = _get_rate_limit_per_minute()
+    if rate_limit <= 0:
         return
     host = request.client.host if request.client else "unknown"
     key = (scope, host)
@@ -80,11 +94,11 @@ def _enforce_rate_limit(request: Request, scope: str) -> None:
         events = _REQUEST_LOG[key]
         while events and (now - events[0]) > 60.0:
             events.popleft()
-        if len(events) >= RATE_LIMIT_PER_MINUTE:
+        if len(events) >= rate_limit:
             _raise_api_error(
                 429,
                 "RATE_LIMIT_EXCEEDED",
-                f"Too many requests. Limit is {RATE_LIMIT_PER_MINUTE} per minute.",
+                f"Too many requests. Limit is {rate_limit} per minute.",
             )
         events.append(now)
 
@@ -92,7 +106,7 @@ def _enforce_rate_limit(request: Request, scope: str) -> None:
 app = FastAPI(
     title="OmniSyntax API",
     description="AI-powered multi-language syntax error detection and auto-fix API",
-    version=API_VERSION,
+    version=_API_VERSION,
     docs_url="/docs",
     redoc_url="/redoc",
 )
@@ -199,7 +213,7 @@ class HealthResponse(BaseModel):
 async def root():
     return {
         "message": "OmniSyntax API",
-        "version": API_VERSION,
+        "version": _API_VERSION,
         "docs": "/docs",
         "health": "/health",
     }
@@ -213,12 +227,12 @@ async def health_check():
     degraded_reason = None if loaded else (status.get("error") or "ML model unavailable")
     return {
         "status": health_status,
-        "version": API_VERSION,
-        "supported_languages": SUPPORTED_LANGUAGES,
+        "version": _API_VERSION,
+        "supported_languages": _SUPPORTED_LANGUAGES,
         "ml_model_loaded": loaded,
         "degraded_reason": degraded_reason,
-        "max_code_size": MAX_CODE_SIZE,
-        "rate_limit_per_minute": RATE_LIMIT_PER_MINUTE,
+        "max_code_size": _get_max_code_size(),
+        "rate_limit_per_minute": _get_rate_limit_per_minute(),
     }
 
 
@@ -227,7 +241,7 @@ async def check_code(http_request: Request, request: CodeCheckRequest):
     _enforce_rate_limit(http_request, "check")
     _validate_code_payload(request.code)
 
-    if request.language and request.language not in SUPPORTED_LANGUAGES:
+    if request.language and request.language not in _SUPPORTED_LANGUAGES:
         _raise_api_error(
             400,
             "INVALID_LANGUAGE_OVERRIDE",
@@ -306,7 +320,7 @@ async def analyze_quality(http_request: Request, request: QualityCheckRequest):
 async def check_and_fix(http_request: Request, request: CodeCheckRequest):
     _enforce_rate_limit(http_request, "check-and-fix")
     _validate_code_payload(request.code)
-    if request.language and request.language not in SUPPORTED_LANGUAGES:
+    if request.language and request.language not in _SUPPORTED_LANGUAGES:
         _raise_api_error(
             400,
             "INVALID_LANGUAGE_OVERRIDE",

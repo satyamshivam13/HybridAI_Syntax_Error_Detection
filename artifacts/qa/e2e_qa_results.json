@@ -1,0 +1,5122 @@
+{
+  "metadata": {
+    "audit_name": "OmniSyntax E2E QA Audit",
+    "generated_at_unix": 1774624732.0444307,
+    "focus": "deep",
+    "languages": [
+      "C",
+      "C++",
+      "Java",
+      "Python",
+      "JavaScript"
+    ]
+  },
+  "architecture_validation": {
+    "core_detection_entry": {
+      "file": "src/error_engine.py",
+      "line": 1213,
+      "symbol": "detect_errors",
+      "evidence": "Primary hybrid detection entry point."
+    },
+    "api_check_route_integration": {
+      "file": "api.py",
+      "line": 225,
+      "symbol": "@app.post('/check') -> check_code",
+      "evidence": "Route calls detect_errors at api.py:238."
+    },
+    "streamlit_detection_integration": {
+      "file": "app.py",
+      "line": 95,
+      "symbol": "show_all branch uses detect_all_errors",
+      "evidence": "Single-error branch calls detect_errors at app.py:131."
+    },
+    "cli_detection_integration": {
+      "file": "cli.py",
+      "line": 25,
+      "symbol": "main",
+      "evidence": "CLI calls detect_errors at cli.py:51."
+    }
+  },
+  "summary": {
+    "overall": {
+      "total_test_count": 50,
+      "passed_count": 44,
+      "failed_count": 6,
+      "overall_pass_rate_percent": 88.0
+    },
+    "per_language": {
+      "C": {
+        "total": 10,
+        "pass": 9,
+        "fail": 1,
+        "tutor_explains_why": 10,
+        "tutor_beginner_friendly": 10,
+        "tutor_step_by_step": 0
+      },
+      "C++": {
+        "total": 10,
+        "pass": 9,
+        "fail": 1,
+        "tutor_explains_why": 10,
+        "tutor_beginner_friendly": 10,
+        "tutor_step_by_step": 0
+      },
+      "Java": {
+        "total": 10,
+        "pass": 8,
+        "fail": 2,
+        "tutor_explains_why": 10,
+        "tutor_beginner_friendly": 10,
+        "tutor_step_by_step": 0
+      },
+      "Python": {
+        "total": 10,
+        "pass": 9,
+        "fail": 1,
+        "tutor_explains_why": 10,
+        "tutor_beginner_friendly": 7,
+        "tutor_step_by_step": 0
+      },
+      "JavaScript": {
+        "total": 10,
+        "pass": 9,
+        "fail": 1,
+        "tutor_explains_why": 10,
+        "tutor_beginner_friendly": 10,
+        "tutor_step_by_step": 0
+      }
+    }
+  },
+  "records": [
+    {
+      "case_id": "C-01",
+      "language": "C",
+      "category": "Syntax Errors",
+      "description": "Seed: missing semicolon",
+      "input_code": "int main() {\n    int a = 5\n    printf(\"%d\", a);\n}",
+      "expected_types": [
+        "MissingDelimiter"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "MissingDelimiter",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+          "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingDelimiter",
+            "message": "Missing semicolon at the end of the statement.",
+            "line": 2,
+            "col": 13,
+            "snippet": "int a = 5",
+            "suggestion": "Add ';' at the end of the statement."
+          },
+          {
+            "type": "MissingInclude",
+            "message": "printf is used without including <stdio.h>.",
+            "line": 3,
+            "col": 5,
+            "snippet": "printf(\"%d\", a);",
+            "suggestion": "Add '#include <stdio.h>' at the top of the file."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingDelimiter",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2,
+          3
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "#include <stdio.h>\nint main() {\n    int a = 5;\n    printf(\"%d\", a);\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "int main() {\n    int a = 5;\n    printf(\"%d\", a);\n}",
+        "changes": [
+          "Added semicolon at line 2"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 4,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 7.517
+    },
+    {
+      "case_id": "C-02",
+      "language": "C",
+      "category": "Syntax Errors",
+      "description": "Unmatched brace",
+      "input_code": "int main() {\n    int x = 1;\n",
+      "expected_types": [
+        "UnmatchedBracket"
+      ],
+      "expected_line": 1,
+      "omnisyntax_output": {
+        "predicted_error": "UnmatchedBracket",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "Every opening bracket '{', '(', '[' must have a matching closing bracket '}', ')', ']'.",
+          "fix": "Add or remove brackets so that all pairs match correctly. Check for missing closing brackets."
+        },
+        "rule_based_issues": [
+          {
+            "type": "UnmatchedBracket",
+            "message": "Opening { is missing a matching closing bracket.",
+            "line": 1,
+            "col": 12,
+            "snippet": "int main() {",
+            "suggestion": "Add a closing bracket for {."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "UnmatchedBracket",
+      "location": {
+        "line": 1,
+        "all_lines": [
+          1
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "int main() {\n    int x = 1;\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "int main() {\n    int x = 1;\n}",
+        "changes": [
+          "Added missing closing bracket: }"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.235
+    },
+    {
+      "case_id": "C-03",
+      "language": "C",
+      "category": "Runtime-like Errors",
+      "description": "Division by zero",
+      "input_code": "int main() {\n    int a = 10;\n    int b = 0;\n    int c = a / b;\n    return c;\n}",
+      "expected_types": [
+        "DivisionByZero"
+      ],
+      "expected_line": 4,
+      "omnisyntax_output": {
+        "predicted_error": "DivisionByZero",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "Division by zero is mathematically undefined and will cause a runtime error or crash.",
+          "fix": "Add a condition to check that the denominator is not zero before performing division."
+        },
+        "rule_based_issues": [
+          {
+            "type": "DivisionByZero",
+            "message": "Possible division or modulo by zero via variable 'b'.",
+            "line": 4,
+            "col": 15,
+            "snippet": "int c = a / b;",
+            "suggestion": "Guard the denominator or change it to a non-zero value."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "DivisionByZero",
+      "location": {
+        "line": 4,
+        "all_lines": [
+          4
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "int main() {\n    int a = 10;\n    int b = 2;\n    int c = a / b;\n    return c;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "int main() {\n    int a = 10;\n    int b = 0;\n    int c = a / b;\n    return c;\n}",
+        "changes": [
+          "Suggestion: Avoid dividing by zero or wrap the division in a condition checking if denominator != 0"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.477
+    },
+    {
+      "case_id": "C-04",
+      "language": "C",
+      "category": "Runtime-like Errors",
+      "description": "Undeclared identifier",
+      "input_code": "int main() {\n    int a = 1;\n    return b;\n}",
+      "expected_types": [
+        "UndeclaredIdentifier"
+      ],
+      "expected_line": 3,
+      "omnisyntax_output": {
+        "predicted_error": "UndeclaredIdentifier",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A variable, function, or identifier is used without being declared first (common in C, C++, Java).",
+          "fix": "Declare the variable or import the required identifier before using it."
+        },
+        "rule_based_issues": [
+          {
+            "type": "UndeclaredIdentifier",
+            "message": "b is used before it is declared.",
+            "line": 3,
+            "col": 12,
+            "snippet": "return b;",
+            "suggestion": "Declare the identifier before use or fix the name."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "UndeclaredIdentifier",
+      "location": {
+        "line": 3,
+        "all_lines": [
+          3
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "int main() {\n    int a = 1;\n    int b = 2;\n    return b;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "int main() {\n    int a = 1;\n    return b;\n}",
+        "changes": [
+          "Suggestion: Declare the variable before using it, or check for typos in the variable name"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 2,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.581
+    },
+    {
+      "case_id": "C-05",
+      "language": "C",
+      "category": "Runtime-like Errors",
+      "description": "Missing include",
+      "input_code": "int main() {\n    printf(\"hi\");\n    return 0;\n}",
+      "expected_types": [
+        "MissingInclude"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "MissingInclude",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "The function or object requires a header file that has not been included (C/C++).",
+          "fix": "Add the required #include statement at the top of the file (e.g., #include <stdio.h>)."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingInclude",
+            "message": "printf is used without including <stdio.h>.",
+            "line": 2,
+            "col": 5,
+            "snippet": "printf(\"hi\");",
+            "suggestion": "Add '#include <stdio.h>' at the top of the file."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingInclude",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "#include <stdio.h>\nint main() {\n    printf(\"hi\");\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "#include <stdio.h>\n\nint main() {\n    printf(\"hi\");\n    return 0;\n}",
+        "changes": [
+          "Added suggested includes: #include <stdio.h>"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.305
+    },
+    {
+      "case_id": "C-06",
+      "language": "C",
+      "category": "Edge Cases",
+      "description": "Incomplete assignment",
+      "input_code": "int main() {\n    int x = ;\n    return 0;\n}",
+      "expected_types": [
+        "MissingDelimiter"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "MissingDelimiter",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+          "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingDelimiter",
+            "message": "Assignment is missing a value expression.",
+            "line": 2,
+            "col": 1,
+            "snippet": "int x = ;",
+            "suggestion": "Provide a value on the right-hand side of '='."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingDelimiter",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "int main() {\n    int x = 0;\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "int main() {\n    int x = ;\n    return 0;\n}",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 4,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.291
+    },
+    {
+      "case_id": "C-07",
+      "language": "C",
+      "category": "Edge Cases",
+      "description": "Unclosed string",
+      "input_code": "int main() {\n    printf(\"hello);\n    return 0;\n}",
+      "expected_types": [
+        "UnclosedString"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "UnclosedString",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A string literal was started but not properly closed with a matching quote.",
+          "fix": "Add the missing closing quote (' or \") to properly terminate the string."
+        },
+        "rule_based_issues": [
+          {
+            "type": "UnclosedString",
+            "message": "String literal is not closed before end of file.",
+            "line": 2,
+            "col": 12,
+            "snippet": "printf(\"hello);",
+            "suggestion": "Add the missing closing quote."
+          },
+          {
+            "type": "MissingInclude",
+            "message": "printf is used without including <stdio.h>.",
+            "line": 2,
+            "col": 5,
+            "snippet": "printf(\"hello);",
+            "suggestion": "Add '#include <stdio.h>' at the top of the file."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "UnclosedString",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2,
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "int main() {\n    printf(\"hello\");\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "int main() {\n    printf(\"hello);\n    return 0;\n}\"",
+        "changes": [
+          "Closed unclosed double quote"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.304
+    },
+    {
+      "case_id": "C-08",
+      "language": "C",
+      "category": "Logical Errors",
+      "description": "Wrong formula",
+      "input_code": "int main() {\n    int a = 2;\n    int b = 3;\n    int area = a + b;\n    return area;\n}",
+      "expected_types": [
+        "LogicalError",
+        "NoError"
+      ],
+      "expected_line": 4,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "FAIL",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": false,
+      "corrected_code": "int main() {\n    int a = 2;\n    int b = 3;\n    int area = a * b;\n    return area;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "int main() {\n    int a = 2;\n    int b = 3;\n    int area = a + b;\n    return area;\n}",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 1.146
+    },
+    {
+      "case_id": "C-09",
+      "language": "C",
+      "category": "Correct Code",
+      "description": "Valid C snippet",
+      "input_code": "#include <stdio.h>\nint main() {\n    int sum = 2 + 3;\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+      "expected_types": [
+        "NoError"
+      ],
+      "expected_line": null,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": true,
+      "corrected_code": "#include <stdio.h>\nint main() {\n    int sum = 2 + 3;\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "#include <stdio.h>\nint main() {\n    int sum = 2 + 3;\n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 4.224
+    },
+    {
+      "case_id": "C-10",
+      "language": "C",
+      "category": "Syntax Errors",
+      "description": "Missing delimiter before return",
+      "input_code": "int main() {\n    int n = 4\n    return n;\n}",
+      "expected_types": [
+        "MissingDelimiter"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "MissingDelimiter",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+          "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingDelimiter",
+            "message": "Missing semicolon at the end of the statement.",
+            "line": 2,
+            "col": 13,
+            "snippet": "int n = 4",
+            "suggestion": "Add ';' at the end of the statement."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingDelimiter",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "int main() {\n    int n = 4;\n    return n;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "int main() {\n    int n = 4;\n    return n;\n}",
+        "changes": [
+          "Added semicolon at line 2"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 4,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.349
+    },
+    {
+      "case_id": "C++-01",
+      "language": "C++",
+      "category": "Runtime-like Errors",
+      "description": "Seed: undeclared identifier",
+      "input_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int x;\n    cout << y;\n}",
+      "expected_types": [
+        "UndeclaredIdentifier"
+      ],
+      "expected_line": 5,
+      "omnisyntax_output": {
+        "predicted_error": "UndeclaredIdentifier",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A variable, function, or identifier is used without being declared first (common in C, C++, Java).",
+          "fix": "Declare the variable or import the required identifier before using it."
+        },
+        "rule_based_issues": [
+          {
+            "type": "UndeclaredIdentifier",
+            "message": "y is used before it is declared.",
+            "line": 5,
+            "col": 13,
+            "snippet": "cout << y;",
+            "suggestion": "Declare the identifier before use or fix the name."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "UndeclaredIdentifier",
+      "location": {
+        "line": 5,
+        "all_lines": [
+          5
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int y = 0;\n    cout << y;\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "#include <iostream>\nusing namespace std;\nint main() {\n    int x;\n    cout << y;\n}",
+        "changes": [
+          "Suggestion: Declare the variable before using it, or check for typos in the variable name"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 2,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.913
+    },
+    {
+      "case_id": "C++-02",
+      "language": "C++",
+      "category": "Syntax Errors",
+      "description": "Missing semicolon",
+      "input_code": "#include <iostream>\nint main() {\n    int a = 5\n    std::cout << a;\n}",
+      "expected_types": [
+        "MissingDelimiter"
+      ],
+      "expected_line": 3,
+      "omnisyntax_output": {
+        "predicted_error": "MissingDelimiter",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+          "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingDelimiter",
+            "message": "Missing semicolon at the end of the statement.",
+            "line": 3,
+            "col": 13,
+            "snippet": "int a = 5",
+            "suggestion": "Add ';' at the end of the statement."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingDelimiter",
+      "location": {
+        "line": 3,
+        "all_lines": [
+          3
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "#include <iostream>\nint main() {\n    int a = 5;\n    std::cout << a;\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "#include <iostream>\nint main() {\n    int a = 5;\n    std::cout << a;\n}",
+        "changes": [
+          "Added semicolon at line 3"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 4,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.412
+    },
+    {
+      "case_id": "C++-03",
+      "language": "C++",
+      "category": "Runtime-like Errors",
+      "description": "Division by zero",
+      "input_code": "int main() {\n    int x = 10;\n    int y = 0;\n    return x / y;\n}",
+      "expected_types": [
+        "DivisionByZero"
+      ],
+      "expected_line": 4,
+      "omnisyntax_output": {
+        "predicted_error": "DivisionByZero",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "Division by zero is mathematically undefined and will cause a runtime error or crash.",
+          "fix": "Add a condition to check that the denominator is not zero before performing division."
+        },
+        "rule_based_issues": [
+          {
+            "type": "DivisionByZero",
+            "message": "Possible division or modulo by zero via variable 'y'.",
+            "line": 4,
+            "col": 14,
+            "snippet": "return x / y;",
+            "suggestion": "Guard the denominator or change it to a non-zero value."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "DivisionByZero",
+      "location": {
+        "line": 4,
+        "all_lines": [
+          4
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "int main() {\n    int x = 10;\n    int y = 2;\n    return x / y;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "int main() {\n    int x = 10;\n    int y = 0;\n    return x / y;\n}",
+        "changes": [
+          "Suggestion: Avoid dividing by zero or wrap the division in a condition checking if denominator != 0"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.402
+    },
+    {
+      "case_id": "C++-04",
+      "language": "C++",
+      "category": "Runtime-like Errors",
+      "description": "Missing include for cout",
+      "input_code": "int main() {\n    std::cout << 10;\n    return 0;\n}",
+      "expected_types": [
+        "MissingInclude"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "MissingInclude",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "The function or object requires a header file that has not been included (C/C++).",
+          "fix": "Add the required #include statement at the top of the file (e.g., #include <stdio.h>)."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingInclude",
+            "message": "cout is used without including <iostream>.",
+            "line": 2,
+            "col": 10,
+            "snippet": "std::cout << 10;",
+            "suggestion": "Add '#include <iostream>' at the top of the file."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingInclude",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "#include <iostream>\nint main() {\n    std::cout << 10;\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "#include <iostream>\n\nint main() {\n    std::cout << 10;\n    return 0;\n}",
+        "changes": [
+          "Added suggested includes: #include <iostream>"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.469
+    },
+    {
+      "case_id": "C++-05",
+      "language": "C++",
+      "category": "Edge Cases",
+      "description": "Unmatched parenthesis",
+      "input_code": "int main( {\n    return 0;\n}",
+      "expected_types": [
+        "UnmatchedBracket"
+      ],
+      "expected_line": 1,
+      "omnisyntax_output": {
+        "predicted_error": "UnmatchedBracket",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "Every opening bracket '{', '(', '[' must have a matching closing bracket '}', ')', ']'.",
+          "fix": "Add or remove brackets so that all pairs match correctly. Check for missing closing brackets."
+        },
+        "rule_based_issues": [
+          {
+            "type": "UnmatchedBracket",
+            "message": "Opening ( is missing a matching closing bracket.",
+            "line": 1,
+            "col": 9,
+            "snippet": "int main( {",
+            "suggestion": "Add a closing bracket for (."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "UnmatchedBracket",
+      "location": {
+        "line": 1,
+        "all_lines": [
+          1
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "int main() {\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "int main( {\n    return 0;\n})",
+        "changes": [
+          "Added missing closing bracket: )"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.23
+    },
+    {
+      "case_id": "C++-06",
+      "language": "C++",
+      "category": "Edge Cases",
+      "description": "Infinite loop",
+      "input_code": "int main() {\n    for(;;) {\n    }\n}",
+      "expected_types": [
+        "InfiniteLoop"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "InfiniteLoop",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A loop has no exit condition or the condition is always true, causing it to run forever.",
+          "fix": "Add a proper exit condition or ensure the loop variable changes to eventually break the loop."
+        },
+        "rule_based_issues": [
+          {
+            "type": "InfiniteLoop",
+            "message": "Loop condition is always true and has no visible exit path.",
+            "line": 2,
+            "col": 5,
+            "snippet": "for(;;) {",
+            "suggestion": "Add an exit condition or a break path inside the loop."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "InfiniteLoop",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "int main() {\n    for (int i = 0; i < 10; i++) {\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "int main() {\n    for(;;) {\n    }\n}",
+        "changes": [
+          "Suggestion: Add a break condition or modify the loop expression to prevent an infinite loop"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.349
+    },
+    {
+      "case_id": "C++-07",
+      "language": "C++",
+      "category": "Logical Errors",
+      "description": "Off-by-one loop",
+      "input_code": "#include <vector>\nint main() {\n    std::vector<int> v = {1,2,3};\n    int s = 0;\n    for (size_t i = 0; i <= v.size(); i++) { s += v[i]; }\n    return s;\n}",
+      "expected_types": [
+        "LogicalError",
+        "NoError"
+      ],
+      "expected_line": 5,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "FAIL",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": false,
+      "corrected_code": "#include <vector>\nint main() {\n    std::vector<int> v = {1,2,3};\n    int s = 0;\n    for (size_t i = 0; i < v.size(); i++) { s += v[i]; }\n    return s;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "#include <vector>\nint main() {\n    std::vector<int> v = {1,2,3};\n    int s = 0;\n    for (size_t i = 0; i <= v.size(); i++) { s += v[i]; }\n    return s;\n}",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 5.466
+    },
+    {
+      "case_id": "C++-08",
+      "language": "C++",
+      "category": "Correct Code",
+      "description": "Valid C++ snippet",
+      "input_code": "#include <iostream>\nint main() {\n    int x = 10;\n    std::cout << x << std::endl;\n    return 0;\n}",
+      "expected_types": [
+        "NoError"
+      ],
+      "expected_line": null,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": true,
+      "corrected_code": "#include <iostream>\nint main() {\n    int x = 10;\n    std::cout << x << std::endl;\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "#include <iostream>\nint main() {\n    int x = 10;\n    std::cout << x << std::endl;\n    return 0;\n}",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 3.367
+    },
+    {
+      "case_id": "C++-09",
+      "language": "C++",
+      "category": "Correct Code",
+      "description": "Function and call",
+      "input_code": "#include <iostream>\nint add(int a, int b) { return a + b; }\nint main() {\n    std::cout << add(2, 3);\n    return 0;\n}",
+      "expected_types": [
+        "NoError"
+      ],
+      "expected_line": null,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": true,
+      "corrected_code": "#include <iostream>\nint add(int a, int b) { return a + b; }\nint main() {\n    std::cout << add(2, 3);\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "#include <iostream>\nint add(int a, int b) { return a + b; }\nint main() {\n    std::cout << add(2, 3);\n    return 0;\n}",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 3.183
+    },
+    {
+      "case_id": "C++-10",
+      "language": "C++",
+      "category": "Syntax Errors",
+      "description": "Missing semicolon after cout",
+      "input_code": "#include <iostream>\nint main() {\n    std::cout << 1\n    return 0;\n}",
+      "expected_types": [
+        "MissingDelimiter"
+      ],
+      "expected_line": 3,
+      "omnisyntax_output": {
+        "predicted_error": "MissingDelimiter",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+          "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingDelimiter",
+            "message": "Missing semicolon at the end of the statement.",
+            "line": 3,
+            "col": 18,
+            "snippet": "std::cout << 1",
+            "suggestion": "Add ';' at the end of the statement."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingDelimiter",
+      "location": {
+        "line": 3,
+        "all_lines": [
+          3
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "#include <iostream>\nint main() {\n    std::cout << 1;\n    return 0;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "#include <iostream>\nint main() {\n    std::cout << 1;\n    return 0;\n}",
+        "changes": [
+          "Added semicolon at line 3"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 4,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.447
+    },
+    {
+      "case_id": "Java-01",
+      "language": "Java",
+      "category": "Runtime-like Errors",
+      "description": "Seed: type mismatch",
+      "input_code": "public class Main {\n    public static void main(String[] args) {\n        int a = \"hello\";\n    }\n}",
+      "expected_types": [
+        "TypeMismatch"
+      ],
+      "expected_line": 3,
+      "omnisyntax_output": {
+        "predicted_error": "TypeMismatch",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A value of one data type is being assigned or passed to a variable/parameter of a different, incompatible type.",
+          "fix": "Convert the value to the correct type using type casting or change the variable's declared type."
+        },
+        "rule_based_issues": [
+          {
+            "type": "TypeMismatch",
+            "message": "Assigned value type does not match the declared variable type.",
+            "line": 3,
+            "col": 1,
+            "snippet": "int a = \"hello\";",
+            "suggestion": "Convert the value to the correct type or change the variable declaration."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "TypeMismatch",
+      "location": {
+        "line": 3,
+        "all_lines": [
+          3
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "public class Main {\n    public static void main(String[] args) {\n        String a = \"hello\";\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "public class Main {\n    public static void main(String[] args) {\n        int a = \"hello\";\n    }\n}",
+        "changes": [
+          "Suggestion: Ensure assigned values match their declared variable types or cast appropriately"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 1.614
+    },
+    {
+      "case_id": "Java-02",
+      "language": "Java",
+      "category": "Syntax Errors",
+      "description": "Missing semicolon",
+      "input_code": "public class Main {\n    public static void main(String[] args) {\n        int x = 1\n    }\n}",
+      "expected_types": [
+        "MissingDelimiter"
+      ],
+      "expected_line": 3,
+      "omnisyntax_output": {
+        "predicted_error": "MissingDelimiter",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+          "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingDelimiter",
+            "message": "Missing semicolon at the end of the statement.",
+            "line": 3,
+            "col": 17,
+            "snippet": "int x = 1",
+            "suggestion": "Add ';' at the end of the statement."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingDelimiter",
+      "location": {
+        "line": 3,
+        "all_lines": [
+          3
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "public class Main {\n    public static void main(String[] args) {\n        int x = 1;\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "public class Main {\n    public static void main(String[] args) {\n        int x = 1;\n    }\n}",
+        "changes": [
+          "Added semicolon at line 3"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 4,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.345
+    },
+    {
+      "case_id": "Java-03",
+      "language": "Java",
+      "category": "Runtime-like Errors",
+      "description": "Undeclared identifier",
+      "input_code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(z);\n    }\n}",
+      "expected_types": [
+        "UndeclaredIdentifier"
+      ],
+      "expected_line": 3,
+      "omnisyntax_output": {
+        "predicted_error": "UndeclaredIdentifier",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A variable, function, or identifier is used without being declared first (common in C, C++, Java).",
+          "fix": "Declare the variable or import the required identifier before using it."
+        },
+        "rule_based_issues": [
+          {
+            "type": "UndeclaredIdentifier",
+            "message": "z is used before it is declared.",
+            "line": 3,
+            "col": 28,
+            "snippet": "System.out.println(z);",
+            "suggestion": "Declare the identifier before use or fix the name."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "UndeclaredIdentifier",
+      "location": {
+        "line": 3,
+        "all_lines": [
+          3
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "public class Main {\n    public static void main(String[] args) {\n        int z = 0;\n        System.out.println(z);\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(z);\n    }\n}",
+        "changes": [
+          "Suggestion: Declare the variable before using it, or check for typos in the variable name"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 2,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.693
+    },
+    {
+      "case_id": "Java-04",
+      "language": "Java",
+      "category": "Runtime-like Errors",
+      "description": "Missing import",
+      "input_code": "public class Main {\n    public static void main(String[] args) {\n        ArrayList<Integer> x = new ArrayList<>();\n    }\n}",
+      "expected_types": [
+        "MissingImport"
+      ],
+      "expected_line": 3,
+      "omnisyntax_output": {
+        "predicted_error": "MissingImport",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A module, class, or function is used without being imported (Python/Java).",
+          "fix": "Add the required import statement at the top of the file (e.g., 'import module' or 'import java.util.Scanner;')."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingImport",
+            "message": "ArrayList is used without importing java.util.ArrayList.",
+            "line": 3,
+            "col": 9,
+            "snippet": "ArrayList<Integer> x = new ArrayList<>();",
+            "suggestion": "Add 'import java.util.ArrayList;' near the top of the file."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingImport",
+      "location": {
+        "line": 3,
+        "all_lines": [
+          3
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "import java.util.ArrayList;\npublic class Main {\n    public static void main(String[] args) {\n        ArrayList<Integer> x = new ArrayList<>();\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "import java.util.ArrayList;\n\npublic class Main {\n    public static void main(String[] args) {\n        ArrayList<Integer> x = new ArrayList<>();\n    }\n}",
+        "changes": [
+          "Added suggested imports: import java.util.ArrayList;"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.603
+    },
+    {
+      "case_id": "Java-05",
+      "language": "Java",
+      "category": "Edge Cases",
+      "description": "Unmatched bracket",
+      "input_code": "public class Main {\n    public static void main(String[] args) {\n        if (true) {\n            System.out.println(1);\n    }\n}",
+      "expected_types": [
+        "UnmatchedBracket"
+      ],
+      "expected_line": 1,
+      "omnisyntax_output": {
+        "predicted_error": "UnmatchedBracket",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "Every opening bracket '{', '(', '[' must have a matching closing bracket '}', ')', ']'.",
+          "fix": "Add or remove brackets so that all pairs match correctly. Check for missing closing brackets."
+        },
+        "rule_based_issues": [
+          {
+            "type": "UnmatchedBracket",
+            "message": "Opening { is missing a matching closing bracket.",
+            "line": 1,
+            "col": 19,
+            "snippet": "public class Main {",
+            "suggestion": "Add a closing bracket for {."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "UnmatchedBracket",
+      "location": {
+        "line": 1,
+        "all_lines": [
+          1
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "public class Main {\n    public static void main(String[] args) {\n        if (true) {\n            System.out.println(1);\n        }\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "public class Main {\n    public static void main(String[] args) {\n        if (true) {\n            System.out.println(1);\n    }\n}}",
+        "changes": [
+          "Added missing closing bracket: }"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.454
+    },
+    {
+      "case_id": "Java-06",
+      "language": "Java",
+      "category": "Edge Cases",
+      "description": "Infinite loop",
+      "input_code": "public class Main {\n    public static void main(String[] args) {\n        while(true) {}\n    }\n}",
+      "expected_types": [
+        "InfiniteLoop"
+      ],
+      "expected_line": 3,
+      "omnisyntax_output": {
+        "predicted_error": "InfiniteLoop",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A loop has no exit condition or the condition is always true, causing it to run forever.",
+          "fix": "Add a proper exit condition or ensure the loop variable changes to eventually break the loop."
+        },
+        "rule_based_issues": [
+          {
+            "type": "InfiniteLoop",
+            "message": "Loop condition is always true and has no visible exit path.",
+            "line": 3,
+            "col": 9,
+            "snippet": "while(true) {}",
+            "suggestion": "Add an exit condition or a break path inside the loop."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "InfiniteLoop",
+      "location": {
+        "line": 3,
+        "all_lines": [
+          3
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "public class Main {\n    public static void main(String[] args) {\n        for (int i = 0; i < 5; i++) {}\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "public class Main {\n    public static void main(String[] args) {\n        while(true) {}\n    }\n}",
+        "changes": [
+          "Suggestion: Add a break condition or modify the loop expression to prevent an infinite loop"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.374
+    },
+    {
+      "case_id": "Java-07",
+      "language": "Java",
+      "category": "Logical Errors",
+      "description": "Wrong operation",
+      "input_code": "public class Main {\n    public static void main(String[] args) {\n        int price = 100;\n        int discount = 10;\n        int finalPrice = price + discount;\n        System.out.println(finalPrice);\n    }\n}",
+      "expected_types": [
+        "LogicalError",
+        "NoError"
+      ],
+      "expected_line": 5,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "FAIL",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": false,
+      "corrected_code": "public class Main {\n    public static void main(String[] args) {\n        int price = 100;\n        int discount = 10;\n        int finalPrice = price - discount;\n        System.out.println(finalPrice);\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "public class Main {\n    public static void main(String[] args) {\n        int price = 100;\n        int discount = 10;\n        int finalPrice = price + discount;\n        System.out.println(finalPrice);\n    }\n}",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 4.747
+    },
+    {
+      "case_id": "Java-08",
+      "language": "Java",
+      "category": "Correct Code",
+      "description": "Simple valid Java",
+      "input_code": "public class Main {\n    public static void main(String[] args) {\n        int a = 2;\n        int b = 3;\n        System.out.println(a + b);\n    }\n}",
+      "expected_types": [
+        "NoError"
+      ],
+      "expected_line": null,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": true,
+      "corrected_code": "public class Main {\n    public static void main(String[] args) {\n        int a = 2;\n        int b = 3;\n        System.out.println(a + b);\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "public class Main {\n    public static void main(String[] args) {\n        int a = 2;\n        int b = 3;\n        System.out.println(a + b);\n    }\n}",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 3.203
+    },
+    {
+      "case_id": "Java-09",
+      "language": "Java",
+      "category": "Correct Code",
+      "description": "Class with method",
+      "input_code": "public class Main {\n    static int add(int a, int b) { return a + b; }\n    public static void main(String[] args) {\n        System.out.println(add(2, 3));\n    }\n}",
+      "expected_types": [
+        "NoError"
+      ],
+      "expected_line": null,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": true,
+      "corrected_code": "public class Main {\n    static int add(int a, int b) { return a + b; }\n    public static void main(String[] args) {\n        System.out.println(add(2, 3));\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "public class Main {\n    static int add(int a, int b) { return a + b; }\n    public static void main(String[] args) {\n        System.out.println(add(2, 3));\n    }\n}",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 3.103
+    },
+    {
+      "case_id": "Java-10",
+      "language": "Java",
+      "category": "Syntax Errors",
+      "description": "Missing parenthesis",
+      "input_code": "public class Main {\n    public static void main(String[] args {\n        System.out.println(1);\n    }\n}",
+      "expected_types": [
+        "UnmatchedBracket",
+        "MissingDelimiter"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "UnmatchedBracket",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "Every opening bracket '{', '(', '[' must have a matching closing bracket '}', ')', ']'.",
+          "fix": "Add or remove brackets so that all pairs match correctly. Check for missing closing brackets."
+        },
+        "rule_based_issues": [
+          {
+            "type": "UnmatchedBracket",
+            "message": "Opening { is missing a matching closing bracket.",
+            "line": 1,
+            "col": 19,
+            "snippet": "public class Main {",
+            "suggestion": "Add a closing bracket for {."
+          },
+          {
+            "type": "UnmatchedBracket",
+            "message": "Opening ( is missing a matching closing bracket.",
+            "line": 2,
+            "col": 28,
+            "snippet": "public static void main(String[] args {",
+            "suggestion": "Add a closing bracket for (."
+          },
+          {
+            "type": "UnmatchedBracket",
+            "message": "Found closing } without a matching opening bracket.",
+            "line": 5,
+            "col": 1,
+            "snippet": "}",
+            "suggestion": "Remove the extra closing bracket or add the missing opening bracket."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "FAIL",
+      "error_type": "UnmatchedBracket",
+      "location": {
+        "line": 1,
+        "all_lines": [
+          1,
+          2,
+          5
+        ]
+      },
+      "line_match": false,
+      "corrected_code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(1);\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "public class Main {\n    public static void main(String[] args {\n        System.out.println(1);\n    }\n})}",
+        "changes": [
+          "Added missing closing bracket: )",
+          "Added missing closing bracket: }"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.41
+    },
+    {
+      "case_id": "Python-01",
+      "language": "Python",
+      "category": "Syntax Errors",
+      "description": "Seed: indentation error",
+      "input_code": "def test():\nprint(\"Hello\")",
+      "expected_types": [
+        "IndentationError"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "IndentationError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "Python uses indentation to define code blocks. Inconsistent indentation causes errors.",
+          "fix": "Indent the statement correctly (use 4 spaces per indentation level). Avoid mixing tabs and spaces."
+        },
+        "rule_based_issues": [
+          {
+            "type": "IndentationError",
+            "message": "expected an indented block after function definition on line 1 (<string>, line 2)",
+            "line": 2,
+            "col": null,
+            "snippet": null,
+            "suggestion": "Check indentation levels (use consistent tabs/spaces; prefer 4 spaces)."
+          },
+          {
+            "type": "SyntaxError",
+            "message": "expected an indented block after function definition on line 1 (<unknown>, line 2)",
+            "line": 2,
+            "col": null,
+            "snippet": null,
+            "suggestion": null
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "IndentationError",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2,
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "def test():\n    print(\"Hello\")",
+      "auto_fix_preview": {
+        "fixed_code": "def test():\nprint(\"Hello\")",
+        "changes": [
+          "Standardized indentation to 4 spaces"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.525
+    },
+    {
+      "case_id": "Python-02",
+      "language": "Python",
+      "category": "Correct Code",
+      "description": "Seed: correct python",
+      "input_code": "def add(a, b):\n    return a + b\nprint(add(2,3))",
+      "expected_types": [
+        "NoError"
+      ],
+      "expected_line": null,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "The Python code follows correct syntax rules.",
+          "fix": "No changes are required."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": true,
+      "corrected_code": "def add(a, b):\n    return a + b\nprint(add(2,3))",
+      "auto_fix_preview": {
+        "fixed_code": "def add(a, b):\n    return a + b\nprint(add(2,3))",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": false,
+        "step_by_step": false,
+        "concept_explanation_quality": 2,
+        "correction_clarity": 1,
+        "beginner_readability": 2,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 3.001
+    },
+    {
+      "case_id": "Python-03",
+      "language": "Python",
+      "category": "Syntax Errors",
+      "description": "Missing colon",
+      "input_code": "if True\n    print('x')",
+      "expected_types": [
+        "MissingDelimiter",
+        "MissingColon"
+      ],
+      "expected_line": 1,
+      "omnisyntax_output": {
+        "predicted_error": "MissingDelimiter",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+          "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingDelimiter",
+            "message": "Probable missing ':' after statement starting with 'if'",
+            "line": 1,
+            "col": null,
+            "snippet": "if True",
+            "suggestion": "Add a ':' at the end of this line."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingDelimiter",
+      "location": {
+        "line": 1,
+        "all_lines": [
+          1
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "if True:\n    print('x')",
+      "auto_fix_preview": {
+        "fixed_code": "if True:\n    print('x')",
+        "changes": [
+          "Added colon at line 1"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 4,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.228
+    },
+    {
+      "case_id": "Python-04",
+      "language": "Python",
+      "category": "Runtime-like Errors",
+      "description": "Division by zero",
+      "input_code": "def f():\n    return 10/0\nprint(f())",
+      "expected_types": [
+        "DivisionByZero"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "DivisionByZero",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "Division by zero is mathematically undefined and will cause a runtime error or crash.",
+          "fix": "Add a condition to check that the denominator is not zero before performing division."
+        },
+        "rule_based_issues": [
+          {
+            "type": "DivisionByZero",
+            "line": 2,
+            "col": 14,
+            "message": "Division by zero detected",
+            "snippet": "return 10/0",
+            "suggestion": "Guard the denominator or change it to a non-zero value."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "DivisionByZero",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "def f():\n    return 10/2\nprint(f())",
+      "auto_fix_preview": {
+        "fixed_code": "def f():\n    return 10/0\nprint(f())",
+        "changes": [
+          "Suggestion: Avoid dividing by zero or wrap the division in a condition checking if denominator != 0"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 4.702
+    },
+    {
+      "case_id": "Python-05",
+      "language": "Python",
+      "category": "Runtime-like Errors",
+      "description": "Name error",
+      "input_code": "def f():\n    return x + 1\nprint(f())",
+      "expected_types": [
+        "NameError"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "NameError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A variable or function name is used before it has been defined (Python).",
+          "fix": "Define the variable or function before using it, or check for typos in the name."
+        },
+        "rule_based_issues": [
+          {
+            "type": "NameError",
+            "line": 2,
+            "col": 12,
+            "message": "x is used before assignment or import.",
+            "snippet": "return x + 1",
+            "suggestion": "Define or import the name before using it."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "NameError",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "def f():\n    x = 1\n    return x + 1\nprint(f())",
+      "auto_fix_preview": {
+        "fixed_code": "def f():\n    return x + 1\nprint(f())",
+        "changes": [
+          "Suggestion: Declare the variable before using it, or check for typos in the variable name"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.124
+    },
+    {
+      "case_id": "Python-06",
+      "language": "Python",
+      "category": "Runtime-like Errors",
+      "description": "Mutable default",
+      "input_code": "def add_item(item, bag=[]):\n    bag.append(item)\n    return bag",
+      "expected_types": [
+        "MutableDefault"
+      ],
+      "expected_line": 1,
+      "omnisyntax_output": {
+        "predicted_error": "MutableDefault",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "Using a mutable object (like a list or dict) as a default function argument can cause unexpected behavior.",
+          "fix": "Use None as the default and initialize the mutable object inside the function."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MutableDefault",
+            "line": 1,
+            "col": 1,
+            "message": "Mutable default argument can leak state across calls.",
+            "snippet": "def add_item(item, bag=[]):",
+            "suggestion": "Use None as default and initialize the mutable object inside the function."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MutableDefault",
+      "location": {
+        "line": 1,
+        "all_lines": [
+          1
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "def add_item(item, bag=None):\n    if bag is None:\n        bag = []\n    bag.append(item)\n    return bag",
+      "auto_fix_preview": {
+        "fixed_code": "def add_item(item, bag=[]):\n    bag.append(item)\n    return bag",
+        "changes": [
+          "Suggestion: Use None as default value and initialize the mutable object (e.g. lists/dicts) inside the function"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.037
+    },
+    {
+      "case_id": "Python-07",
+      "language": "Python",
+      "category": "Edge Cases",
+      "description": "Wildcard import",
+      "input_code": "from math import *\nprint(sqrt(4))",
+      "expected_types": [
+        "WildcardImport"
+      ],
+      "expected_line": 1,
+      "omnisyntax_output": {
+        "predicted_error": "WildcardImport",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "Using wildcard imports (e.g., 'from module import *') is discouraged as it pollutes the namespace.",
+          "fix": "Import specific names instead (e.g., 'from module import SpecificClass') for better code clarity."
+        },
+        "rule_based_issues": [
+          {
+            "type": "WildcardImport",
+            "line": 1,
+            "col": 1,
+            "message": "Wildcard import can pollute namespace and hide name collisions.",
+            "snippet": "from math import *",
+            "suggestion": "Import only the specific names you need."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "WildcardImport",
+      "location": {
+        "line": 1,
+        "all_lines": [
+          1
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "from math import sqrt\nprint(sqrt(4))",
+      "auto_fix_preview": {
+        "fixed_code": "# TODO: Replace with specific imports from math\nprint(sqrt(4))",
+        "changes": [
+          "Marked wildcard import for replacement: math"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.029
+    },
+    {
+      "case_id": "Python-08",
+      "language": "Python",
+      "category": "Logical Errors",
+      "description": "Wrong formula",
+      "input_code": "def avg(a, b):\n    return a * b / 2\nprint(avg(2, 6))",
+      "expected_types": [
+        "LogicalError",
+        "NoError"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "The Python code follows correct syntax rules.",
+          "fix": "No changes are required."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "FAIL",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": false,
+      "corrected_code": "def avg(a, b):\n    return (a + b) / 2\nprint(avg(2, 6))",
+      "auto_fix_preview": {
+        "fixed_code": "def avg(a, b):\n    return a * b / 2\nprint(avg(2, 6))",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": false,
+        "step_by_step": false,
+        "concept_explanation_quality": 2,
+        "correction_clarity": 1,
+        "beginner_readability": 2,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 2.749
+    },
+    {
+      "case_id": "Python-09",
+      "language": "Python",
+      "category": "Correct Code",
+      "description": "Valid loop",
+      "input_code": "total = 0\nfor i in range(3):\n    total += i\nprint(total)",
+      "expected_types": [
+        "NoError"
+      ],
+      "expected_line": null,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "The Python code follows correct syntax rules.",
+          "fix": "No changes are required."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": true,
+      "corrected_code": "total = 0\nfor i in range(3):\n    total += i\nprint(total)",
+      "auto_fix_preview": {
+        "fixed_code": "total = 0\nfor i in range(3):\n    total += i\nprint(total)",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": false,
+        "step_by_step": false,
+        "concept_explanation_quality": 2,
+        "correction_clarity": 1,
+        "beginner_readability": 2,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.461
+    },
+    {
+      "case_id": "Python-10",
+      "language": "Python",
+      "category": "Edge Cases",
+      "description": "Unclosed string",
+      "input_code": "name = \"Asha\nprint(name)",
+      "expected_types": [
+        "UnclosedString"
+      ],
+      "expected_line": 1,
+      "omnisyntax_output": {
+        "predicted_error": "UnclosedString",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A string literal was started but not properly closed with a matching quote.",
+          "fix": "Add the missing closing quote (' or \") to properly terminate the string."
+        },
+        "rule_based_issues": [
+          {
+            "type": "UnclosedString",
+            "message": "unterminated string literal (detected at line 1) (<unknown>, line 1)",
+            "line": 1,
+            "col": null,
+            "snippet": null,
+            "suggestion": "It looks like a string wasn't closed properly."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "UnclosedString",
+      "location": {
+        "line": 1,
+        "all_lines": [
+          1
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "name = \"Asha\"\nprint(name)",
+      "auto_fix_preview": {
+        "fixed_code": "name = \"Asha\nprint(name)\"",
+        "changes": [
+          "Closed unclosed double quote"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.13
+    },
+    {
+      "case_id": "JavaScript-01",
+      "language": "JavaScript",
+      "category": "Runtime-like Errors",
+      "description": "Seed: undeclared variable",
+      "input_code": "function demo() {\n    let a = 10;\n    console.log(b);\n}",
+      "expected_types": [
+        "UndeclaredIdentifier"
+      ],
+      "expected_line": 3,
+      "omnisyntax_output": {
+        "predicted_error": "UndeclaredIdentifier",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A variable, function, or identifier is used without being declared first (common in C, C++, Java).",
+          "fix": "Declare the variable or import the required identifier before using it."
+        },
+        "rule_based_issues": [
+          {
+            "type": "UndeclaredIdentifier",
+            "message": "b is used before it is declared.",
+            "line": 3,
+            "col": 17,
+            "snippet": "console.log(b);",
+            "suggestion": "Declare the identifier before use or fix the name."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "UndeclaredIdentifier",
+      "location": {
+        "line": 3,
+        "all_lines": [
+          3
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "function demo() {\n    let a = 10;\n    console.log(a);\n}",
+      "auto_fix_preview": {
+        "fixed_code": "function demo() {\n    let a = 10;\n    console.log(b);\n}",
+        "changes": [
+          "Suggestion: Declare the variable before using it, or check for typos in the variable name"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 2,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.683
+    },
+    {
+      "case_id": "JavaScript-02",
+      "language": "JavaScript",
+      "category": "Correct Code",
+      "description": "Seed: correct JS",
+      "input_code": "let x = 10;\nconsole.log(x);",
+      "expected_types": [
+        "NoError"
+      ],
+      "expected_line": null,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": true,
+      "corrected_code": "let x = 10;\nconsole.log(x);",
+      "auto_fix_preview": {
+        "fixed_code": "let x = 10;\nconsole.log(x);",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.13
+    },
+    {
+      "case_id": "JavaScript-03",
+      "language": "JavaScript",
+      "category": "Syntax Errors",
+      "description": "Invalid member access",
+      "input_code": "function f() {\n    const a = {x: 1};\n    console..log(a.x);\n}",
+      "expected_types": [
+        "MissingDelimiter"
+      ],
+      "expected_line": 3,
+      "omnisyntax_output": {
+        "predicted_error": "MissingDelimiter",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+          "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingDelimiter",
+            "message": "Invalid member access syntax '..'.",
+            "line": 3,
+            "col": 12,
+            "snippet": "console..log(a.x);",
+            "suggestion": "Use a single '.' for property access."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingDelimiter",
+      "location": {
+        "line": 3,
+        "all_lines": [
+          3
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "function f() {\n    const a = {x: 1};\n    console.log(a.x);\n}",
+      "auto_fix_preview": {
+        "fixed_code": "function f() {\n    const a = {x: 1};\n    console..log(a.x);\n}",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 4,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.291
+    },
+    {
+      "case_id": "JavaScript-04",
+      "language": "JavaScript",
+      "category": "Runtime-like Errors",
+      "description": "Division by zero",
+      "input_code": "function f() {\n    return 10 / 0;\n}",
+      "expected_types": [
+        "DivisionByZero"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "DivisionByZero",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "Division by zero is mathematically undefined and will cause a runtime error or crash.",
+          "fix": "Add a condition to check that the denominator is not zero before performing division."
+        },
+        "rule_based_issues": [
+          {
+            "type": "DivisionByZero",
+            "message": "Possible division or modulo by zero.",
+            "line": 2,
+            "col": 15,
+            "snippet": "return 10 / 0;",
+            "suggestion": "Guard the denominator or change it to a non-zero value."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "DivisionByZero",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "function f() {\n    return 10 / 2;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "function f() {\n    return 10 / 0;\n}",
+        "changes": [
+          "Suggestion: Avoid dividing by zero or wrap the division in a condition checking if denominator != 0"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.15
+    },
+    {
+      "case_id": "JavaScript-05",
+      "language": "JavaScript",
+      "category": "Edge Cases",
+      "description": "Unclosed string",
+      "input_code": "function f() {\n    let s = \"hello;\n}",
+      "expected_types": [
+        "UnclosedString"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "UnclosedString",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A string literal was started but not properly closed with a matching quote.",
+          "fix": "Add the missing closing quote (' or \") to properly terminate the string."
+        },
+        "rule_based_issues": [
+          {
+            "type": "UnclosedString",
+            "message": "String literal is not closed before end of file.",
+            "line": 2,
+            "col": 13,
+            "snippet": "let s = \"hello;",
+            "suggestion": "Add the missing closing quote."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "UnclosedString",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "function f() {\n    let s = \"hello\";\n}",
+      "auto_fix_preview": {
+        "fixed_code": "function f() {\n    let s = \"hello;\n}\"",
+        "changes": [
+          "Closed unclosed double quote"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.151
+    },
+    {
+      "case_id": "JavaScript-06",
+      "language": "JavaScript",
+      "category": "Edge Cases",
+      "description": "Infinite loop",
+      "input_code": "function f() {\n    while(true) {\n    }\n}",
+      "expected_types": [
+        "InfiniteLoop"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "InfiniteLoop",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A loop has no exit condition or the condition is always true, causing it to run forever.",
+          "fix": "Add a proper exit condition or ensure the loop variable changes to eventually break the loop."
+        },
+        "rule_based_issues": [
+          {
+            "type": "InfiniteLoop",
+            "message": "Loop condition is always true and has no visible exit path.",
+            "line": 2,
+            "col": 5,
+            "snippet": "while(true) {",
+            "suggestion": "Add an exit condition or a break path inside the loop."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "InfiniteLoop",
+      "location": {
+        "line": 2,
+        "all_lines": [
+          2
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "function f() {\n    for (let i = 0; i < 10; i++) {\n    }\n}",
+      "auto_fix_preview": {
+        "fixed_code": "function f() {\n    while(true) {\n    }\n}",
+        "changes": [
+          "Suggestion: Add a break condition or modify the loop expression to prevent an infinite loop"
+        ],
+        "success": true
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 4,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.171
+    },
+    {
+      "case_id": "JavaScript-07",
+      "language": "JavaScript",
+      "category": "Logical Errors",
+      "description": "Wrong threshold",
+      "input_code": "function isAdult(age) {\n    return age > 21;\n}",
+      "expected_types": [
+        "LogicalError",
+        "NoError"
+      ],
+      "expected_line": 2,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "FAIL",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": false,
+      "corrected_code": "function isAdult(age) {\n    return age >= 18;\n}",
+      "auto_fix_preview": {
+        "fixed_code": "function isAdult(age) {\n    return age > 21;\n}",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.179
+    },
+    {
+      "case_id": "JavaScript-08",
+      "language": "JavaScript",
+      "category": "Correct Code",
+      "description": "Function add",
+      "input_code": "function add(a, b) {\n    return a + b;\n}\nconsole.log(add(2, 3));",
+      "expected_types": [
+        "NoError"
+      ],
+      "expected_line": null,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": true,
+      "corrected_code": "function add(a, b) {\n    return a + b;\n}\nconsole.log(add(2, 3));",
+      "auto_fix_preview": {
+        "fixed_code": "function add(a, b) {\n    return a + b;\n}\nconsole.log(add(2, 3));",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.258
+    },
+    {
+      "case_id": "JavaScript-09",
+      "language": "JavaScript",
+      "category": "Syntax Errors",
+      "description": "Incomplete assignment",
+      "input_code": "let x = ;\nconsole.log(x);",
+      "expected_types": [
+        "MissingDelimiter"
+      ],
+      "expected_line": 1,
+      "omnisyntax_output": {
+        "predicted_error": "MissingDelimiter",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+          "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+        },
+        "rule_based_issues": [
+          {
+            "type": "MissingDelimiter",
+            "message": "Assignment is missing a value expression.",
+            "line": 1,
+            "col": 1,
+            "snippet": "let x = ;",
+            "suggestion": "Provide a value on the right-hand side of '='."
+          }
+        ],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "MissingDelimiter",
+      "location": {
+        "line": 1,
+        "all_lines": [
+          1
+        ]
+      },
+      "line_match": true,
+      "corrected_code": "let x = 0;\nconsole.log(x);",
+      "auto_fix_preview": {
+        "fixed_code": "let x = ;\nconsole.log(x);",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 4,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.117
+    },
+    {
+      "case_id": "JavaScript-10",
+      "language": "JavaScript",
+      "category": "Correct Code",
+      "description": "Arrow function map",
+      "input_code": "const nums = [1, 2, 3];\nconst out = nums.map(n => n * 2);\nconsole.log(out);",
+      "expected_types": [
+        "NoError"
+      ],
+      "expected_line": null,
+      "omnisyntax_output": {
+        "predicted_error": "NoError",
+        "confidence": 1.0,
+        "tutor": {
+          "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+          "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+        },
+        "rule_based_issues": [],
+        "degraded_mode": false,
+        "warnings": []
+      },
+      "result": "PASS",
+      "error_type": "NoError",
+      "location": {
+        "line": null,
+        "all_lines": []
+      },
+      "line_match": true,
+      "corrected_code": "const nums = [1, 2, 3];\nconst out = nums.map(n => n * 2);\nconsole.log(out);",
+      "auto_fix_preview": {
+        "fixed_code": "const nums = [1, 2, 3];\nconst out = nums.map(n => n * 2);\nconsole.log(out);",
+        "changes": [],
+        "success": false
+      },
+      "ai_tutor_assessment": {
+        "explains_why": true,
+        "beginner_friendly": true,
+        "step_by_step": false,
+        "concept_explanation_quality": 3,
+        "correction_clarity": 3,
+        "beginner_readability": 3,
+        "guidance_structure": 3,
+        "teaching_value_vs_patching": 3
+      },
+      "latency_ms": 0.271
+    }
+  ],
+  "pathway_checks": {
+    "api": {
+      "total": 50,
+      "records": [
+        {
+          "case_id": "C-01",
+          "status_code": 200,
+          "predicted_error": "MissingDelimiter",
+          "latency_ms": 11.518,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C",
+            "predicted_error": "MissingDelimiter",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+              "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingDelimiter",
+                "message": "Missing semicolon at the end of the statement.",
+                "line": 2,
+                "col": 13,
+                "snippet": "int a = 5",
+                "suggestion": "Add ';' at the end of the statement."
+              },
+              {
+                "type": "MissingInclude",
+                "message": "printf is used without including <stdio.h>.",
+                "line": 3,
+                "col": 5,
+                "snippet": "printf(\"%d\", a);",
+                "suggestion": "Add '#include <stdio.h>' at the top of the file."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C-02",
+          "status_code": 200,
+          "predicted_error": "UnmatchedBracket",
+          "latency_ms": 3.611,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C",
+            "predicted_error": "UnmatchedBracket",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "Every opening bracket '{', '(', '[' must have a matching closing bracket '}', ')', ']'.",
+              "fix": "Add or remove brackets so that all pairs match correctly. Check for missing closing brackets."
+            },
+            "rule_based_issues": [
+              {
+                "type": "UnmatchedBracket",
+                "message": "Opening { is missing a matching closing bracket.",
+                "line": 1,
+                "col": 12,
+                "snippet": "int main() {",
+                "suggestion": "Add a closing bracket for {."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C-03",
+          "status_code": 200,
+          "predicted_error": "DivisionByZero",
+          "latency_ms": 4.157,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C",
+            "predicted_error": "DivisionByZero",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "Division by zero is mathematically undefined and will cause a runtime error or crash.",
+              "fix": "Add a condition to check that the denominator is not zero before performing division."
+            },
+            "rule_based_issues": [
+              {
+                "type": "DivisionByZero",
+                "message": "Possible division or modulo by zero via variable 'b'.",
+                "line": 4,
+                "col": 15,
+                "snippet": "int c = a / b;",
+                "suggestion": "Guard the denominator or change it to a non-zero value."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C-04",
+          "status_code": 200,
+          "predicted_error": "UndeclaredIdentifier",
+          "latency_ms": 4.841,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C",
+            "predicted_error": "UndeclaredIdentifier",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A variable, function, or identifier is used without being declared first (common in C, C++, Java).",
+              "fix": "Declare the variable or import the required identifier before using it."
+            },
+            "rule_based_issues": [
+              {
+                "type": "UndeclaredIdentifier",
+                "message": "b is used before it is declared.",
+                "line": 3,
+                "col": 12,
+                "snippet": "return b;",
+                "suggestion": "Declare the identifier before use or fix the name."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C-05",
+          "status_code": 200,
+          "predicted_error": "MissingInclude",
+          "latency_ms": 5.057,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C",
+            "predicted_error": "MissingInclude",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "The function or object requires a header file that has not been included (C/C++).",
+              "fix": "Add the required #include statement at the top of the file (e.g., #include <stdio.h>)."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingInclude",
+                "message": "printf is used without including <stdio.h>.",
+                "line": 2,
+                "col": 5,
+                "snippet": "printf(\"hi\");",
+                "suggestion": "Add '#include <stdio.h>' at the top of the file."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C-06",
+          "status_code": 200,
+          "predicted_error": "MissingDelimiter",
+          "latency_ms": 4.076,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C",
+            "predicted_error": "MissingDelimiter",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+              "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingDelimiter",
+                "message": "Assignment is missing a value expression.",
+                "line": 2,
+                "col": 1,
+                "snippet": "int x = ;",
+                "suggestion": "Provide a value on the right-hand side of '='."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C-07",
+          "status_code": 200,
+          "predicted_error": "UnclosedString",
+          "latency_ms": 4.598,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C",
+            "predicted_error": "UnclosedString",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A string literal was started but not properly closed with a matching quote.",
+              "fix": "Add the missing closing quote (' or \") to properly terminate the string."
+            },
+            "rule_based_issues": [
+              {
+                "type": "UnclosedString",
+                "message": "String literal is not closed before end of file.",
+                "line": 2,
+                "col": 12,
+                "snippet": "printf(\"hello);",
+                "suggestion": "Add the missing closing quote."
+              },
+              {
+                "type": "MissingInclude",
+                "message": "printf is used without including <stdio.h>.",
+                "line": 2,
+                "col": 5,
+                "snippet": "printf(\"hello);",
+                "suggestion": "Add '#include <stdio.h>' at the top of the file."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C-08",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 4.307,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C-09",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 7.617,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C-10",
+          "status_code": 200,
+          "predicted_error": "MissingDelimiter",
+          "latency_ms": 4.538,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C",
+            "predicted_error": "MissingDelimiter",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+              "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingDelimiter",
+                "message": "Missing semicolon at the end of the statement.",
+                "line": 2,
+                "col": 13,
+                "snippet": "int n = 4",
+                "suggestion": "Add ';' at the end of the statement."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C++-01",
+          "status_code": 200,
+          "predicted_error": "UndeclaredIdentifier",
+          "latency_ms": 5.023,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C++",
+            "predicted_error": "UndeclaredIdentifier",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A variable, function, or identifier is used without being declared first (common in C, C++, Java).",
+              "fix": "Declare the variable or import the required identifier before using it."
+            },
+            "rule_based_issues": [
+              {
+                "type": "UndeclaredIdentifier",
+                "message": "y is used before it is declared.",
+                "line": 5,
+                "col": 13,
+                "snippet": "cout << y;",
+                "suggestion": "Declare the identifier before use or fix the name."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C++-02",
+          "status_code": 200,
+          "predicted_error": "MissingDelimiter",
+          "latency_ms": 3.958,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C++",
+            "predicted_error": "MissingDelimiter",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+              "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingDelimiter",
+                "message": "Missing semicolon at the end of the statement.",
+                "line": 3,
+                "col": 13,
+                "snippet": "int a = 5",
+                "suggestion": "Add ';' at the end of the statement."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C++-03",
+          "status_code": 200,
+          "predicted_error": "DivisionByZero",
+          "latency_ms": 4.556,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C++",
+            "predicted_error": "DivisionByZero",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "Division by zero is mathematically undefined and will cause a runtime error or crash.",
+              "fix": "Add a condition to check that the denominator is not zero before performing division."
+            },
+            "rule_based_issues": [
+              {
+                "type": "DivisionByZero",
+                "message": "Possible division or modulo by zero via variable 'y'.",
+                "line": 4,
+                "col": 14,
+                "snippet": "return x / y;",
+                "suggestion": "Guard the denominator or change it to a non-zero value."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C++-04",
+          "status_code": 200,
+          "predicted_error": "MissingInclude",
+          "latency_ms": 4.319,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C++",
+            "predicted_error": "MissingInclude",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "The function or object requires a header file that has not been included (C/C++).",
+              "fix": "Add the required #include statement at the top of the file (e.g., #include <stdio.h>)."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingInclude",
+                "message": "cout is used without including <iostream>.",
+                "line": 2,
+                "col": 10,
+                "snippet": "std::cout << 10;",
+                "suggestion": "Add '#include <iostream>' at the top of the file."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C++-05",
+          "status_code": 200,
+          "predicted_error": "UnmatchedBracket",
+          "latency_ms": 5.007,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C++",
+            "predicted_error": "UnmatchedBracket",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "Every opening bracket '{', '(', '[' must have a matching closing bracket '}', ')', ']'.",
+              "fix": "Add or remove brackets so that all pairs match correctly. Check for missing closing brackets."
+            },
+            "rule_based_issues": [
+              {
+                "type": "UnmatchedBracket",
+                "message": "Opening ( is missing a matching closing bracket.",
+                "line": 1,
+                "col": 9,
+                "snippet": "int main( {",
+                "suggestion": "Add a closing bracket for (."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C++-06",
+          "status_code": 200,
+          "predicted_error": "InfiniteLoop",
+          "latency_ms": 4.016,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C++",
+            "predicted_error": "InfiniteLoop",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A loop has no exit condition or the condition is always true, causing it to run forever.",
+              "fix": "Add a proper exit condition or ensure the loop variable changes to eventually break the loop."
+            },
+            "rule_based_issues": [
+              {
+                "type": "InfiniteLoop",
+                "message": "Loop condition is always true and has no visible exit path.",
+                "line": 2,
+                "col": 5,
+                "snippet": "for(;;) {",
+                "suggestion": "Add an exit condition or a break path inside the loop."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C++-07",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 8.053,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C++",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C++-08",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 9.032,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C++",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C++-09",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 11.022,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C++",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "C++-10",
+          "status_code": 200,
+          "predicted_error": "MissingDelimiter",
+          "latency_ms": 4.661,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "C++",
+            "predicted_error": "MissingDelimiter",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+              "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingDelimiter",
+                "message": "Missing semicolon at the end of the statement.",
+                "line": 3,
+                "col": 18,
+                "snippet": "std::cout << 1",
+                "suggestion": "Add ';' at the end of the statement."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Java-01",
+          "status_code": 200,
+          "predicted_error": "TypeMismatch",
+          "latency_ms": 8.125,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Java",
+            "predicted_error": "TypeMismatch",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A value of one data type is being assigned or passed to a variable/parameter of a different, incompatible type.",
+              "fix": "Convert the value to the correct type using type casting or change the variable's declared type."
+            },
+            "rule_based_issues": [
+              {
+                "type": "TypeMismatch",
+                "message": "Assigned value type does not match the declared variable type.",
+                "line": 3,
+                "col": 1,
+                "snippet": "int a = \"hello\";",
+                "suggestion": "Convert the value to the correct type or change the variable declaration."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Java-02",
+          "status_code": 200,
+          "predicted_error": "MissingDelimiter",
+          "latency_ms": 7.679,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Java",
+            "predicted_error": "MissingDelimiter",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+              "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingDelimiter",
+                "message": "Missing semicolon at the end of the statement.",
+                "line": 3,
+                "col": 17,
+                "snippet": "int x = 1",
+                "suggestion": "Add ';' at the end of the statement."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Java-03",
+          "status_code": 200,
+          "predicted_error": "UndeclaredIdentifier",
+          "latency_ms": 6.935,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Java",
+            "predicted_error": "UndeclaredIdentifier",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A variable, function, or identifier is used without being declared first (common in C, C++, Java).",
+              "fix": "Declare the variable or import the required identifier before using it."
+            },
+            "rule_based_issues": [
+              {
+                "type": "UndeclaredIdentifier",
+                "message": "z is used before it is declared.",
+                "line": 3,
+                "col": 28,
+                "snippet": "System.out.println(z);",
+                "suggestion": "Declare the identifier before use or fix the name."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Java-04",
+          "status_code": 200,
+          "predicted_error": "MissingImport",
+          "latency_ms": 7.67,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Java",
+            "predicted_error": "MissingImport",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A module, class, or function is used without being imported (Python/Java).",
+              "fix": "Add the required import statement at the top of the file (e.g., 'import module' or 'import java.util.Scanner;')."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingImport",
+                "message": "ArrayList is used without importing java.util.ArrayList.",
+                "line": 3,
+                "col": 9,
+                "snippet": "ArrayList<Integer> x = new ArrayList<>();",
+                "suggestion": "Add 'import java.util.ArrayList;' near the top of the file."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Java-05",
+          "status_code": 200,
+          "predicted_error": "UnmatchedBracket",
+          "latency_ms": 6.436,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Java",
+            "predicted_error": "UnmatchedBracket",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "Every opening bracket '{', '(', '[' must have a matching closing bracket '}', ')', ']'.",
+              "fix": "Add or remove brackets so that all pairs match correctly. Check for missing closing brackets."
+            },
+            "rule_based_issues": [
+              {
+                "type": "UnmatchedBracket",
+                "message": "Opening { is missing a matching closing bracket.",
+                "line": 1,
+                "col": 19,
+                "snippet": "public class Main {",
+                "suggestion": "Add a closing bracket for {."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Java-06",
+          "status_code": 200,
+          "predicted_error": "InfiniteLoop",
+          "latency_ms": 6.708,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Java",
+            "predicted_error": "InfiniteLoop",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A loop has no exit condition or the condition is always true, causing it to run forever.",
+              "fix": "Add a proper exit condition or ensure the loop variable changes to eventually break the loop."
+            },
+            "rule_based_issues": [
+              {
+                "type": "InfiniteLoop",
+                "message": "Loop condition is always true and has no visible exit path.",
+                "line": 3,
+                "col": 9,
+                "snippet": "while(true) {}",
+                "suggestion": "Add an exit condition or a break path inside the loop."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Java-07",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 10.679,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Java",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Java-08",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 14.585,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Java",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Java-09",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 18.948,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Java",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Java-10",
+          "status_code": 200,
+          "predicted_error": "UnmatchedBracket",
+          "latency_ms": 6.682,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Java",
+            "predicted_error": "UnmatchedBracket",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "Every opening bracket '{', '(', '[' must have a matching closing bracket '}', ')', ']'.",
+              "fix": "Add or remove brackets so that all pairs match correctly. Check for missing closing brackets."
+            },
+            "rule_based_issues": [
+              {
+                "type": "UnmatchedBracket",
+                "message": "Opening { is missing a matching closing bracket.",
+                "line": 1,
+                "col": 19,
+                "snippet": "public class Main {",
+                "suggestion": "Add a closing bracket for {."
+              },
+              {
+                "type": "UnmatchedBracket",
+                "message": "Opening ( is missing a matching closing bracket.",
+                "line": 2,
+                "col": 28,
+                "snippet": "public static void main(String[] args {",
+                "suggestion": "Add a closing bracket for (."
+              },
+              {
+                "type": "UnmatchedBracket",
+                "message": "Found closing } without a matching opening bracket.",
+                "line": 5,
+                "col": 1,
+                "snippet": "}",
+                "suggestion": "Remove the extra closing bracket or add the missing opening bracket."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Python-01",
+          "status_code": 200,
+          "predicted_error": "IndentationError",
+          "latency_ms": 4.979,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Python",
+            "predicted_error": "IndentationError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "Python uses indentation to define code blocks. Inconsistent indentation causes errors.",
+              "fix": "Indent the statement correctly (use 4 spaces per indentation level). Avoid mixing tabs and spaces."
+            },
+            "rule_based_issues": [
+              {
+                "type": "IndentationError",
+                "message": "expected an indented block after function definition on line 1 (<string>, line 2)",
+                "line": 2,
+                "col": null,
+                "snippet": null,
+                "suggestion": "Check indentation levels (use consistent tabs/spaces; prefer 4 spaces)."
+              },
+              {
+                "type": "SyntaxError",
+                "message": "expected an indented block after function definition on line 1 (<unknown>, line 2)",
+                "line": 2,
+                "col": null,
+                "snippet": null,
+                "suggestion": null
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Python-02",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 9.226,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Python",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "The Python code follows correct syntax rules.",
+              "fix": "No changes are required."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Python-03",
+          "status_code": 200,
+          "predicted_error": "MissingDelimiter",
+          "latency_ms": 4.558,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Python",
+            "predicted_error": "MissingDelimiter",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+              "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingDelimiter",
+                "message": "Probable missing ':' after statement starting with 'if'",
+                "line": 1,
+                "col": null,
+                "snippet": "if True",
+                "suggestion": "Add a ':' at the end of this line."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Python-04",
+          "status_code": 200,
+          "predicted_error": "DivisionByZero",
+          "latency_ms": 11.101,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Python",
+            "predicted_error": "DivisionByZero",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "Division by zero is mathematically undefined and will cause a runtime error or crash.",
+              "fix": "Add a condition to check that the denominator is not zero before performing division."
+            },
+            "rule_based_issues": [
+              {
+                "type": "DivisionByZero",
+                "line": 2,
+                "col": 14,
+                "message": "Division by zero detected",
+                "snippet": "return 10/0",
+                "suggestion": "Guard the denominator or change it to a non-zero value."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Python-05",
+          "status_code": 200,
+          "predicted_error": "NameError",
+          "latency_ms": 5.292,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Python",
+            "predicted_error": "NameError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A variable or function name is used before it has been defined (Python).",
+              "fix": "Define the variable or function before using it, or check for typos in the name."
+            },
+            "rule_based_issues": [
+              {
+                "type": "NameError",
+                "line": 2,
+                "col": 12,
+                "message": "x is used before assignment or import.",
+                "snippet": "return x + 1",
+                "suggestion": "Define or import the name before using it."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Python-06",
+          "status_code": 200,
+          "predicted_error": "MutableDefault",
+          "latency_ms": 4.849,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Python",
+            "predicted_error": "MutableDefault",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "Using a mutable object (like a list or dict) as a default function argument can cause unexpected behavior.",
+              "fix": "Use None as the default and initialize the mutable object inside the function."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MutableDefault",
+                "line": 1,
+                "col": 1,
+                "message": "Mutable default argument can leak state across calls.",
+                "snippet": "def add_item(item, bag=[]):",
+                "suggestion": "Use None as default and initialize the mutable object inside the function."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Python-07",
+          "status_code": 200,
+          "predicted_error": "WildcardImport",
+          "latency_ms": 5.833,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Python",
+            "predicted_error": "WildcardImport",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "Using wildcard imports (e.g., 'from module import *') is discouraged as it pollutes the namespace.",
+              "fix": "Import specific names instead (e.g., 'from module import SpecificClass') for better code clarity."
+            },
+            "rule_based_issues": [
+              {
+                "type": "WildcardImport",
+                "line": 1,
+                "col": 1,
+                "message": "Wildcard import can pollute namespace and hide name collisions.",
+                "snippet": "from math import *",
+                "suggestion": "Import only the specific names you need."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Python-08",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 8.748,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Python",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "The Python code follows correct syntax rules.",
+              "fix": "No changes are required."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Python-09",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 4.985,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Python",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "The Python code follows correct syntax rules.",
+              "fix": "No changes are required."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "Python-10",
+          "status_code": 200,
+          "predicted_error": "UnclosedString",
+          "latency_ms": 4.431,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "Python",
+            "predicted_error": "UnclosedString",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A string literal was started but not properly closed with a matching quote.",
+              "fix": "Add the missing closing quote (' or \") to properly terminate the string."
+            },
+            "rule_based_issues": [
+              {
+                "type": "UnclosedString",
+                "message": "unterminated string literal (detected at line 1) (<unknown>, line 1)",
+                "line": 1,
+                "col": null,
+                "snippet": null,
+                "suggestion": "It looks like a string wasn't closed properly."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "JavaScript-01",
+          "status_code": 200,
+          "predicted_error": "UndeclaredIdentifier",
+          "latency_ms": 5.458,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "JavaScript",
+            "predicted_error": "UndeclaredIdentifier",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A variable, function, or identifier is used without being declared first (common in C, C++, Java).",
+              "fix": "Declare the variable or import the required identifier before using it."
+            },
+            "rule_based_issues": [
+              {
+                "type": "UndeclaredIdentifier",
+                "message": "b is used before it is declared.",
+                "line": 3,
+                "col": 17,
+                "snippet": "console.log(b);",
+                "suggestion": "Declare the identifier before use or fix the name."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "JavaScript-02",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 4.125,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "JavaScript",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "JavaScript-03",
+          "status_code": 200,
+          "predicted_error": "MissingDelimiter",
+          "latency_ms": 6.641,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "JavaScript",
+            "predicted_error": "MissingDelimiter",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+              "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingDelimiter",
+                "message": "Invalid member access syntax '..'.",
+                "line": 3,
+                "col": 12,
+                "snippet": "console..log(a.x);",
+                "suggestion": "Use a single '.' for property access."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "JavaScript-04",
+          "status_code": 200,
+          "predicted_error": "DivisionByZero",
+          "latency_ms": 6.364,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "JavaScript",
+            "predicted_error": "DivisionByZero",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "Division by zero is mathematically undefined and will cause a runtime error or crash.",
+              "fix": "Add a condition to check that the denominator is not zero before performing division."
+            },
+            "rule_based_issues": [
+              {
+                "type": "DivisionByZero",
+                "message": "Possible division or modulo by zero.",
+                "line": 2,
+                "col": 15,
+                "snippet": "return 10 / 0;",
+                "suggestion": "Guard the denominator or change it to a non-zero value."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "JavaScript-05",
+          "status_code": 200,
+          "predicted_error": "UnclosedString",
+          "latency_ms": 6.273,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "JavaScript",
+            "predicted_error": "UnclosedString",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A string literal was started but not properly closed with a matching quote.",
+              "fix": "Add the missing closing quote (' or \") to properly terminate the string."
+            },
+            "rule_based_issues": [
+              {
+                "type": "UnclosedString",
+                "message": "String literal is not closed before end of file.",
+                "line": 2,
+                "col": 13,
+                "snippet": "let s = \"hello;",
+                "suggestion": "Add the missing closing quote."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "JavaScript-06",
+          "status_code": 200,
+          "predicted_error": "InfiniteLoop",
+          "latency_ms": 8.32,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "JavaScript",
+            "predicted_error": "InfiniteLoop",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A loop has no exit condition or the condition is always true, causing it to run forever.",
+              "fix": "Add a proper exit condition or ensure the loop variable changes to eventually break the loop."
+            },
+            "rule_based_issues": [
+              {
+                "type": "InfiniteLoop",
+                "message": "Loop condition is always true and has no visible exit path.",
+                "line": 2,
+                "col": 5,
+                "snippet": "while(true) {",
+                "suggestion": "Add an exit condition or a break path inside the loop."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "JavaScript-07",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 6.029,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "JavaScript",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "JavaScript-08",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 6.6,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "JavaScript",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "JavaScript-09",
+          "status_code": 200,
+          "predicted_error": "MissingDelimiter",
+          "latency_ms": 5.866,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "JavaScript",
+            "predicted_error": "MissingDelimiter",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "A required statement delimiter is missing (':' in Python, ';' in C/C++/Java).",
+              "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
+            },
+            "rule_based_issues": [
+              {
+                "type": "MissingDelimiter",
+                "message": "Assignment is missing a value expression.",
+                "line": 1,
+                "col": 1,
+                "snippet": "let x = ;",
+                "suggestion": "Provide a value on the right-hand side of '='."
+              }
+            ],
+            "has_errors": true,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        },
+        {
+          "case_id": "JavaScript-10",
+          "status_code": 200,
+          "predicted_error": "NoError",
+          "latency_ms": 6.168,
+          "degraded_mode": false,
+          "warnings": [],
+          "raw": {
+            "language": "JavaScript",
+            "predicted_error": "NoError",
+            "confidence": 1.0,
+            "tutor": {
+              "why": "No syntax or rule-based semantic issue was detected in this snippet.",
+              "fix": "No direct fix is required from static checks; run or test the program to validate runtime behavior."
+            },
+            "rule_based_issues": [],
+            "has_errors": false,
+            "degraded_mode": false,
+            "warnings": []
+          }
+        }
+      ],
+      "avg_latency_ms": 6.685
+    },
+    "cli": {
+      "sample_total": 10,
+      "records": [
+        {
+          "case_id": "C-01",
+          "language": "C",
+          "exit_code": 0,
+          "predicted_error": "MissingDelimiter",
+          "latency_ms": 2286.994,
+          "stdout_excerpt": "============================================================\n\u00f0\u0178\u00a7\u00a0 Multi-Language Syntax Error Checker (CLI)\n============================================================\n\u00f0\u0178\u201c\u201a File        : C:\\Users\\Asus\\AppData\\Local\\Temp\\tmpa10gg9rn.txt\n\u00f0\u0178\u2014\u201a Language    : C\n\u00f0\u0178\u00a4\u2013 Detected    : MissingDelimiter\n------------------------------------------------------------\n\u00e2\u0161\u00a0\u00ef\u00b8\u008f Rule-Based Issues:\n\n1. MissingDelimiter\n   Line      : 2\n   Column    : 13\n   Message   : Missing semicolon at the end of the statement.\n   Suggestion: Add ';' at the end of the statement.\n\n2. MissingInclude\n   Line      : 3\n   Column    : 5\n   Message   : printf is used without including <stdio.h>.\n   Suggestion: Add '#include <stdio.h>' at the top of the file.\n\n============================================================\n\u00f0\u0178\u201d\u00a7 AUTO-FIX SUGGESTION\n============================================================\n\u00e2\u0153\u2026 Automatic fix available!",
+          "stderr_excerpt": ""
+        },
+        {
+          "case_id": "C-08",
+          "language": "C",
+          "exit_code": 0,
+          "predicted_error": "NoError",
+          "latency_ms": 2314.206,
+          "stdout_excerpt": "============================================================\n\u00f0\u0178\u00a7\u00a0 Multi-Language Syntax Error Checker (CLI)\n============================================================\n\u00f0\u0178\u201c\u201a File        : C:\\Users\\Asus\\AppData\\Local\\Temp\\tmpkvttxkpn.txt\n\u00f0\u0178\u2014\u201a Language    : C++\n\u00f0\u0178\u00a4\u2013 Detected    : NoError\n------------------------------------------------------------\n\u00e2\u0153\u2026 No rule-based syntax issues detected.\n\n============================================================\n\u00f0\u0178\u201c\u0160 CODE QUALITY ANALYSIS\n============================================================\nQuality Score  : 90.0/100\nCode Lines     : 6\nComment Lines  : 0\nBlank Lines    : 0\nComplexity     : 1\nComment Ratio  : 0.0%\n\n\u00f0\u0178\u2019\u00a1 Quality Suggestions:\n  1. \ud83d\udcdd Low comment ratio (0.0%). Add more documentation.\n\n============================================================\nDone.\n============================================================",
+          "stderr_excerpt": ""
+        },
+        {
+          "case_id": "C++-01",
+          "language": "C++",
+          "exit_code": 0,
+          "predicted_error": "UndeclaredIdentifier",
+          "latency_ms": 2302.917,
+          "stdout_excerpt": "============================================================\n\u00f0\u0178\u00a7\u00a0 Multi-Language Syntax Error Checker (CLI)\n============================================================\n\u00f0\u0178\u201c\u201a File        : C:\\Users\\Asus\\AppData\\Local\\Temp\\tmpa7t_aax8.txt\n\u00f0\u0178\u2014\u201a Language    : C++\n\u00f0\u0178\u00a4\u2013 Detected    : UndeclaredIdentifier\n------------------------------------------------------------\n\u00e2\u0161\u00a0\u00ef\u00b8\u008f Rule-Based Issues:\n\n1. UndeclaredIdentifier\n   Line      : 5\n   Column    : 13\n   Message   : y is used before it is declared.\n   Suggestion: Declare the identifier before use or fix the name.\n\n============================================================\n\u00f0\u0178\u201d\u00a7 AUTO-FIX SUGGESTION\n============================================================\n\u00e2\u0153\u2026 Automatic fix available!\n\nFixed Code:\n------------------------------------------------------------\n#include <iostream>\nusing namespace std;\nint main() {",
+          "stderr_excerpt": ""
+        },
+        {
+          "case_id": "C++-07",
+          "language": "C++",
+          "exit_code": 0,
+          "predicted_error": "NoError",
+          "latency_ms": 2273.5,
+          "stdout_excerpt": "============================================================\n\u00f0\u0178\u00a7\u00a0 Multi-Language Syntax Error Checker (CLI)\n============================================================\n\u00f0\u0178\u201c\u201a File        : C:\\Users\\Asus\\AppData\\Local\\Temp\\tmpsqsrypbt.txt\n\u00f0\u0178\u2014\u201a Language    : C++\n\u00f0\u0178\u00a4\u2013 Detected    : NoError\n------------------------------------------------------------\n\u00e2\u0153\u2026 No rule-based syntax issues detected.\n\n============================================================\n\u00f0\u0178\u201c\u0160 CODE QUALITY ANALYSIS\n============================================================\nQuality Score  : 90.0/100\nCode Lines     : 7\nComment Lines  : 0\nBlank Lines    : 0\nComplexity     : 2\nComment Ratio  : 0.0%\n\n\u00f0\u0178\u2019\u00a1 Quality Suggestions:\n  1. \ud83d\udcdd Low comment ratio (0.0%). Add more documentation.\n\n============================================================\nDone.\n============================================================",
+          "stderr_excerpt": ""
+        },
+        {
+          "case_id": "Java-01",
+          "language": "Java",
+          "exit_code": 0,
+          "predicted_error": "TypeMismatch",
+          "latency_ms": 2318.366,
+          "stdout_excerpt": "============================================================\n\u00f0\u0178\u00a7\u00a0 Multi-Language Syntax Error Checker (CLI)\n============================================================\n\u00f0\u0178\u201c\u201a File        : C:\\Users\\Asus\\AppData\\Local\\Temp\\tmpj1ao32n8.txt\n\u00f0\u0178\u2014\u201a Language    : Java\n\u00f0\u0178\u00a4\u2013 Detected    : TypeMismatch\n------------------------------------------------------------\n\u00e2\u0161\u00a0\u00ef\u00b8\u008f Rule-Based Issues:\n\n1. TypeMismatch\n   Line      : 3\n   Column    : 1\n   Message   : Assigned value type does not match the declared variable type.\n   Suggestion: Convert the value to the correct type or change the variable declaration.\n\n============================================================\n\u00f0\u0178\u201d\u00a7 AUTO-FIX SUGGESTION\n============================================================\n\u00e2\u0153\u2026 Automatic fix available!\n\nFixed Code:\n------------------------------------------------------------\npublic class Main {\n    public static void main(String[] args) {\n        int a = \"hello\";",
+          "stderr_excerpt": ""
+        },
+        {
+          "case_id": "Java-07",
+          "language": "Java",
+          "exit_code": 0,
+          "predicted_error": "NoError",
+          "latency_ms": 2322.879,
+          "stdout_excerpt": "============================================================\n\u00f0\u0178\u00a7\u00a0 Multi-Language Syntax Error Checker (CLI)\n============================================================\n\u00f0\u0178\u201c\u201a File        : C:\\Users\\Asus\\AppData\\Local\\Temp\\tmpoae_3lez.txt\n\u00f0\u0178\u2014\u201a Language    : Java\n\u00f0\u0178\u00a4\u2013 Detected    : NoError\n------------------------------------------------------------\n\u00e2\u0153\u2026 No rule-based syntax issues detected.\n\n============================================================\n\u00f0\u0178\u201c\u0160 CODE QUALITY ANALYSIS\n============================================================\nQuality Score  : 90.0/100\nCode Lines     : 8\nComment Lines  : 0\nBlank Lines    : 0\nComplexity     : 1\nComment Ratio  : 0.0%\n\n\u00f0\u0178\u2019\u00a1 Quality Suggestions:\n  1. \ud83d\udcdd Low comment ratio (0.0%). Add more documentation.\n\n============================================================\nDone.\n============================================================",
+          "stderr_excerpt": ""
+        },
+        {
+          "case_id": "Python-01",
+          "language": "Python",
+          "exit_code": 0,
+          "predicted_error": "IndentationError",
+          "latency_ms": 2342.562,
+          "stdout_excerpt": "============================================================\n\u00f0\u0178\u00a7\u00a0 Multi-Language Syntax Error Checker (CLI)\n============================================================\n\u00f0\u0178\u201c\u201a File        : C:\\Users\\Asus\\AppData\\Local\\Temp\\tmpn3qyydpv.txt\n\u00f0\u0178\u2014\u201a Language    : Python\n\u00f0\u0178\u00a4\u2013 Detected    : IndentationError\n------------------------------------------------------------\n\u00e2\u0161\u00a0\u00ef\u00b8\u008f Rule-Based Issues:\n\n1. IndentationError\n   Line      : 2\n   Message   : expected an indented block after function definition on line 1 (<string>, line 2)\n   Suggestion: Check indentation levels (use consistent tabs/spaces; prefer 4 spaces).\n\n2. SyntaxError\n   Line      : 2\n   Message   : expected an indented block after function definition on line 1 (<unknown>, line 2)\n\n============================================================\n\u00f0\u0178\u201d\u00a7 AUTO-FIX SUGGESTION\n============================================================\n\u00e2\u0153\u2026 Automatic fix available!\n\nFixed Code:\n------------------------------------------------------------",
+          "stderr_excerpt": ""
+        },
+        {
+          "case_id": "Python-02",
+          "language": "Python",
+          "exit_code": 0,
+          "predicted_error": "NoError",
+          "latency_ms": 2299.653,
+          "stdout_excerpt": "============================================================\n\u00f0\u0178\u00a7\u00a0 Multi-Language Syntax Error Checker (CLI)\n============================================================\n\u00f0\u0178\u201c\u201a File        : C:\\Users\\Asus\\AppData\\Local\\Temp\\tmpyfyiygq0.txt\n\u00f0\u0178\u2014\u201a Language    : Python\n\u00f0\u0178\u00a4\u2013 Detected    : NoError\n------------------------------------------------------------\n\u00e2\u0153\u2026 No rule-based syntax issues detected.\n\n============================================================\n\u00f0\u0178\u201c\u0160 CODE QUALITY ANALYSIS\n============================================================\nQuality Score  : 90.0/100\nCode Lines     : 3\nComment Lines  : 0\nBlank Lines    : 0\nComplexity     : 1\nComment Ratio  : 0.0%\n\n\u00f0\u0178\u2019\u00a1 Quality Suggestions:\n  1. \ud83d\udcdd Low comment ratio (0.0%). Add more documentation.\n\n============================================================\nDone.\n============================================================",
+          "stderr_excerpt": ""
+        },
+        {
+          "case_id": "JavaScript-01",
+          "language": "JavaScript",
+          "exit_code": 0,
+          "predicted_error": "UndeclaredIdentifier",
+          "latency_ms": 2304.405,
+          "stdout_excerpt": "============================================================\n\u00f0\u0178\u00a7\u00a0 Multi-Language Syntax Error Checker (CLI)\n============================================================\n\u00f0\u0178\u201c\u201a File        : C:\\Users\\Asus\\AppData\\Local\\Temp\\tmp6tmdhfhs.txt\n\u00f0\u0178\u2014\u201a Language    : JavaScript\n\u00f0\u0178\u00a4\u2013 Detected    : UndeclaredIdentifier\n------------------------------------------------------------\n\u00e2\u0161\u00a0\u00ef\u00b8\u008f Rule-Based Issues:\n\n1. UndeclaredIdentifier\n   Line      : 3\n   Column    : 17\n   Message   : b is used before it is declared.\n   Suggestion: Declare the identifier before use or fix the name.\n\n============================================================\n\u00f0\u0178\u201d\u00a7 AUTO-FIX SUGGESTION\n============================================================\n\u00e2\u0153\u2026 Automatic fix available!\n\nFixed Code:\n------------------------------------------------------------\nfunction demo() {\n    let a = 10;\n    console.log(b);",
+          "stderr_excerpt": ""
+        },
+        {
+          "case_id": "JavaScript-02",
+          "language": "JavaScript",
+          "exit_code": 0,
+          "predicted_error": "NoError",
+          "latency_ms": 2408.578,
+          "stdout_excerpt": "============================================================\n\u00f0\u0178\u00a7\u00a0 Multi-Language Syntax Error Checker (CLI)\n============================================================\n\u00f0\u0178\u201c\u201a File        : C:\\Users\\Asus\\AppData\\Local\\Temp\\tmpmdef1mv3.txt\n\u00f0\u0178\u2014\u201a Language    : JavaScript\n\u00f0\u0178\u00a4\u2013 Detected    : NoError\n------------------------------------------------------------\n\u00e2\u0153\u2026 No rule-based syntax issues detected.\n\n============================================================\n\u00f0\u0178\u201c\u0160 CODE QUALITY ANALYSIS\n============================================================\nQuality Score  : 90.0/100\nCode Lines     : 2\nComment Lines  : 0\nBlank Lines    : 0\nComplexity     : 1\nComment Ratio  : 0.0%\n\n\u00f0\u0178\u2019\u00a1 Quality Suggestions:\n  1. \ud83d\udcdd Low comment ratio (0.0%). Add more documentation.\n\n============================================================\nDone.\n============================================================",
+          "stderr_excerpt": ""
+        }
+      ],
+      "avg_latency_ms": 2317.406
+    },
+    "streamlit_expectations": {
+      "total": 50,
+      "records": [
+        {
+          "case_id": "C-01",
+          "language": "C",
+          "has_errors": true,
+          "total_errors": 3,
+          "error_types": [
+            "MissingDelimiter",
+            "MissingInclude",
+            "UnmatchedBracket"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 6.793
+        },
+        {
+          "case_id": "C-02",
+          "language": "C",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "UnmatchedBracket"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 4.75
+        },
+        {
+          "case_id": "C-03",
+          "language": "C",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "DivisionByZero"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 7.031
+        },
+        {
+          "case_id": "C-04",
+          "language": "C",
+          "has_errors": true,
+          "total_errors": 2,
+          "error_types": [
+            "UndeclaredIdentifier",
+            "MissingInclude"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 4.399
+        },
+        {
+          "case_id": "C-05",
+          "language": "C",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "MissingInclude"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 5.633
+        },
+        {
+          "case_id": "C-06",
+          "language": "C",
+          "has_errors": true,
+          "total_errors": 2,
+          "error_types": [
+            "MissingDelimiter",
+            "MissingInclude"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 6.746
+        },
+        {
+          "case_id": "C-07",
+          "language": "C",
+          "has_errors": true,
+          "total_errors": 2,
+          "error_types": [
+            "UnclosedString",
+            "MissingInclude"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.612
+        },
+        {
+          "case_id": "C-08",
+          "language": "C",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "MissingInclude"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.919
+        },
+        {
+          "case_id": "C-09",
+          "language": "C",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "UndeclaredIdentifier"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 6.688
+        },
+        {
+          "case_id": "C-10",
+          "language": "C",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "MissingDelimiter"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.745
+        },
+        {
+          "case_id": "C++-01",
+          "language": "C++",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "UndeclaredIdentifier"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.764
+        },
+        {
+          "case_id": "C++-02",
+          "language": "C++",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "MissingDelimiter"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.63
+        },
+        {
+          "case_id": "C++-03",
+          "language": "C++",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "DivisionByZero"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 6.052
+        },
+        {
+          "case_id": "C++-04",
+          "language": "C++",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "MissingInclude"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.775
+        },
+        {
+          "case_id": "C++-05",
+          "language": "C++",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "UnmatchedBracket"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.273
+        },
+        {
+          "case_id": "C++-06",
+          "language": "C++",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "InfiniteLoop"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.303
+        },
+        {
+          "case_id": "C++-07",
+          "language": "C++",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 10.733
+        },
+        {
+          "case_id": "C++-08",
+          "language": "C++",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 8.954
+        },
+        {
+          "case_id": "C++-09",
+          "language": "C++",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 8.136
+        },
+        {
+          "case_id": "C++-10",
+          "language": "C++",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "MissingDelimiter"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 6.139
+        },
+        {
+          "case_id": "Java-01",
+          "language": "Java",
+          "has_errors": true,
+          "total_errors": 2,
+          "error_types": [
+            "TypeMismatch",
+            "InvalidAssignment"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 6.068
+        },
+        {
+          "case_id": "Java-02",
+          "language": "Java",
+          "has_errors": true,
+          "total_errors": 2,
+          "error_types": [
+            "MissingDelimiter",
+            "InvalidAssignment"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.959
+        },
+        {
+          "case_id": "Java-03",
+          "language": "Java",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "UndeclaredIdentifier"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.777
+        },
+        {
+          "case_id": "Java-04",
+          "language": "Java",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "MissingImport"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 10.398
+        },
+        {
+          "case_id": "Java-05",
+          "language": "Java",
+          "has_errors": true,
+          "total_errors": 2,
+          "error_types": [
+            "UnmatchedBracket",
+            "UndeclaredIdentifier"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 8.328
+        },
+        {
+          "case_id": "Java-06",
+          "language": "Java",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "InfiniteLoop"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 10.206
+        },
+        {
+          "case_id": "Java-07",
+          "language": "Java",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 10.565
+        },
+        {
+          "case_id": "Java-08",
+          "language": "Java",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "UndeclaredIdentifier"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 9.365
+        },
+        {
+          "case_id": "Java-09",
+          "language": "Java",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 10.933
+        },
+        {
+          "case_id": "Java-10",
+          "language": "Java",
+          "has_errors": true,
+          "total_errors": 3,
+          "error_types": [
+            "UnmatchedBracket"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 6.834
+        },
+        {
+          "case_id": "Python-01",
+          "language": "Python",
+          "has_errors": true,
+          "total_errors": 2,
+          "error_types": [
+            "IndentationError",
+            "SyntaxError"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 8.964
+        },
+        {
+          "case_id": "Python-02",
+          "language": "Python",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 0.201
+        },
+        {
+          "case_id": "Python-03",
+          "language": "Python",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "MissingColon"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 7.522
+        },
+        {
+          "case_id": "Python-04",
+          "language": "Python",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 0.161
+        },
+        {
+          "case_id": "Python-05",
+          "language": "Python",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 0.066
+        },
+        {
+          "case_id": "Python-06",
+          "language": "Python",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 0.091
+        },
+        {
+          "case_id": "Python-07",
+          "language": "Python",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 0.076
+        },
+        {
+          "case_id": "Python-08",
+          "language": "Python",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 0.082
+        },
+        {
+          "case_id": "Python-09",
+          "language": "Python",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 0.079
+        },
+        {
+          "case_id": "Python-10",
+          "language": "Python",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "UnclosedQuotes"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 9.291
+        },
+        {
+          "case_id": "JavaScript-01",
+          "language": "JavaScript",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "UndeclaredIdentifier"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 7.365
+        },
+        {
+          "case_id": "JavaScript-02",
+          "language": "JavaScript",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 8.159
+        },
+        {
+          "case_id": "JavaScript-03",
+          "language": "JavaScript",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "MissingDelimiter"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 5.212
+        },
+        {
+          "case_id": "JavaScript-04",
+          "language": "JavaScript",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "DivisionByZero"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.54
+        },
+        {
+          "case_id": "JavaScript-05",
+          "language": "JavaScript",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "UnclosedString"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 6.012
+        },
+        {
+          "case_id": "JavaScript-06",
+          "language": "JavaScript",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "InfiniteLoop"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.797
+        },
+        {
+          "case_id": "JavaScript-07",
+          "language": "JavaScript",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "ImportError"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.348
+        },
+        {
+          "case_id": "JavaScript-08",
+          "language": "JavaScript",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 3.388
+        },
+        {
+          "case_id": "JavaScript-09",
+          "language": "JavaScript",
+          "has_errors": true,
+          "total_errors": 1,
+          "error_types": [
+            "MissingDelimiter"
+          ],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 5.472
+        },
+        {
+          "case_id": "JavaScript-10",
+          "language": "JavaScript",
+          "has_errors": false,
+          "total_errors": 0,
+          "error_types": [],
+          "degraded_mode": false,
+          "warnings": [],
+          "latency_ms": 4.284
+        }
+      ],
+      "avg_latency_ms": 5.372
+    }
+  },
+  "consistency": {
+    "core_api_total_compared": 50,
+    "mismatch_count": 0,
+    "match_rate_percent": 100.0,
+    "mismatches": []
+  },
+  "stress": {
+    "total_evaluations": 300,
+    "core_evaluations": 150,
+    "api_evaluations": 150,
+    "core_avg_latency_ms": 1.711,
+    "api_avg_latency_ms": 9.941,
+    "core_p95_latency_ms": 7.779,
+    "api_p95_latency_ms": 20.282,
+    "deterministic_failures": [],
+    "api_non_200_count": 0,
+    "consistency_verdict": "PASS"
+  },
+  "defects": [
+    {
+      "id": "DEF-004",
+      "severity": "High",
+      "what_failed": "Expected ['UnmatchedBracket', 'MissingDelimiter'] but observed UnmatchedBracket.",
+      "evidence_case_id": "Java-10",
+      "impact": "Learner feedback may be incorrect or less actionable.",
+      "likely_root_cause": "Localization issue in rule-based issue ordering or line extraction.",
+      "code_location_hint": "src/error_engine.py:1213"
+    },
+    {
+      "id": "DEF-001",
+      "severity": "Medium",
+      "what_failed": "Expected ['LogicalError', 'NoError'] but observed NoError.",
+      "evidence_case_id": "C-08",
+      "impact": "Learner feedback may be incorrect or less actionable.",
+      "likely_root_cause": "Localization issue in rule-based issue ordering or line extraction.",
+      "code_location_hint": "src/error_engine.py:1213"
+    },
+    {
+      "id": "DEF-002",
+      "severity": "Medium",
+      "what_failed": "Expected ['LogicalError', 'NoError'] but observed NoError.",
+      "evidence_case_id": "C++-07",
+      "impact": "Learner feedback may be incorrect or less actionable.",
+      "likely_root_cause": "Localization issue in rule-based issue ordering or line extraction.",
+      "code_location_hint": "src/error_engine.py:1213"
+    },
+    {
+      "id": "DEF-003",
+      "severity": "Medium",
+      "what_failed": "Expected ['LogicalError', 'NoError'] but observed NoError.",
+      "evidence_case_id": "Java-07",
+      "impact": "Learner feedback may be incorrect or less actionable.",
+      "likely_root_cause": "Localization issue in rule-based issue ordering or line extraction.",
+      "code_location_hint": "src/error_engine.py:1213"
+    },
+    {
+      "id": "DEF-005",
+      "severity": "Medium",
+      "what_failed": "Expected ['LogicalError', 'NoError'] but observed NoError.",
+      "evidence_case_id": "Python-08",
+      "impact": "Learner feedback may be incorrect or less actionable.",
+      "likely_root_cause": "Localization issue in rule-based issue ordering or line extraction.",
+      "code_location_hint": "src/error_engine.py:1213"
+    },
+    {
+      "id": "DEF-006",
+      "severity": "Medium",
+      "what_failed": "Expected ['LogicalError', 'NoError'] but observed NoError.",
+      "evidence_case_id": "JavaScript-07",
+      "impact": "Learner feedback may be incorrect or less actionable.",
+      "likely_root_cause": "Localization issue in rule-based issue ordering or line extraction.",
+      "code_location_hint": "src/error_engine.py:1213"
+    }
+  ],
+  "root_cause_themes": {
+    "heuristic_brittleness": 0,
+    "prioritization_bias": 0,
+    "ml_threshold_or_label_confusion": 0,
+    "tutor_static_response_limitations": 0
+  },
+  "remediation_plan": {
+    "rule_based_enhancements": [
+      "Increase malformed-token recovery for syntax localization precision.",
+      "Harden C/C++ include resolution around mixed snippets."
+    ],
+    "model_improvements": [
+      "Tune semantic confidence thresholds by language and snippet length.",
+      "Add confidence calibration checks in CI."
+    ],
+    "training_data_improvements": [
+      "Add hard negatives for logical-error lookalikes.",
+      "Expand Java missing-import and JavaScript undeclared-identifier edge corpora."
+    ],
+    "tutor_ux_improvements": [
+      "Standardize stepwise tutoring format with concrete mini examples.",
+      "Expose confidence and warning context to reduce ambiguity."
+    ],
+    "regression_hardening": [
+      "Run this audit script in CI and fail on high-severity regressions.",
+      "Pin deterministic behavior tests across repeated runs."
+    ]
+  },
+  "workspace_integrity": {
+    "pre_existing_dirty_detected": true,
+    "pre_status_lines": [
+      " M src/error_engine.py",
+      " M src/tutor_explainer.py",
+      " M tests/test_c_java_js_regressions.py",
+      "?? .github/prompts/omnisyntax-e2e-qa-audit.prompt.md",
+      "?? artifacts/qa/",
+      "?? scripts/api_consistency_check.py",
+      "?? scripts/e2e_qa_audit.py",
+      "?? tests/test_accuracy_improvements_regressions.py",
+      "?? tests/test_cross_language_error_coverage.py",
+      "?? tests/test_error_and_repair_matrix.py"
+    ],
+    "post_status_lines": [
+      " M src/error_engine.py",
+      " M src/tutor_explainer.py",
+      " M tests/test_c_java_js_regressions.py",
+      "?? .github/prompts/omnisyntax-e2e-qa-audit.prompt.md",
+      "?? artifacts/qa/",
+      "?? scripts/api_consistency_check.py",
+      "?? scripts/e2e_qa_audit.py",
+      "?? tests/test_accuracy_improvements_regressions.py",
+      "?? tests/test_cross_language_error_coverage.py",
+      "?? tests/test_error_and_repair_matrix.py"
+    ],
+    "unrelated_local_changes_reverted": false,
+    "new_artifacts_created": [
+      "artifacts\\qa\\e2e_qa_results.json",
+      "artifacts\\qa\\e2e_qa_results.md"
+    ]
+  }
+}

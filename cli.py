@@ -10,16 +10,20 @@ import io
 if sys.stdout.encoding != 'utf-8':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-from src.error_engine import detect_errors
 from src.auto_fix import AutoFixer
+from src.error_engine import detect_errors
+from src.multi_error_detector import detect_all_errors
 from src.quality_analyzer import CodeQualityAnalyzer
 
 
 def print_usage():
     print("Usage:")
-    print("  python cli.py <path_to_code_file>")
-    print("Example:")
+    print("  python cli.py <path_to_code_file> [OPTIONS]")
+    print("\nOptions:")
+    print("  --all-errors     Show all detected errors (default: first error only)")
+    print("\nExample:")
     print("  python cli.py test.java")
+    print("  python cli.py test.py --all-errors")
 
 
 def main():
@@ -31,7 +35,8 @@ def main():
         sys.exit(1)
 
     file_path = sys.argv[1]
-
+    show_all_errors = "--all-errors" in sys.argv
+    
     # --------------------------------------------------------
     # 2. Read Code File
     # --------------------------------------------------------
@@ -48,7 +53,10 @@ def main():
     # --------------------------------------------------------
     # 3. Detect Errors (PASS FILENAME ðŸ”¥)
     # --------------------------------------------------------
-    result = detect_errors(code, filename=file_path)
+    if show_all_errors:
+        result = detect_all_errors(code, filename=file_path)
+    else:
+        result = detect_errors(code, filename=file_path)
 
     # --------------------------------------------------------
     # 4. Print Results
@@ -59,14 +67,33 @@ def main():
 
     print(f"ðŸ“‚ File        : {file_path}")
     print(f"ðŸ—‚ Language    : {result['language']}")
-    print(f"ðŸ¤– Detected    : {result['predicted_error']}")
-    print("-" * 60)
-
+    
     warnings = result.get("warnings", [])
     if warnings:
         print("Runtime Warnings:")
         for warning in warnings:
             print(f"   - {warning}")
+        print("-" * 60)
+    
+    # Handle both single-error and all-errors output
+    if show_all_errors:
+        # Multi-error output
+        print(f"ðŸ¤– Total Errors : {result.get('total_errors', 0)}")
+        print("-" * 60)
+        
+        if result.get('total_errors', 0) == 0:
+            print("âœ… No syntax errors detected.")
+        else:
+            errors_by_type = result.get('errors_by_type', {})
+            for error_type, errors in errors_by_type.items():
+                print(f"\nâš ï¸ {error_type} ({len(errors)} found)")
+                for i, error in enumerate(errors, start=1):
+                    print(f"  {i}. Line {error.get('line')}: {error.get('message')}")
+                    if error.get("suggestion"):
+                        print(f"     Suggestion: {error.get('suggestion')}")
+    else:
+        # Single error output  
+        print(f"ðŸ¤– Detected    : {result['predicted_error']}")
         print("-" * 60)
 
     # --------------------------------------------------------

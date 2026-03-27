@@ -1,0 +1,348 @@
+[
+  {
+    "id": "C-01",
+    "language": "C",
+    "category": "Syntax",
+    "title": "Missing semicolon after declaration (provided)",
+    "expected_type": "MissingDelimiter",
+    "predicted_error": "MissingDelimiter",
+    "rule_issue_types": [
+      "MissingDelimiter"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 3,
+    "first_issue_message": "Missing semicolon at the end of the statement.",
+    "input_code": "#include <stdio.h>\nint main() {\n    int a = 10\n    printf(\"%d\", a);\n    return 0;\n}\n",
+    "fixed_code": "#include <stdio.h>\nint main() {\n    int a = 10;\n    printf(\"%d\", a);\n    return 0;\n}\n"
+  },
+  {
+    "id": "C-02",
+    "language": "C",
+    "category": "Syntax",
+    "title": "Missing closing brace",
+    "expected_type": "UnmatchedBracket",
+    "predicted_error": "UnmatchedBracket",
+    "rule_issue_types": [
+      "UnmatchedBracket"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 2,
+    "first_issue_message": "Opening { is missing a matching closing bracket.",
+    "input_code": "#include <stdio.h>\nint main() {\n    printf(\"Hello\");\n",
+    "fixed_code": "#include <stdio.h>\nint main() {\n    printf(\"Hello\");\n}\n"
+  },
+  {
+    "id": "C-03",
+    "language": "C",
+    "category": "Runtime",
+    "title": "Division by zero",
+    "expected_type": "DivisionByZero",
+    "predicted_error": "DivisionByZero",
+    "rule_issue_types": [
+      "DivisionByZero"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 3,
+    "first_issue_message": "Possible division or modulo by zero.",
+    "input_code": "#include <stdio.h>\nint main() {\n    int x = 10 / 0;\n    printf(\"%d\", x);\n    return 0;\n}\n",
+    "fixed_code": "#include <stdio.h>\nint main() {\n    int d = 2;\n    int x = 10 / d;\n    printf(\"%d\", x);\n    return 0;\n}\n"
+  },
+  {
+    "id": "C-04",
+    "language": "C",
+    "category": "Semantic",
+    "title": "Use stdio symbol without include",
+    "expected_type": "MissingInclude",
+    "predicted_error": "MissingInclude",
+    "rule_issue_types": [
+      "MissingInclude"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 2,
+    "first_issue_message": "printf is used without including <stdio.h>.",
+    "input_code": "int main() {\n    printf(\"Hi\");\n    return 0;\n}\n",
+    "fixed_code": "#include <stdio.h>\nint main() {\n    printf(\"Hi\");\n    return 0;\n}\n"
+  },
+  {
+    "id": "C-05",
+    "language": "C",
+    "category": "Edge",
+    "title": "Undeclared identifier",
+    "expected_type": "UndeclaredIdentifier",
+    "predicted_error": "UndeclaredIdentifier",
+    "rule_issue_types": [
+      "UndeclaredIdentifier"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 3,
+    "first_issue_message": "result is used before it is declared.",
+    "input_code": "#include <stdio.h>\nint main() {\n    result = 42;\n    return 0;\n}\n",
+    "fixed_code": "#include <stdio.h>\nint main() {\n    int result = 42;\n    return 0;\n}\n"
+  },
+  {
+    "id": "C-06",
+    "language": "C",
+    "category": "Semantic",
+    "title": "Type mismatch int assigned string",
+    "expected_type": "TypeMismatch",
+    "predicted_error": "MissingDelimiter",
+    "rule_issue_types": [
+      "MissingDelimiter",
+      "TypeMismatch"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 3,
+    "first_issue_message": "Assignment is missing a value expression.",
+    "input_code": "#include <stdio.h>\nint main() {\n    int n = \"42\";\n    return 0;\n}\n",
+    "fixed_code": "#include <stdio.h>\nint main() {\n    int n = 42;\n    return 0;\n}\n"
+  },
+  {
+    "id": "J-01",
+    "language": "Java",
+    "category": "Syntax+Semantic",
+    "title": "Type mismatch and missing semicolon (provided)",
+    "expected_type": "TypeMismatch",
+    "predicted_error": "MissingDelimiter",
+    "rule_issue_types": [
+      "MissingDelimiter",
+      "MissingDelimiter",
+      "TypeMismatch"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 3,
+    "first_issue_message": "Assignment is missing a value expression.",
+    "input_code": "public class Test {\n    public static void main(String[] args) {\n        int x = \"10\";\n        System.out.println(x)\n    }\n}\n",
+    "fixed_code": "public class Test {\n    public static void main(String[] args) {\n        int x = 10;\n        System.out.println(x);\n    }\n}\n"
+  },
+  {
+    "id": "J-02",
+    "language": "Java",
+    "category": "Syntax",
+    "title": "Missing closing brace",
+    "expected_type": "UnmatchedBracket",
+    "predicted_error": "UnmatchedBracket",
+    "rule_issue_types": [
+      "UnmatchedBracket"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 1,
+    "first_issue_message": "Opening { is missing a matching closing bracket.",
+    "input_code": "public class T {\n    public static void main(String[] args) {\n        System.out.println(1);\n}\n",
+    "fixed_code": "public class T {\n    public static void main(String[] args) {\n        System.out.println(1);\n    }\n}\n"
+  },
+  {
+    "id": "J-03",
+    "language": "Java",
+    "category": "Semantic",
+    "title": "Missing import for ArrayList",
+    "expected_type": "MissingImport",
+    "predicted_error": "MissingImport",
+    "rule_issue_types": [
+      "MissingImport"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 3,
+    "first_issue_message": "ArrayList is used without importing java.util.ArrayList.",
+    "input_code": "public class T {\n    public static void main(String[] args) {\n        ArrayList<Integer> nums = new ArrayList<>();\n        System.out.println(nums.size());\n    }\n}\n",
+    "fixed_code": "import java.util.ArrayList;\npublic class T {\n    public static void main(String[] args) {\n        ArrayList<Integer> nums = new ArrayList<>();\n        System.out.println(nums.size());\n    }\n}\n"
+  },
+  {
+    "id": "J-04",
+    "language": "Java",
+    "category": "Edge",
+    "title": "Undeclared variable use",
+    "expected_type": "UndeclaredIdentifier",
+    "predicted_error": "UndeclaredIdentifier",
+    "rule_issue_types": [
+      "UndeclaredIdentifier"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 3,
+    "first_issue_message": "y is used before it is declared.",
+    "input_code": "public class T {\n    public static void main(String[] args) {\n        int x = y + 1;\n        System.out.println(x);\n    }\n}\n",
+    "fixed_code": "public class T {\n    public static void main(String[] args) {\n        int y = 2;\n        int x = y + 1;\n        System.out.println(x);\n    }\n}\n"
+  },
+  {
+    "id": "J-05",
+    "language": "Java",
+    "category": "Runtime",
+    "title": "Division by zero",
+    "expected_type": "DivisionByZero",
+    "predicted_error": "DivisionByZero",
+    "rule_issue_types": [
+      "DivisionByZero"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 3,
+    "first_issue_message": "Possible division or modulo by zero.",
+    "input_code": "public class T {\n    public static void main(String[] args) {\n        int z = 5 / 0;\n        System.out.println(z);\n    }\n}\n",
+    "fixed_code": "public class T {\n    public static void main(String[] args) {\n        int d = 1;\n        int z = 5 / d;\n        System.out.println(z);\n    }\n}\n"
+  },
+  {
+    "id": "J-06",
+    "language": "Java",
+    "category": "Logical",
+    "title": "Potentially unreachable statement after return",
+    "expected_type": "UnreachableCode",
+    "predicted_error": "UnreachableCode",
+    "rule_issue_types": [
+      "UnreachableCode"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 4,
+    "first_issue_message": "Statement appears after a control-flow jump and may never execute.",
+    "input_code": "public class T {\n    static int f() {\n        return 1;\n        int x = 2;\n    }\n}\n",
+    "fixed_code": "public class T {\n    static int f() {\n        int x = 2;\n        return x;\n    }\n}\n"
+  },
+  {
+    "id": "JS-01",
+    "language": "JavaScript",
+    "category": "Syntax+Runtime",
+    "title": "Undefined variable and broken function call (provided)",
+    "expected_type": "UndeclaredIdentifier",
+    "predicted_error": "UnmatchedBracket",
+    "rule_issue_types": [
+      "UnmatchedBracket",
+      "UndeclaredIdentifier"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 5,
+    "first_issue_message": "Opening ( is missing a matching closing bracket.",
+    "input_code": "function test() {\n    let x = 10;\n    console.log(y);\n}\ntest(\n",
+    "fixed_code": "function test() {\n    let x = 10;\n    console.log(x);\n}\ntest();\n"
+  },
+  {
+    "id": "JS-02",
+    "language": "JavaScript",
+    "category": "Syntax",
+    "title": "Missing parenthesis in if condition (provided edge)",
+    "expected_type": "UnmatchedBracket",
+    "predicted_error": "UnmatchedBracket",
+    "rule_issue_types": [
+      "UnmatchedBracket"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 1,
+    "first_issue_message": "Opening ( is missing a matching closing bracket.",
+    "input_code": "if (true {\n    console.log(\"Hello\");\n}\n",
+    "fixed_code": "if (true) {\n    console.log(\"Hello\");\n}\n"
+  },
+  {
+    "id": "JS-03",
+    "language": "JavaScript",
+    "category": "Edge",
+    "title": "Duplicate let declaration",
+    "expected_type": "DuplicateDefinition",
+    "predicted_error": "DuplicateDefinition",
+    "rule_issue_types": [
+      "DuplicateDefinition"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 2,
+    "first_issue_message": "a is declared multiple times in the same scope.",
+    "input_code": "let a = 1;\nlet a = 2;\nconsole.log(a);\n",
+    "fixed_code": "let a = 1;\na = 2;\nconsole.log(a);\n"
+  },
+  {
+    "id": "JS-04",
+    "language": "JavaScript",
+    "category": "Runtime",
+    "title": "Division by zero",
+    "expected_type": "DivisionByZero",
+    "predicted_error": "DivisionByZero",
+    "rule_issue_types": [
+      "DivisionByZero"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 2,
+    "first_issue_message": "Possible division or modulo by zero.",
+    "input_code": "function f() {\n    const z = 10 / 0;\n    return z;\n}\n",
+    "fixed_code": "function f() {\n    const d = 2;\n    const z = 10 / d;\n    return z;\n}\n"
+  },
+  {
+    "id": "JS-05",
+    "language": "JavaScript",
+    "category": "Syntax",
+    "title": "Unclosed string literal",
+    "expected_type": "UnclosedString",
+    "predicted_error": "UnclosedString",
+    "rule_issue_types": [
+      "UnclosedString"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 2,
+    "first_issue_message": "String literal is not closed before end of file.",
+    "input_code": "function greet() {\n    const s = \"hello;\n    return s;\n}\n",
+    "fixed_code": "function greet() {\n    const s = \"hello\";\n    return s;\n}\n"
+  },
+  {
+    "id": "JS-06",
+    "language": "JavaScript",
+    "category": "Logical",
+    "title": "Unreachable code after return",
+    "expected_type": "UnreachableCode",
+    "predicted_error": "UnreachableCode",
+    "rule_issue_types": [
+      "UnreachableCode"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 3,
+    "first_issue_message": "Statement appears after a control-flow jump and may never execute.",
+    "input_code": "function f() {\n    return 1;\n    console.log(\"never\");\n}\n",
+    "fixed_code": "function f() {\n    console.log(\"runs\");\n    return 1;\n}\n"
+  },
+  {
+    "id": "JS-07",
+    "language": "JavaScript",
+    "category": "Edge",
+    "title": "Undeclared identifier usage",
+    "expected_type": "UndeclaredIdentifier",
+    "predicted_error": "UndeclaredIdentifier",
+    "rule_issue_types": [
+      "UndeclaredIdentifier"
+    ],
+    "detected": true,
+    "degraded_mode": false,
+    "warnings": [],
+    "first_issue_line": 2,
+    "first_issue_message": "total is used before it is declared.",
+    "input_code": "function add() {\n    return total + 1;\n}\n",
+    "fixed_code": "function add() {\n    const total = 0;\n    return total + 1;\n}\n"
+  }
+]

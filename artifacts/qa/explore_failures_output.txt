@@ -1,0 +1,57 @@
+﻿======================================================================
+C-F1 C
+predicted: NoError degraded: False
+issues: []
+======================================================================
+C-F2 C
+predicted: UndeclaredIdentifier degraded: False
+issues: ['UndeclaredIdentifier']
+first issue: 4 y is used before it is declared.
+======================================================================
+C-F3 C
+predicted: NoError degraded: False
+issues: []
+======================================================================
+J-F1 Java
+predicted: TypeMismatch degraded: False
+issues: ['TypeMismatch']
+first issue: 3 Assigned value type does not match the declared variable type.
+======================================================================
+J-F2 Java
+predicted: TypeMismatch degraded: False
+issues: ['TypeMismatch']
+first issue: 3 Assigned value type does not match the declared variable type.
+======================================================================
+J-F3 Java
+predicted: MissingDelimiter degraded: False
+issues: ['MissingDelimiter', 'UndeclaredIdentifier', 'UndeclaredIdentifier']
+first issue: 3 Missing semicolon at the end of the statement.
+======================================================================
+J-F4 Java
+predicted: MissingDelimiter degraded: False
+issues: ['MissingDelimiter']
+first issue: 3 Missing semicolon at the end of the statement.
+======================================================================
+JS-F1 JavaScript
+predicted: MissingDelimiter degraded: False
+issues: ['MissingDelimiter']
+first issue: 2 Assignment is missing a value expression.
+======================================================================
+JS-F2 JavaScript
+predicted: NoError degraded: False
+issues: []
+======================================================================
+JS-F3 JavaScript
+predicted: UndeclaredIdentifier degraded: False
+issues: ['UndeclaredIdentifier']
+first issue: 4 elsee is used before it is declared.
+======================================================================
+JS-F4 JavaScript
+predicted: MissingDelimiter degraded: False
+issues: ['MissingDelimiter']
+first issue: 2 Invalid member access syntax '..'.
+======================================================================
+JS-F5 JavaScript
+predicted: UndeclaredIdentifier degraded: False
+issues: ['UndeclaredIdentifier', 'UnreachableCode']
+first issue: 3 undeclared is used before it is declared.
