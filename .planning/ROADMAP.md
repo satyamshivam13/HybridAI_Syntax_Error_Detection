@@ -14,6 +14,7 @@ This roadmap focuses on stabilizing OmniSyntax as a dependable educational code-
 - [ ] **Phase 2: Diagnostics and Autofix Quality** - Improve localization, explanations, and student-facing consistency.
 - [ ] **Phase 3: Runtime Health and ML Recovery** - Make degraded mode safer and restore ML compatibility where feasible.
 - [ ] **Phase 4: QA Hardening and Release Readiness** - Expand verification, docs, and repeatable evidence for future changes.
+- [ ] **Phase 5: Cross-Language Reliability Hardening** - Consolidate ML recovery, fallback detection, diagnostics, explanations, and multi-entry-point verification.
 
 ## Phase Details
 
@@ -77,7 +78,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -85,3 +86,17 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | 2. Diagnostics and Autofix Quality | 0/2 | Not started | - |
 | 3. Runtime Health and ML Recovery | 0/3 | Not started | - |
 | 4. QA Hardening and Release Readiness | 0/2 | Not started | - |
+| 5. Cross-Language Reliability Hardening | 0/4 | Not started | - |
+
+### Phase 5: Cross-Language Reliability Hardening
+
+**Goal:** Make C, Java, and JavaScript analysis trustworthy across healthy and degraded runtime states by hardening shared detection contracts, actionable explanations, and API/CLI/Streamlit parity.
+**Requirements**: [DET-02, DET-03, DET-04, DIAG-01, DIAG-02, DIAG-03, DIAG-04, FIX-02, OPS-01, OPS-03, QA-01, QA-02, QA-03]
+**Depends on:** Phase 4
+**Plans:** 4 plans
+
+Plans:
+- [ ] 05-01-PLAN.md - Reconcile runtime and documentation assumptions with the verified ML health contract
+- [ ] 05-02-PLAN.md - Harden shared C, Java, and JavaScript detection plus localization
+- [ ] 05-03-PLAN.md - Align explanations, degraded warnings, and entry-point wording
+- [ ] 05-04-PLAN.md - Expand startup and smoke verification, then collect sign-off evidence
