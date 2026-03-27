@@ -104,6 +104,10 @@ The active model bundle is metadata-aware via `models/bundle_metadata.json` and 
 - [Project Structure](PROJECT_STRUCTURE.md)
 - [Project Status](PROJECT_STATUS.md)
 
+Documentation maintenance note:
+- `python scripts/check_links.py` runs in CI and validates local markdown links.
+- Keep these linked files present and update links if files are moved or renamed.
+
 ## Notes on sample inputs
 The `samples/` directory may be empty in some snapshots. Use `tests/Test.java` or your own snippets with `cli.py`.
 
