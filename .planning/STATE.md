@@ -1,11 +1,11 @@
 ﻿---
 gsd_state_version: 1.0
-milestone: v1.0
+milestone: v1.1
 milestone_name: milestone
-status: completing
-stopped_at: Phase 05 execution complete; all 4 plans finished successfully
-last_updated: "2026-03-27T15:45:00.000Z"
-last_activity: 2026-03-27 -- Phase 05 final plan (smoke coverage) completed
+status: ready
+stopped_at: v1.0 milestone complete; archived 2026-03-27
+last_updated: "2026-03-27T16:00:00.000Z"
+last_activity: 2026-03-27 -- v1.0 milestone archived; ready for v1.1 planning
 progress:
   total_phases: 5
   completed_phases: 5
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-03-27)
 
 **Core value:** Students should get accurate, actionable code-error feedback even when the ML layer is unavailable.
-**Current focus:** Phase 05 â€” cross-language-reliability-hardening
+**Current focus:** Planning next milestone (v1.1)
 
 ## Current Position
 
-Phase: 05 (cross-language-reliability-hardening) – COMPLETE ✅
-All Plans: 4 of 4 completed
-Status: Ready for milestone completion/audit
-Last activity: 2026-03-27 -- Phase 05 Plan 04 (smoke coverage) completed
+Milestone v1.0 — Cross-Language Reliability: COMPLETE ✅
+All Phases: 5 of 5 completed | All Plans: 10 of 10 completed
+Status: v1.0 archived; ready to begin v1.1 planning
+Last activity: 2026-03-27 -- v1.0 milestone archived
 
 Progress: [██████████] 100%
 
@@ -71,12 +71,11 @@ None yet.
 
 ### Blockers/Concerns
 
-- ML model artifacts are compatibility-sensitive across environments; healthy mode is verified in the current workspace
-- Non-Python accuracy still relies on heuristics in some scenarios
+None — v1.0 shipped. Known gaps tracked in `.planning/MILESTONES.md`.
 
 ## Session Continuity
 
 Last session: 2026-03-27 00:00
-Stopped at: Initial GSD setup completed; next step is `gsd-plan-phase` for Phase 1
+Stopped at: v1.0 milestone complete and archived; run `/gsd-new-milestone` for v1.1
 Resume file: None
 

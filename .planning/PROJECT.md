@@ -12,31 +12,42 @@ Students should get accurate, actionable code-error feedback even when the ML la
 
 ### Validated
 
-- âœ“ Multi-language code checking is already available through the API, CLI, and Streamlit app.
-- âœ“ The system can explain detected errors and suggest fixes for supported scenarios.
-- âœ“ The runtime now exposes degraded mode explicitly when ML artifacts cannot load.
-- âœ“ Automated tests and CI already protect core detection, API behavior, and smoke scripts.
+- ✓ Multi-language code checking is available through the API, CLI, and Streamlit app. — v1.0
+- ✓ The system explains detected errors and suggests fixes for supported scenarios. — v1.0
+- ✓ The runtime exposes degraded mode explicitly when ML artifacts cannot load. — v1.0
+- ✓ Automated tests and CI protect core detection, API behavior, and smoke scripts. — v1.0
+- ✓ Improved syntax and semantic error detection accuracy for C, Java, and JavaScript. — v1.0
+- ✓ Reduced false negatives in degraded mode via 11+ rule-based patterns. — v1.0
+- ✓ Line and column localization for all rule-based C/Java/JavaScript findings. — v1.0
+- ✓ Improved tutor explanations with actionable next-step guidance. — v1.0
+- ✓ API, CLI, and Streamlit degrade consistently with shared warning payloads. — v1.0
+- ✓ Expanded QA coverage: 153 automated tests + regression suites for C/Java/JavaScript. — v1.0
 
 ### Active
 
-- [ ] Improve syntax and semantic error detection accuracy for C, Java, and JavaScript.
-- [ ] Reduce false negatives when ML classification is unavailable or incompatible.
-- [ ] Improve line and column localization for reported issues.
-- [ ] Improve tutor explanations and autofix quality for student-facing feedback.
-- [ ] Make API, CLI, and Streamlit behavior reliable and consistent in degraded mode.
-- [ ] Expand QA coverage and regression protection for known OmniSyntax failure cases.
+*No active requirements yet — define via `$gsd-new-milestone` for v1.1.*
 
 ### Out of Scope
 
-- New language support beyond Python, Java, C, C++, and JavaScript - current work is focused on reliability in existing languages.
-- Full compiler replacement for every supported language - the current roadmap improves the hybrid engine rather than building full compiler frontends.
-- Hosted SaaS, user accounts, or classroom management features - not part of the present repo and not needed for the current reliability push.
+- New language support beyond Python, Java, C, C++, and JavaScript — reliability in existing languages is the priority.
+- Full compiler replacement — the hybrid engine approach is the chosen strategy.
+- Hosted SaaS, user accounts, or classroom management — outside the current repo scope.
 
 ## Context
 
-OmniSyntax already contains a hybrid analysis pipeline with rule-based detection, ML-backed classification, auto-fix helpers, quality analysis, and student-oriented explanations. The repo includes working FastAPI, CLI, and Streamlit entry points, plus evaluation and reporting scripts, but recent QA work found that non-Python detection quality depends heavily on fallback heuristics when the serialized scikit-learn model bundle is unavailable.
+OmniSyntax v1.0 shipped a hardened hybrid analysis pipeline for educational use across Python, Java, C, C++, and JavaScript. The engine exposes detection through FastAPI, a Streamlit UI, and a CLI. Key improvements in v1.0:
 
-Recent verification confirms the metadata-aware ML bundle now loads successfully in the current environment, while degraded mode remains a first-class fallback when compatibility drifts. The roadmap focus remains strong rule-based behavior, trustworthy diagnostics, and reliable verification for both healthy and degraded runtime states.
+- **ML compatibility**: scikit-learn==1.7.2 bundle with metadata-aware health contract; `/health` reflects true model state.
+- **Rule-based coverage**: 11+ patterns for C/Java/JavaScript covering syntax, semantic, and runtime error classes.
+- **Entry-point parity**: CLI, API, and Streamlit now share warning payloads and consistent label/column output.
+- **Test coverage**: 153 automated tests including API regressions, C/Java/JavaScript-specific regressions, and 13 smoke tests.
+
+**Known gaps at v1.0:**
+- `--all-errors` mode skips ML for Python semantic errors
+- IndentationError and UnclosedString auto-fixes are imprecise
+- Occasional false-positive UndeclaredIdentifier alongside TypeMismatch in Java
+
+**Stack:** Python, FastAPI, Streamlit, scikit-learn 1.7.2, pytest
 
 ## Constraints
 
@@ -50,11 +61,13 @@ Recent verification confirms the metadata-aware ML bundle now loads successfully
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Keep the brownfield Python architecture | The repo already has stable entry points and tests, so focused improvements are lower risk than a rewrite | âœ“ Good |
-| Treat degraded-mode correctness as a first-class requirement | ML compatibility is currently fragile, so fallback behavior must still be trustworthy | âœ“ Good |
-| Organize work around detection reliability, feedback quality, ML recovery, and QA hardening | These areas map directly to observed failures and user goals | - Pending |
-| Use `.planning/codebase/` maps before deeper phase planning | Future GSD phases need reliable repo context instead of rediscovering structure each time | âœ“ Good |
+| Keep the brownfield Python architecture | Stable entry points and tests made focused improvements lower risk than a rewrite | ✓ Good |
+| Treat degraded-mode correctness as a first-class requirement | ML compatibility is fragile; fallback must still be trustworthy | ✓ Good |
+| Organize work around detection reliability → feedback quality → ML recovery → QA hardening | Maps directly to observed failures and user goals; all phases delivered | ✓ Good |
+| Use `.planning/codebase/` maps before deeper phase planning | Reliable repo context reduced rediscovery overhead across phases | ✓ Good |
+| Pin scikit-learn==1.7.2 to match the bundle metadata contract | Prevents silent model incompatibility; degraded mode handles drift | ✓ Good |
+| Accept auto-fix imprecision for IndentationError and UnclosedString | Precise rewriting is high-risk; suggestion-based fix is safer and still useful | ⚠️ Revisit |
 
 ---
-*Last updated: 2026-03-27 after GSD project initialization*
+*Last updated: 2026-03-27 after v1.0 milestone*
 
