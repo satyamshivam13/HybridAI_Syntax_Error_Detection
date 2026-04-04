@@ -118,7 +118,12 @@ def main():
     # --------------------------------------------------------
     # 6. Auto-Fix Suggestion
     # --------------------------------------------------------
-    if result['predicted_error'] != "NoError":
+    if show_all_errors:
+        primary_error = next(iter(result.get("errors_by_type", {})), "NoError")
+    else:
+        primary_error = result.get("predicted_error", "NoError")
+
+    if primary_error != "NoError":
         print("\n" + "=" * 60)
         print("ðŸ”§ AUTO-FIX SUGGESTION")
         print("=" * 60)
@@ -133,7 +138,7 @@ def main():
                     line_num = issue['line'] - 1
                     break
         
-        fix_result = fixer.apply_fixes(code, result['predicted_error'], line_num, result['language'])
+        fix_result = fixer.apply_fixes(code, primary_error, line_num, result['language'])
         
         if fix_result['success']:
             print("âœ… Automatic fix available!\n")
