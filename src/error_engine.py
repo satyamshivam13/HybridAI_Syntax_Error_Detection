@@ -180,7 +180,9 @@ C_LIKE_KEYWORDS = {
     "const", "function", "true", "false", "null",
 }
 
-def _normalize(label):
+def _normalize(label: str | None) -> str:
+    if not label:
+        return "NoError"
     return LABEL_ALIASES.get(label, label)
 
 
@@ -238,6 +240,17 @@ def _normalize_rule_issues(issues: list[dict]) -> list[dict]:
 def _pick_primary_issue(issues: list[dict]) -> dict | None:
     normalized = _normalize_rule_issues(issues)
     return normalized[0] if normalized else None
+
+
+def _should_suppress_java_undeclared_identifier(rule_based_issues: list[dict], ml_error: str | None) -> bool:
+    """
+    Suppress a Java UndeclaredIdentifier ML guess when rule-based analysis already
+    found a TypeMismatch in the same snippet. In practice, that pairing is a cascade
+    from the typed assignment, not a second independent issue.
+    """
+    if ml_error != "UndeclaredIdentifier":
+        return False
+    return any(issue.get("type") == "TypeMismatch" for issue in rule_based_issues)
 
 
 def _suppress_cascading_syntax_noise(issues: list[dict]) -> list[dict]:
@@ -1581,7 +1594,7 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
         strong_issues = [i for i in rule_based_issues if i.get("type") in RULE_BASED_TYPES]
 
         if strong_issues:
-            rb_error = strong_issues[0].get("type", "SyntaxError")
+            rb_error = str(strong_issues[0].get("type") or "SyntaxError")
 
             # AST already failed and rule-based found concrete syntax issue(s).
             # Keep syntax findings authoritative to prevent semantic false overrides.
@@ -1635,7 +1648,7 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
 
         if syntax_issues:
             primary_issue = _pick_primary_issue(syntax_issues)
-            primary_type = primary_issue["type"] if primary_issue else "SyntaxError"
+            primary_type = str(primary_issue.get("type") or "SyntaxError") if primary_issue else "SyntaxError"
             return _attach_metadata({
                 "language": language,
                 "predicted_error": primary_type,
@@ -1646,7 +1659,7 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
 
         if semantic_issues:
             primary_issue = _pick_primary_issue(semantic_issues)
-            primary_type = primary_issue["type"] if primary_issue else "NoError"
+            primary_type = str(primary_issue.get("type") or "NoError") if primary_issue else "NoError"
             return _attach_metadata({
                 "language": language,
                 "predicted_error": primary_type,

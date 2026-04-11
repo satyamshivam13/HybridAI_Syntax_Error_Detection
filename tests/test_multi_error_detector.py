@@ -166,3 +166,65 @@ def test_ml_unavailable_error_is_handled_gracefully(monkeypatch):
     
     assert result['language'] == 'JavaScript'
     assert result['has_errors'] is False # Gracefully degraded to no errors instead of crashing
+
+
+
+def test_python_semantic_ml_is_reported_for_valid_code(monkeypatch):
+    monkeypatch.setattr("src.multi_error_detector.detect_language", lambda code, filename: "Python")
+    monkeypatch.setattr("src.multi_error_detector.is_model_available", lambda: True)
+    monkeypatch.setattr("src.multi_error_detector.detect_error_ml", lambda code: ("DivisionByZero", 0.97))
+
+    code = "def answer():\n    return 10 / 0\n"
+    result = detect_all_errors(code, "answer.py")
+
+    assert result["has_errors"] is True
+    assert result["total_errors"] == 1
+    assert {error["type"] for error in result["errors"]} == {"DivisionByZero"}
+
+
+def test_python_semantic_ml_is_merged_with_rule_based_errors(monkeypatch):
+    monkeypatch.setattr("src.multi_error_detector.detect_language", lambda code, filename: "Python")
+    monkeypatch.setattr("src.multi_error_detector.is_model_available", lambda: True)
+    monkeypatch.setattr(
+        "src.multi_error_detector.detect_all",
+        lambda code: [
+            {
+                "type": "MissingColon",
+                "line": 1,
+                "col": 10,
+                "message": "Missing colon",
+                "snippet": "def broken()",
+                "suggestion": "Add a colon after the function signature.",
+            }
+        ],
+    )
+    monkeypatch.setattr("src.multi_error_detector.detect_error_ml", lambda code: ("DivisionByZero", 0.96))
+
+    result = detect_all_errors("def broken()\n    return 1 / 0", "broken.py")
+
+    assert result["total_errors"] == 2
+    assert {error["type"] for error in result["errors"]} == {"MissingColon", "DivisionByZero"}
+
+
+def test_java_type_mismatch_suppresses_undeclared_identifier_ml(monkeypatch):
+    monkeypatch.setattr("src.multi_error_detector.detect_language", lambda code, filename: "Java")
+    monkeypatch.setattr("src.multi_error_detector.is_model_available", lambda: True)
+    monkeypatch.setattr(
+        "src.multi_error_detector._collect_c_like_rule_based_issues",
+        lambda code, language: [
+            {
+                "type": "TypeMismatch",
+                "line": 1,
+                "col": 1,
+                "message": "Assigned value type does not match the declared variable type.",
+                "snippet": "String value = 1;",
+                "suggestion": "Convert the value to the correct type or change the variable declaration.",
+            }
+        ],
+    )
+    monkeypatch.setattr("src.multi_error_detector.detect_error_ml", lambda code: ("UndeclaredIdentifier", 0.91))
+
+    result = detect_all_errors("public class T { String value = 1; }", "T.java")
+
+    assert result["total_errors"] == 1
+    assert [error["type"] for error in result["errors"]] == ["TypeMismatch"]

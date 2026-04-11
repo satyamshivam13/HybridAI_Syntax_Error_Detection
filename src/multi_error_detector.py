@@ -7,7 +7,12 @@ from error_engine so the UI can show multiple findings in degraded ML mode.
 
 import ast as _ast
 
-from .error_engine import _collect_c_like_rule_based_issues
+from .error_engine import (
+    SEMANTIC_ERROR_TYPES,
+    _collect_c_like_rule_based_issues,
+    _should_run_semantic_ml,
+    _should_suppress_java_undeclared_identifier,
+)
 from .language_detector import detect_language
 from .ml_engine import (
     ModelInferenceError,
@@ -60,7 +65,7 @@ def detect_all_errors(code: str, filename: str | None = None):
     language = detect_language(code, filename)
     all_errors = []
     rule_based_issues = []
-    is_valid_python = False
+    python_ast_valid = False
     warnings: list[str] = []
 
     degraded_mode = not is_model_available()
@@ -73,27 +78,66 @@ def detect_all_errors(code: str, filename: str | None = None):
     if language == "Python":
         try:
             _ast.parse(code)
-            is_valid_python = True
+            python_ast_valid = True
         except SyntaxError:
             rule_based_issues = detect_all(code)
 
         if rule_based_issues:
             all_errors.extend(_group_issues(rule_based_issues))
 
+        should_run_ml = _should_run_semantic_ml(code, language) or not python_ast_valid
+        if should_run_ml:
+            try:
+                ml_error, confidence = detect_error_ml(code)
+            except (ModelUnavailableError, ModelInferenceError):
+                ml_error, confidence = ("NoError", 0.0)
+
+            if python_ast_valid:
+                if (
+                    ml_error in SEMANTIC_ERROR_TYPES
+                    and confidence >= 0.65
+                    and not any(error["type"] == ml_error for error in all_errors)
+                ):
+                    all_errors.append({
+                        "type": ml_error,
+                        "count": 1,
+                        "locations": [{"confidence": confidence, "ml_detected": True}],
+                        "tutor": explain_error(ml_error),
+                    })
+            elif not rule_based_issues and ml_error != "NoError" and confidence >= 0.65:
+                if not any(error["type"] == ml_error for error in all_errors):
+                    all_errors.append({
+                        "type": ml_error,
+                        "count": 1,
+                        "locations": [{"confidence": confidence, "ml_detected": True}],
+                        "tutor": explain_error(ml_error),
+                    })
+            elif ml_error in SEMANTIC_ERROR_TYPES and confidence >= 0.65:
+                if not any(error["type"] == ml_error for error in all_errors):
+                    all_errors.append({
+                        "type": ml_error,
+                        "count": 1,
+                        "locations": [{"confidence": confidence, "ml_detected": True}],
+                        "tutor": explain_error(ml_error),
+                    })
+
     if language in ["Java", "C", "C++", "JavaScript"]:
         rule_based_issues = _collect_c_like_rule_based_issues(code, language)
         if rule_based_issues:
             all_errors.extend(_group_issues(rule_based_issues))
 
-    if not is_valid_python:
-        try:
-            ml_error, confidence = detect_error_ml(code)
-        except (ModelUnavailableError, ModelInferenceError):
-            ml_error, confidence = ("NoError", 0.0)
+        if _should_run_semantic_ml(code, language):
+            try:
+                ml_error, confidence = detect_error_ml(code)
+            except (ModelUnavailableError, ModelInferenceError):
+                ml_error, confidence = ("NoError", 0.0)
 
-        if ml_error != "NoError" and confidence >= 0.65:
-            error_already_found = any(error["type"] == ml_error for error in all_errors)
-            if not error_already_found:
+            if (
+                ml_error in SEMANTIC_ERROR_TYPES
+                and confidence >= 0.65
+                and not any(error["type"] == ml_error for error in all_errors)
+                and not _should_suppress_java_undeclared_identifier(rule_based_issues, ml_error)
+            ):
                 all_errors.append({
                     "type": ml_error,
                     "count": 1,

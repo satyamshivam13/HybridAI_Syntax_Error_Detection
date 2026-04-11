@@ -120,3 +120,10 @@ print(f"degraded_mode:{result.get('degraded_mode')}")
     assert "degraded_mode:" in proc.stdout, (
         f"Expected degraded_mode field in response. stderr: {proc.stderr}\nstdout: {proc.stdout}"
     )
+
+
+
+def test_cli_all_errors_smoke_on_java_fixture():
+    proc = _run(["cli.py", "tests/Test.java", "--all-errors"], encoding="utf-8")
+    assert proc.returncode == 0, proc.stderr + "\n" + proc.stdout
+    assert "Total Errors" in proc.stdout

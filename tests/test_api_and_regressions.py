@@ -248,3 +248,19 @@ def test_java_missing_delimiter_false_negative_regression(monkeypatch: pytest.Mo
 
 
 
+
+
+
+def test_check_endpoint_reports_python_semantic_errors(monkeypatch: pytest.MonkeyPatch):
+    api = _load_api(monkeypatch, rate_limit="100")
+    client = TestClient(api.app)
+
+    response = client.post(
+        "/check",
+        json={"code": "def answer():\n    return 10 / 0\n", "filename": "answer.py"},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["predicted_error"] == "DivisionByZero"
+    assert payload["has_errors"] is True
