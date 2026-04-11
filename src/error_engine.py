@@ -2211,6 +2211,17 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
     """
     Detect syntax and semantic errors using a hybrid approach.
     """
+    from .static_pipeline import detect_errors_static
+
+    result = detect_errors_static(code, filename, language_override)
+    if not is_model_available():
+        status = get_model_status()
+        warning = f"ML model unavailable; falling back to rule-based checks only ({status.get('error', 'unknown reason')})"
+        if warning not in result.get("warnings", []):
+            result.setdefault("warnings", []).append(warning)
+        result["degraded_mode"] = True
+    return result
+
     warnings: list[str] = []
     if not is_model_available():
         status = get_model_status()

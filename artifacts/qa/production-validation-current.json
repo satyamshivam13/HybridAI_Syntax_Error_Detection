@@ -1,0 +1,253 @@
+{
+  "metrics": {
+    "mutation_robustness": 1.0,
+    "real_world_messy_accuracy": 1.0,
+    "multi_error_recall": 1.0,
+    "cross_language_consistency": 1.0,
+    "confidence_ece": 0.0385,
+    "confidence_constant": false
+  },
+  "thresholds": {
+    "mutation_robustness": 0.95,
+    "real_world_messy_accuracy": 0.9,
+    "multi_error_recall": 0.85,
+    "cross_language_consistency": 0.8,
+    "confidence_ece": 0.05,
+    "confidence_constant": false
+  },
+  "details": {
+    "mutation": [
+      {
+        "language": "Python",
+        "expected": "DivisionByZero",
+        "predicted": "DivisionByZero",
+        "confidence": 0.97,
+        "correct": true
+      },
+      {
+        "language": "Python",
+        "expected": "InfiniteLoop",
+        "predicted": "InfiniteLoop",
+        "confidence": 0.96,
+        "correct": true
+      },
+      {
+        "language": "Python",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "confidence": 0.96,
+        "correct": true
+      },
+      {
+        "language": "Python",
+        "expected": "MissingImport",
+        "predicted": "MissingImport",
+        "confidence": 0.96,
+        "correct": true
+      },
+      {
+        "language": "Java",
+        "expected": "DivisionByZero",
+        "predicted": "DivisionByZero",
+        "confidence": 0.97,
+        "correct": true
+      },
+      {
+        "language": "Java",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "confidence": 0.96,
+        "correct": true
+      },
+      {
+        "language": "Java",
+        "expected": "MissingImport",
+        "predicted": "MissingImport",
+        "confidence": 0.97,
+        "correct": true
+      },
+      {
+        "language": "C",
+        "expected": "DivisionByZero",
+        "predicted": "DivisionByZero",
+        "confidence": 0.97,
+        "correct": true
+      },
+      {
+        "language": "C",
+        "expected": "MissingInclude",
+        "predicted": "MissingInclude",
+        "confidence": 0.96,
+        "correct": true
+      },
+      {
+        "language": "C++",
+        "expected": "DanglingPointer",
+        "predicted": "DanglingPointer",
+        "confidence": 0.96,
+        "correct": true
+      },
+      {
+        "language": "JavaScript",
+        "expected": "DivisionByZero",
+        "predicted": "DivisionByZero",
+        "confidence": 0.97,
+        "correct": true
+      },
+      {
+        "language": "JavaScript",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "confidence": 0.96,
+        "correct": true
+      }
+    ],
+    "messy": [
+      {
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "confidence": 0.95,
+        "correct": true
+      },
+      {
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "confidence": 0.95,
+        "correct": true
+      },
+      {
+        "language": "C",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "confidence": 0.95,
+        "correct": true
+      },
+      {
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "confidence": 0.95,
+        "correct": true
+      },
+      {
+        "language": "JavaScript",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "confidence": 0.95,
+        "correct": true
+      },
+      {
+        "language": "JavaScript",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "confidence": 0.96,
+        "correct": true
+      },
+      {
+        "language": "Python",
+        "expected": "ImportError",
+        "predicted": "ImportError",
+        "confidence": 0.96,
+        "correct": true
+      },
+      {
+        "language": "Java",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "confidence": 0.96,
+        "correct": true
+      },
+      {
+        "language": "C",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "confidence": 0.96,
+        "correct": true
+      },
+      {
+        "language": "C++",
+        "expected": "DivisionByZero",
+        "predicted": "DivisionByZero",
+        "confidence": 0.97,
+        "correct": true
+      }
+    ],
+    "multi": [
+      {
+        "language": "Java",
+        "expected": [
+          "MissingImport",
+          "TypeMismatch",
+          "UnreachableCode"
+        ],
+        "found": [
+          "MissingImport",
+          "TypeMismatch",
+          "UnreachableCode"
+        ],
+        "recall": 1.0,
+        "full_match": true
+      },
+      {
+        "language": "C",
+        "expected": [
+          "DivisionByZero",
+          "UnreachableCode"
+        ],
+        "found": [
+          "DivisionByZero",
+          "UnreachableCode"
+        ],
+        "recall": 1.0,
+        "full_match": true
+      },
+      {
+        "language": "C++",
+        "expected": [
+          "DanglingPointer",
+          "UndeclaredIdentifier"
+        ],
+        "found": [
+          "DanglingPointer",
+          "UndeclaredIdentifier"
+        ],
+        "recall": 1.0,
+        "full_match": true
+      },
+      {
+        "language": "JavaScript",
+        "expected": [
+          "DuplicateDefinition",
+          "UnreachableCode"
+        ],
+        "found": [
+          "DuplicateDefinition",
+          "UnreachableCode"
+        ],
+        "recall": 1.0,
+        "full_match": true
+      },
+      {
+        "language": "Python",
+        "expected": [
+          "MissingImport",
+          "TypeMismatch"
+        ],
+        "found": [
+          "MissingImport",
+          "TypeMismatch"
+        ],
+        "recall": 1.0,
+        "full_match": true
+      }
+    ],
+    "families": {
+      "division_expr_zero": 1.0,
+      "infinite_condition_expr": 1.0,
+      "unreachable_after_jump": 1.0
+    }
+  },
+  "passed": true
+}
