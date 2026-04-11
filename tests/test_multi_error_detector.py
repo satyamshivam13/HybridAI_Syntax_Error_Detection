@@ -69,6 +69,50 @@ def test_python_rules_override_ml_duplication(monkeypatch):
     assert 'ml_detected' not in result['errors'][0]['locations'][0]
     assert result['errors'][0]['locations'][0]['line'] == 1
 
+def test_detect_all_errors_groups_repeated_issues_and_reports_degraded_mode(monkeypatch):
+    repeated_issues = [
+        {
+            "type": "MissingDelimiter",
+            "line": 2,
+            "col": 5,
+            "message": "Missing delimiter",
+            "suggestion": "Add ;",
+            "snippet": "int x = 1",
+        },
+        {
+            "type": "MissingDelimiter",
+            "line": 4,
+            "col": 9,
+            "message": "Missing delimiter again",
+            "suggestion": "Add ;",
+            "snippet": "int y = 2",
+        },
+    ]
+
+    monkeypatch.setattr("src.multi_error_detector.detect_language", lambda code, filename: "Java")
+    monkeypatch.setattr("src.multi_error_detector._collect_c_like_rule_based_issues", lambda code, language: repeated_issues)
+    monkeypatch.setattr("src.multi_error_detector.is_model_available", lambda: False)
+    monkeypatch.setattr("src.multi_error_detector.get_model_status", lambda: {"error": "forced-unavailable"})
+    monkeypatch.setattr("src.multi_error_detector.detect_error_ml", lambda code: ("NoError", 0.0))
+
+    result = detect_all_errors("class T {}", "T.java")
+
+    assert result["language"] == "Java"
+    assert result["degraded_mode"] is True
+    assert result["warnings"] == [
+        "ML model unavailable; falling back to rule-based checks only (forced-unavailable)"
+    ]
+    assert result["total_errors"] == 2
+    assert len(result["errors"]) == 1
+
+    grouped = result["errors"][0]
+    assert grouped["type"] == "MissingDelimiter"
+    assert grouped["count"] == 2
+    assert [location["line"] for location in grouped["locations"]] == [2, 4]
+    assert result["errors_by_type"]["MissingDelimiter"] == [
+        {"line": 2, "message": "Missing delimiter", "snippet": "int x = 1"},
+        {"line": 4, "message": "Missing delimiter again", "snippet": "int y = 2"},
+    ]
 
 # --- Java / C / C++ Tests ---
 
