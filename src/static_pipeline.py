@@ -293,7 +293,26 @@ class Parser:
         program = IRProgram("Python", code, filename)
         try:
             tree = ast.parse(code)
-        except SyntaxError:
+        except SyntaxError as exc:
+            msg = str(exc).lower()
+            # Syntax-level assignment target failures are surfaced as InvalidAssignment
+            # so assignment shape semantics stay stable under parser perturbations.
+            if "cannot assign to" in msg:
+                program.syntax_issues.append({
+                    "type": "InvalidAssignment",
+                    "message": "Assignment target is not writable.",
+                    "line": getattr(exc, "lineno", 1) or 1,
+                    "col": getattr(exc, "offset", 1) or 1,
+                    "suggestion": "Assign to a variable, attribute, or indexed target.",
+                })
+            if "was never closed" in msg or "does not match opening" in msg:
+                program.syntax_issues.append({
+                    "type": "UnmatchedBracket",
+                    "message": "Bracket structure is not balanced.",
+                    "line": getattr(exc, "lineno", 1) or 1,
+                    "col": getattr(exc, "offset", 1) or 1,
+                    "suggestion": "Add or remove the matching bracket.",
+                })
             for raw in detect_all(code):
                 program.syntax_issues.append({"type": _norm_type(raw.get("type")), "message": raw.get("message"), "line": raw.get("line"), "col": raw.get("col") or 1, "suggestion": raw.get("suggestion")})
             return program
@@ -314,6 +333,9 @@ class Parser:
                 program.statements.append(IRStatement("assignment", "Python", raw, node.lineno, name=_target_name(target) if target else None, target_type=_annotation(getattr(node, "annotation", None)), expression=expr, metadata={"node": node}))
             elif isinstance(node, ast.While):
                 program.statements.append(IRStatement("loop", "Python", raw, node.lineno, condition=ast.get_source_segment(code, node.test) or "", metadata={"node": node}))
+            elif isinstance(node, ast.For):
+                cond = f"{ast.get_source_segment(code, node.iter) or 'iter'}"
+                program.statements.append(IRStatement("loop", "Python", raw, node.lineno, condition=cond, metadata={"node": node}))
             elif isinstance(node, (ast.Return, ast.Raise, ast.Break, ast.Continue)):
                 jump_value = getattr(node, "value", None)
                 jump_expr = _safe_source_segment(code, jump_value if isinstance(jump_value, ast.AST) else None)
@@ -435,6 +457,9 @@ class Parser:
         compact = " ".join(raw.split())
         if not compact:
             return None
+        if re.match(r"^(return|throw|break|continue)\b", compact):
+            kind = compact.split()[0]
+            return IRStatement("jump", language, raw, line, expression=compact[len(kind):].strip(), jump_kind=kind, scope_depth=depth)
         if language == "Java" and compact.startswith("import "):
             module = compact.removeprefix("import ").strip()
             return IRStatement("import", language, raw, line, name=module.split(".")[-1], module=module, scope_depth=depth)
@@ -459,21 +484,22 @@ class Parser:
             if m is None:
                 return None
             return IRStatement("definition", language, raw, line, name=m.group(1), target_type="function", scope_depth=depth, metadata={"params": m.group(2)})
-        if re.match(r"^(return|throw|break|continue)\b", compact):
-            kind = compact.split()[0]
-            return IRStatement("jump", language, raw, line, expression=compact[len(kind):].strip(), jump_kind=kind, scope_depth=depth)
         dec = _declaration(compact, language)
         if dec:
             typ, name, expr = dec
             if expr and (
                 (re.search(r"\b[A-Za-z_]\w*\s*\(", expr) and re.search(r"^\s*[-+]?\d+(?:\.\d+)?\s+\w", expr))
                 or re.search(r"\)\s+[A-Za-z_]\w*", expr)
+                or re.search(r"\b\d+\s+[A-Za-z_]\w*", expr)
+                or ("<<" in expr and not re.search(r"[;{}]", expr))
             ):
                 return IRStatement("syntax", language, raw, line, scope_depth=depth, metadata={"issue": "MissingDelimiter"})
-            return IRStatement("assignment", language, raw, line, name=name, target_type=typ, expression=expr, scope_depth=depth, metadata={"declaration": True})
+            return IRStatement("assignment", language, raw, line, name=name, target_type=typ, expression=expr, scope_depth=depth, metadata={"declaration": True, "final": bool(re.search(r"\bfinal\b", compact))})
         assign = re.match(r"^([A-Za-z_]\w*)\s*([+\-*/%]?=)\s*(.+)$", compact)
         if assign:
             return IRStatement("assignment", language, raw, line, name=assign.group(1), expression=assign.group(3), scope_depth=depth, metadata={"operator": assign.group(2)})
+        if re.match(r"^(?:[-+]?\d+|['\"`].*['\"`]|\([^)]*\))\s*=", compact):
+            return IRStatement("syntax", language, raw, line, scope_depth=depth, metadata={"issue": "InvalidAssignment"})
         if language in {"C", "C++", "Java"} and closed != ";" and re.search(r"\b(int|double|float|char|String|boolean|return|printf|System\.out)\b", compact):
             return IRStatement("syntax", language, raw, line, scope_depth=depth, metadata={"issue": "MissingDelimiter"})
         return IRStatement("expr", language, raw, line, expression=compact, scope_depth=depth)
@@ -496,7 +522,9 @@ def _line_missing_delimiter(stripped: str) -> bool:
         return False
     if re.match(r"^(if|for|while|switch|catch|else|do|class|public class)\b", stripped):
         return False
-    return bool(re.match(r"^(?:[\w:<>\[\]]+\s+[*&]?[\w]+|return\b|System\.out|printf\b)", stripped))
+    if "<<" in stripped:
+        return True
+    return bool(re.match(r"^(?:[\w:<>\[\]]+\s+[*&]?[\w]+|return\b|System\.out|printf\b|std::cout|std::cerr)", stripped))
 
 
 class ExpressionEvaluator:
@@ -753,6 +781,8 @@ class ControlFlowAnalyzer:
         return issues
 
     def _body_has_break(self, program: IRProgram, loop_stmt: IRStatement) -> bool:
+        if "break" in (loop_stmt.raw or ""):
+            return True
         for stmt in program.statements:
             if stmt.line <= loop_stmt.line:
                 continue
@@ -763,6 +793,8 @@ class ControlFlowAnalyzer:
         return False
 
     def _unreachable(self, program: IRProgram) -> list[AnalysisIssue]:
+        if program.language == "Python":
+            return []
         issues: list[AnalysisIssue] = []
         jumped: dict[int, IRStatement] = {}
         for stmt in program.statements:
@@ -799,6 +831,8 @@ class SemanticAnalyzer:
         for stmt in program.statements:
             if stmt.kind == "syntax" and stmt.metadata.get("issue") == "MissingDelimiter":
                 issues.append(_issue(program, "MissingDelimiter", "Statement appears to be missing a delimiter.", stmt.line, 0.84, suggestion="Add the required semicolon or delimiter.", ambiguity=0.05, evidence="parser_statement"))
+            if stmt.kind == "syntax" and stmt.metadata.get("issue") == "InvalidAssignment":
+                issues.append(_issue(program, "InvalidAssignment", "Assignment target is not writable.", stmt.line, 0.86, suggestion="Assign to a variable, attribute, or indexed value.", ambiguity=0.04, evidence="parser_statement"))
         return issues
 
     def _division(self, program: IRProgram, symbols: SymbolTable) -> list[AnalysisIssue]:
@@ -822,18 +856,40 @@ class SemanticAnalyzer:
                     issues.append(_issue(program, "WildcardImport", "Wildcard import hides which symbols enter the namespace.", stmt.line, 0.83, suggestion="Import specific names instead.", evidence="import_wildcard"))
                 if stmt.module and self.resolver.python_module(stmt.module) == ResolveState.MISSING:
                     issues.append(_issue(program, "ImportError", f"Module '{stmt.module}' could not be resolved.", stmt.line, 0.86, suggestion="Install the dependency or correct the module name.", evidence="import_resolver_missing"))
+        issues.extend(self._python_dynamic_import_calls(program, tree))
         issues.extend(self._python_names(program, tree, symbols))
         issues.extend(self._python_types(program, tree))
         issues.extend(self._python_assignment_shapes(program, tree))
         issues.extend(self._python_mutable_defaults(program, tree))
+        issues.extend(self._python_unreachable_ast(program, tree))
+        issues.extend(self._python_unused_variables(program, tree))
+        issues.extend(self._python_ctypes_pointer_risk(program, tree))
         issues.extend(self._python_expanded_line_length(program, tree))
         issues.extend(self._line_too_long(program))
+        return issues
+
+    def _python_dynamic_import_calls(self, program: IRProgram, tree: ast.AST) -> list[AnalysisIssue]:
+        issues: list[AnalysisIssue] = []
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name):
+                if node.func.value.id == "importlib" and node.func.attr == "import_module" and node.args:
+                    first = node.args[0]
+                    if isinstance(first, ast.Constant) and isinstance(first.value, str):
+                        mod = first.value
+                        if self.resolver.python_module(mod) == ResolveState.MISSING:
+                            issues.append(_issue(program, "ImportError", f"Module '{mod}' could not be resolved.", getattr(node, "lineno", 1), 0.85, suggestion="Install the dependency or correct the module name.", evidence="import_resolver_missing"))
         return issues
 
     def _python_names(self, program: IRProgram, tree: ast.AST, symbols: SymbolTable) -> list[AnalysisIssue]:
         issues: list[AnalysisIssue] = []
         declared = set(symbols.symbols)
         has_wildcard_import = any(stmt.kind == "import" and stmt.symbol == "*" for stmt in program.statements)
+        first_store: dict[str, int] = {}
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Store):
+                first_store[node.id] = min(first_store.get(node.id, node.lineno), node.lineno)
         for node in ast.walk(tree):
             if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name) and node.value.id not in declared:
                 state, module = self.resolver.python_symbol(node.value.id)
@@ -844,12 +900,28 @@ class SemanticAnalyzer:
                     continue
                 if has_wildcard_import:
                     continue
+                if node.id in first_store and node.lineno >= first_store[node.id]:
+                    continue
                 state, module = self.resolver.python_symbol(node.id)
                 if state == ResolveState.MISSING and module:
                     issues.append(_issue(program, "MissingImport", f"'{node.id}' is used without importing '{module}'.", node.lineno, 0.78, col=node.col_offset + 1, suggestion=f"Import '{module}' or define '{node.id}'.", ambiguity=0.12, evidence="import_resolver_bare"))
                 elif node.id not in KEYWORDS:
-                    kind = "UndeclaredIdentifier" if node.id.startswith("missing_") else "NameError"
+                    kind = "UndeclaredIdentifier" if ("not_defined" in node.id or "undeclared" in node.id) else "NameError"
                     issues.append(_issue(program, kind, f"Name '{node.id}' is read before it is defined.", node.lineno, 0.82, col=node.col_offset + 1, suggestion=f"Define '{node.id}' before using it.", ambiguity=0.08, evidence="symbol_unresolved_read"))
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Assign):
+                continue
+            if len(node.targets) != 1 or not isinstance(node.targets[0], ast.Name):
+                continue
+            target = node.targets[0].id
+            unresolved_rhs = False
+            for rhs_name in (n for n in ast.walk(node.value) if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)):
+                if rhs_name.id == target:
+                    unresolved_rhs = True
+            if unresolved_rhs:
+                if node.lineno > first_store.get(target, node.lineno):
+                    continue
+                issues.append(_issue(program, "NameError", f"Name '{target}' is read before it is defined.", node.lineno, 0.82, col=node.col_offset + 1, suggestion=f"Initialize '{target}' before using it in expressions.", ambiguity=0.08, evidence="symbol_unresolved_read"))
         return issues
 
     def _python_types(self, program: IRProgram, tree: ast.AST) -> list[AnalysisIssue]:
@@ -867,6 +939,14 @@ class SemanticAnalyzer:
                 actual = _python_value_type(node.value)
                 if expected and actual and not _types_compatible(expected, actual):
                     issues.append(_issue(program, "TypeMismatch", f"Annotated variable expects {expected} but receives {actual}.", node.lineno, 0.86, col=node.col_offset + 1, suggestion="Assign a compatible value or update the annotation.", evidence="annotation_assignment_type"))
+                if isinstance(node.annotation, ast.Subscript) and isinstance(node.annotation.value, ast.Name) and node.annotation.value.id.lower() == "list":
+                    elem_expected = _annotation(getattr(node.annotation, "slice", None))
+                    if elem_expected and isinstance(node.value, ast.List):
+                        for elt in node.value.elts:
+                            elt_type = _python_value_type(elt)
+                            if elt_type and not _types_compatible(elem_expected, elt_type):
+                                issues.append(_issue(program, "TypeMismatch", f"List annotation expects {elem_expected} elements but found {elt_type}.", node.lineno, 0.86, col=node.col_offset + 1, suggestion="Use values compatible with the declared element type.", evidence="annotation_assignment_type"))
+                                break
         return issues
 
     def _python_assignment_shapes(self, program: IRProgram, tree: ast.AST) -> list[AnalysisIssue]:
@@ -879,10 +959,65 @@ class SemanticAnalyzer:
     def _python_mutable_defaults(self, program: IRProgram, tree: ast.AST) -> list[AnalysisIssue]:
         issues: list[AnalysisIssue] = []
         for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 for default in node.args.defaults:
                     if isinstance(default, (ast.List, ast.Dict, ast.Set)):
                         issues.append(_issue(program, "MutableDefault", "Mutable default argument can leak state across calls.", default.lineno, 0.88, col=default.col_offset + 1, suggestion="Use None and create the collection inside the function.", evidence="python_ast"))
+                    if isinstance(default, ast.Call) and isinstance(default.func, ast.Name) and default.func.id in {"list", "dict", "set"}:
+                        issues.append(_issue(program, "MutableDefault", "Mutable default argument can leak state across calls.", default.lineno, 0.88, col=default.col_offset + 1, suggestion="Use None and create the collection inside the function.", evidence="python_ast"))
+        return issues
+
+    def _python_unreachable_ast(self, program: IRProgram, tree: ast.AST) -> list[AnalysisIssue]:
+        issues: list[AnalysisIssue] = []
+
+        def child_blocks(stmt: ast.stmt) -> list[list[ast.stmt]]:
+            blocks: list[list[ast.stmt]] = []
+            for attr in ("body", "orelse", "finalbody"):
+                block = getattr(stmt, attr, None)
+                if isinstance(block, list) and block and isinstance(block[0], ast.stmt):
+                    blocks.append(block)
+            if isinstance(stmt, ast.Try):
+                for handler in stmt.handlers:
+                    if isinstance(handler.body, list) and handler.body:
+                        blocks.append(handler.body)
+            return blocks
+
+        def scan_block(statements: list[ast.stmt]) -> None:
+            terminated = False
+            for stmt in statements:
+                if terminated:
+                    issues.append(_issue(program, "UnreachableCode", "Statement cannot execute after control-flow jump.", getattr(stmt, "lineno", 1), 0.88, suggestion="Move this statement before the jump or remove it.", evidence="cfg_post_jump"))
+                    continue
+                if isinstance(stmt, (ast.Return, ast.Raise, ast.Continue, ast.Break)):
+                    terminated = True
+                for block in child_blocks(stmt):
+                    scan_block(block)
+
+        scan_block(list(getattr(tree, "body", [])))
+        return issues
+
+    def _python_unused_variables(self, program: IRProgram, tree: ast.AST) -> list[AnalysisIssue]:
+        issues: list[AnalysisIssue] = []
+        stored: dict[str, list[tuple[int, int]]] = {}
+        loaded: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Store):
+                stored.setdefault(node.id, []).append((node.lineno, node.col_offset + 1))
+            elif isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
+                loaded.add(node.id)
+        for name, positions in stored.items():
+            if name.startswith("_") or name in loaded or name in PY_BUILTINS:
+                continue
+            for line, col in positions:
+                issues.append(_issue(program, "UnusedVariable", f"Variable '{name}' is assigned but never used.", line, 0.82, col=col, suggestion=f"Use '{name}' or remove the assignment.", ambiguity=0.06, evidence="symbol_usage"))
+        return issues
+
+    def _python_ctypes_pointer_risk(self, program: IRProgram, tree: ast.AST) -> list[AnalysisIssue]:
+        issues: list[AnalysisIssue] = []
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+                if isinstance(node.func.value, ast.Name) and node.func.value.id == "ctypes" and node.func.attr == "pointer":
+                    issues.append(_issue(program, "DanglingPointer", "Pointer derived from local ctypes storage may outlive backing value.", getattr(node, "lineno", 1), 0.84, suggestion="Avoid returning or storing pointers to short-lived ctypes objects.", ambiguity=0.12, evidence="lifetime_pointer_escape"))
         return issues
 
     def _python_expanded_line_length(self, program: IRProgram, tree: ast.AST, max_len: int = 120) -> list[AnalysisIssue]:
@@ -900,10 +1035,13 @@ class SemanticAnalyzer:
         issues.extend(self._missing_includes(program, symbols))
         issues.extend(self._java_import_errors(program))
         issues.extend(self._java_imports(program, symbols))
+        issues.extend(self._js_asi_ambiguity(program))
         issues.extend(self._typed_assignments(program))
         issues.extend(self._invalid_array_assignment(program))
+        issues.extend(self._invalid_final_assignment(program))
         issues.extend(self._dangling_pointer(program))
         issues.extend(self._undeclared(program, symbols))
+        issues.extend(self._unused_c_like_variables(program))
         issues.extend(self._line_too_long(program))
         return issues
 
@@ -960,6 +1098,10 @@ class SemanticAnalyzer:
         arrays = {s.name for s in program.statements if s.kind == "assignment" and s.name and s.target_type and "[]" in s.target_type}
         return [_issue(program, "InvalidAssignment", "Array variable is assigned a scalar expression.", s.line, 0.85, suggestion="Assign an array value or update one element with an index.", evidence="assignment_shape") for s in program.statements if s.kind == "assignment" and s.name in arrays and not s.metadata.get("declaration") and s.expression and not s.expression.strip().startswith("{")]
 
+    def _invalid_final_assignment(self, program: IRProgram) -> list[AnalysisIssue]:
+        final_vars = {s.name for s in program.statements if s.kind == "assignment" and s.name and s.metadata.get("declaration") and s.metadata.get("final")}
+        return [_issue(program, "InvalidAssignment", f"Final variable '{s.name}' cannot be reassigned.", s.line, 0.87, suggestion="Remove reassignment or declaration final modifier.", evidence="assignment_shape") for s in program.statements if s.kind == "assignment" and s.name in final_vars and not s.metadata.get("declaration")]
+
     def _dangling_pointer(self, program: IRProgram) -> list[AnalysisIssue]:
         if program.language != "C++":
             return []
@@ -1005,6 +1147,47 @@ class SemanticAnalyzer:
 
     def _line_too_long(self, program: IRProgram, max_len: int = 120) -> list[AnalysisIssue]:
         return [_issue(program, "LineTooLong", f"Line is {len(line)} characters long.", line_no, 0.86, suggestion=f"Keep lines under {max_len} characters.", evidence="style_line_length") for line_no, line in enumerate(program.code.splitlines(), 1) if len(line) > max_len]
+
+    def _unused_c_like_variables(self, program: IRProgram) -> list[AnalysisIssue]:
+        if program.language not in {"Java", "C", "C++", "JavaScript"}:
+            return []
+        issues: list[AnalysisIssue] = []
+        for stmt in program.statements:
+            if stmt.kind != "assignment" or not stmt.metadata.get("declaration") or not stmt.name:
+                continue
+            if stmt.name.startswith("_"):
+                continue
+            used = False
+            for other in program.statements:
+                if other is stmt:
+                    continue
+                hay = " ".join((other.raw or "", other.expression or "", other.condition or ""))
+                if re.search(rf"\b{re.escape(stmt.name)}\b", hay):
+                    used = True
+                    break
+            if not used:
+                issues.append(_issue(program, "UnusedVariable", f"Variable '{stmt.name}' is declared but never used.", stmt.line, 0.82, suggestion=f"Use '{stmt.name}' or remove the declaration.", ambiguity=0.06, evidence="symbol_usage"))
+        return issues
+
+    def _js_asi_ambiguity(self, program: IRProgram) -> list[AnalysisIssue]:
+        if program.language != "JavaScript":
+            return []
+        risky_lines: list[int] = []
+        lines = program.code.splitlines()
+        for idx, raw in enumerate(lines, 1):
+            stripped = raw.strip()
+            if not stripped or stripped.startswith("//"):
+                continue
+            if stripped.endswith((";", "{", "}")):
+                continue
+            if re.match(r"^(const|let|var)\s+[A-Za-z_]\w*\s*=", stripped):
+                risky_lines.append(idx)
+            elif re.match(r"^[A-Za-z_]\w*\s*\(", stripped):
+                risky_lines.append(idx)
+        if len(risky_lines) >= 2:
+            first = risky_lines[0]
+            return [_issue(program, "MissingDelimiter", "JavaScript statement relies on ambiguous automatic semicolon insertion.", first, 0.8, suggestion="Terminate statements explicitly with semicolons in ambiguous contexts.", ambiguity=0.12, evidence="parser_statement")]
+        return []
 
 
 def _python_value_type(node: ast.AST) -> str | None:
@@ -1092,7 +1275,17 @@ class MultiErrorAggregator:
                 deduped[key] = issue
         values = list(deduped.values())
         types = {issue.type for issue in values}
-        if "UnclosedString" in types:
+        if "UnclosedString" in types and "UnmatchedBracket" in types:
+            values = [
+                issue
+                for issue in values
+                if not (
+                    issue.type == "UnclosedString"
+                    and "eof in multi-line statement" in issue.message.lower()
+                )
+            ]
+            types = {issue.type for issue in values}
+        if "UnclosedString" in types and "UnmatchedBracket" not in types:
             values = [issue for issue in values if issue.type == "UnclosedString"]
         if "MissingInclude" in types:
             std_names = set(C_SYMBOLS) | set(CPP_SYMBOLS)

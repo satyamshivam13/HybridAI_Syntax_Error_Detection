@@ -1,22 +1,22 @@
 {
   "summary": {
     "total_cases": 240,
-    "total_pass": 211,
-    "total_fail": 29,
+    "total_pass": 234,
+    "total_fail": 6,
     "false_positives": 0,
-    "false_negatives": 17,
-    "misclassified": 12,
+    "false_negatives": 1,
+    "misclassified": 5,
     "degraded_mode_cases": 0,
     "coverage_counts": {
-      "Covered": 44,
-      "Weak": 12,
-      "Missing": 4
+      "Covered": 56,
+      "Weak": 4,
+      "Missing": 0
     },
     "scores": {
-      "accuracy": 8.79,
-      "coverage": 8.33,
-      "robustness": 7.73,
-      "production_readiness": 8.31
+      "accuracy": 9.75,
+      "coverage": 9.67,
+      "robustness": 9.69,
+      "production_readiness": 9.7
     }
   },
   "coverage": [
@@ -131,11 +131,11 @@
     {
       "language": "C++",
       "error_type": "MissingDelimiter",
-      "status": "Weak",
+      "status": "Covered",
       "positive_total": 3,
-      "positive_pass": 1,
+      "positive_pass": 3,
       "negative_pass": 1,
-      "fails": 2
+      "fails": 0
     },
     {
       "language": "C++",
@@ -230,20 +230,20 @@
     {
       "language": "Java",
       "error_type": "InvalidAssignment",
-      "status": "Weak",
+      "status": "Covered",
       "positive_total": 3,
-      "positive_pass": 1,
+      "positive_pass": 3,
       "negative_pass": 1,
-      "fails": 2
+      "fails": 0
     },
     {
       "language": "Java",
       "error_type": "LineTooLong",
       "status": "Weak",
       "positive_total": 3,
-      "positive_pass": 2,
+      "positive_pass": 1,
       "negative_pass": 1,
-      "fails": 1
+      "fails": 2
     },
     {
       "language": "Java",
@@ -302,20 +302,20 @@
     {
       "language": "Java",
       "error_type": "UnreachableCode",
+      "status": "Covered",
+      "positive_total": 3,
+      "positive_pass": 3,
+      "negative_pass": 1,
+      "fails": 0
+    },
+    {
+      "language": "Java",
+      "error_type": "UnusedVariable",
       "status": "Weak",
       "positive_total": 3,
       "positive_pass": 2,
       "negative_pass": 1,
       "fails": 1
-    },
-    {
-      "language": "Java",
-      "error_type": "UnusedVariable",
-      "status": "Missing",
-      "positive_total": 3,
-      "positive_pass": 0,
-      "negative_pass": 1,
-      "fails": 3
     },
     {
       "language": "JavaScript",
@@ -383,20 +383,20 @@
     {
       "language": "JavaScript",
       "error_type": "UnreachableCode",
-      "status": "Weak",
+      "status": "Covered",
       "positive_total": 3,
-      "positive_pass": 2,
+      "positive_pass": 3,
       "negative_pass": 1,
-      "fails": 1
+      "fails": 0
     },
     {
       "language": "Python",
       "error_type": "DanglingPointer",
-      "status": "Missing",
+      "status": "Covered",
       "positive_total": 3,
-      "positive_pass": 0,
+      "positive_pass": 3,
       "negative_pass": 1,
-      "fails": 3
+      "fails": 0
     },
     {
       "language": "Python",
@@ -419,11 +419,11 @@
     {
       "language": "Python",
       "error_type": "ImportError",
-      "status": "Weak",
+      "status": "Covered",
       "positive_total": 3,
-      "positive_pass": 2,
+      "positive_pass": 3,
       "negative_pass": 1,
-      "fails": 1
+      "fails": 0
     },
     {
       "language": "Python",
@@ -446,11 +446,11 @@
     {
       "language": "Python",
       "error_type": "InvalidAssignment",
-      "status": "Weak",
+      "status": "Covered",
       "positive_total": 3,
-      "positive_pass": 1,
+      "positive_pass": 3,
       "negative_pass": 1,
-      "fails": 2
+      "fails": 0
     },
     {
       "language": "Python",
@@ -482,11 +482,11 @@
     {
       "language": "Python",
       "error_type": "MutableDefault",
-      "status": "Weak",
+      "status": "Covered",
       "positive_total": 3,
-      "positive_pass": 2,
+      "positive_pass": 3,
       "negative_pass": 1,
-      "fails": 1
+      "fails": 0
     },
     {
       "language": "Python",
@@ -500,11 +500,11 @@
     {
       "language": "Python",
       "error_type": "TypeMismatch",
-      "status": "Weak",
+      "status": "Covered",
       "positive_total": 3,
-      "positive_pass": 2,
+      "positive_pass": 3,
       "negative_pass": 1,
-      "fails": 1
+      "fails": 0
     },
     {
       "language": "Python",
@@ -527,29 +527,29 @@
     {
       "language": "Python",
       "error_type": "UnmatchedBracket",
-      "status": "Missing",
+      "status": "Covered",
       "positive_total": 3,
-      "positive_pass": 0,
+      "positive_pass": 3,
       "negative_pass": 1,
-      "fails": 3
+      "fails": 0
     },
     {
       "language": "Python",
       "error_type": "UnreachableCode",
-      "status": "Weak",
+      "status": "Covered",
       "positive_total": 3,
-      "positive_pass": 1,
+      "positive_pass": 3,
       "negative_pass": 1,
-      "fails": 2
+      "fails": 0
     },
     {
       "language": "Python",
       "error_type": "UnusedVariable",
-      "status": "Missing",
+      "status": "Covered",
       "positive_total": 3,
-      "positive_pass": 0,
+      "positive_pass": 3,
       "negative_pass": 1,
-      "fails": 3
+      "fails": 0
     },
     {
       "language": "Python",
@@ -564,126 +564,6 @@
   "false_positives": [],
   "false_negatives": [
     {
-      "language": "Python",
-      "error_type": "MutableDefault",
-      "case_kind": "edge",
-      "expected": "MutableDefault",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "def tags(x, s=set()):\n    s.add(x)\n    return s\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "ImportError",
-      "case_kind": "edge",
-      "expected": "ImportError",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "import importlib\nmod = importlib.import_module('imaginary_pkg_123')\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "UnreachableCode",
-      "case_kind": "normal1",
-      "expected": "UnreachableCode",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "def f():\n    return 1\n    print('never')\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "UnusedVariable",
-      "case_kind": "normal1",
-      "expected": "UnusedVariable",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "def f():\n    tmp = 10\n    return 1\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "UnusedVariable",
-      "case_kind": "normal2",
-      "expected": "UnusedVariable",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "x = 3\ny = 4\nprint(x)\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "TypeMismatch",
-      "case_kind": "edge",
-      "expected": "TypeMismatch",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "items: list[int] = ['a']\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "DanglingPointer",
-      "case_kind": "normal1",
-      "expected": "DanglingPointer",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "import ctypes\n\ndef bad_ptr():\n    value = ctypes.c_int(10)\n    return ctypes.pointer(value)\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "DanglingPointer",
-      "case_kind": "normal2",
-      "expected": "DanglingPointer",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "import ctypes\n\nbuf = ctypes.c_int(3)\nptr = ctypes.pointer(buf)\nprint(ptr.contents.value)\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "DanglingPointer",
-      "case_kind": "edge",
-      "expected": "DanglingPointer",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "import ctypes\n\ndef g():\n    local = ctypes.c_int(5)\n    p = ctypes.pointer(local)\n    return p\n"
-    },
-    {
-      "language": "Java",
-      "error_type": "UnreachableCode",
-      "case_kind": "normal2",
-      "expected": "UnreachableCode",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "public class Main {\n    static void f() {\n        throw new RuntimeException();\n        System.out.println(1);\n    }\n}\n"
-    },
-    {
       "language": "Java",
       "error_type": "ImportError",
       "case_kind": "normal2",
@@ -694,128 +574,14 @@
       "degraded_mode": false,
       "warnings": [],
       "code": "import java.util.DoesNotExist;\npublic class Main { public static void main(String[] args) {} }\n"
-    },
-    {
-      "language": "Java",
-      "error_type": "InvalidAssignment",
-      "case_kind": "normal1",
-      "expected": "InvalidAssignment",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "public class Main {\n    public static void main(String[] args) {\n        final int x = 1;\n        x = 2;\n    }\n}\n"
-    },
-    {
-      "language": "Java",
-      "error_type": "InvalidAssignment",
-      "case_kind": "normal2",
-      "expected": "InvalidAssignment",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "public class Main {\n    public static void main(String[] args) {\n        5 = 3;\n    }\n}\n"
-    },
-    {
-      "language": "Java",
-      "error_type": "UnusedVariable",
-      "case_kind": "normal1",
-      "expected": "UnusedVariable",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "public class Main {\n    public static void main(String[] args) {\n        int temp = 1;\n        System.out.println(\"ok\");\n    }\n}\n"
-    },
-    {
-      "language": "Java",
-      "error_type": "UnusedVariable",
-      "case_kind": "normal2",
-      "expected": "UnusedVariable",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "public class Main {\n    public static void main(String[] args) {\n        String name = \"x\";\n    }\n}\n"
-    },
-    {
-      "language": "C++",
-      "error_type": "MissingDelimiter",
-      "case_kind": "normal2",
-      "expected": "MissingDelimiter",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "#include <iostream>\nint main() {\n    std::cout << 1\n    return 0;\n}\n"
-    },
-    {
-      "language": "C++",
-      "error_type": "MissingDelimiter",
-      "case_kind": "edge",
-      "expected": "MissingDelimiter",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "#include <iostream>\nint main() {\n    int x = 1 std::cout << x;\n    return 0;\n}\n"
     }
   ],
   "misclassified": [
     {
       "language": "Python",
-      "error_type": "UnmatchedBracket",
+      "error_type": "UndeclaredIdentifier",
       "case_kind": "normal1",
-      "expected": "UnmatchedBracket",
-      "predicted": "UnclosedString",
-      "pass": false,
-      "rule_types": [
-        "UnclosedString"
-      ],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "items = [1, 2, 3\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "UnmatchedBracket",
-      "case_kind": "normal2",
-      "expected": "UnmatchedBracket",
-      "predicted": "UnclosedString",
-      "pass": false,
-      "rule_types": [
-        "UnclosedString"
-      ],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "print((1 + 2]\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "UnmatchedBracket",
-      "case_kind": "edge",
-      "expected": "UnmatchedBracket",
-      "predicted": "UnclosedString",
-      "pass": false,
-      "rule_types": [
-        "UnclosedString"
-      ],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "config = {'a': 1, 'b': (2, 3}\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "UnreachableCode",
-      "case_kind": "edge",
-      "expected": "UnreachableCode",
+      "expected": "UndeclaredIdentifier",
       "predicted": "NameError",
       "pass": false,
       "rule_types": [
@@ -823,21 +589,7 @@
       ],
       "degraded_mode": false,
       "warnings": [],
-      "code": "def h():\n    for i in range(1):\n        break\n        print(i)\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "UnusedVariable",
-      "case_kind": "edge",
-      "expected": "UnusedVariable",
-      "predicted": "NameError",
-      "pass": false,
-      "rule_types": [
-        "NameError"
-      ],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "for i in range(3):\n    shadow = i\nprint('done')\n"
+      "code": "def calc():\n    return missing_value + 1\n"
     },
     {
       "language": "Python",
@@ -854,48 +606,6 @@
       "code": "print(user_name)\n"
     },
     {
-      "language": "Python",
-      "error_type": "UndeclaredIdentifier",
-      "case_kind": "edge",
-      "expected": "UndeclaredIdentifier",
-      "predicted": "NameError",
-      "pass": false,
-      "rule_types": [
-        "NameError"
-      ],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "class S:\n    def m(self):\n        return not_defined_here\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "InvalidAssignment",
-      "case_kind": "normal1",
-      "expected": "InvalidAssignment",
-      "predicted": "SyntaxError",
-      "pass": false,
-      "rule_types": [
-        "SyntaxError"
-      ],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "a + b = 3\n"
-    },
-    {
-      "language": "Python",
-      "error_type": "InvalidAssignment",
-      "case_kind": "normal2",
-      "expected": "InvalidAssignment",
-      "predicted": "SyntaxError",
-      "pass": false,
-      "rule_types": [
-        "SyntaxError"
-      ],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "1 = x\n"
-    },
-    {
       "language": "Java",
       "error_type": "LineTooLong",
       "case_kind": "normal2",
@@ -904,11 +614,27 @@
       "pass": false,
       "rule_types": [
         "LineTooLong",
-        "UnmatchedBracket"
+        "UnmatchedBracket",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
       "code": "public class Main { public static void main(String[] args) { int x = 1; // aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa } }\n"
+    },
+    {
+      "language": "Java",
+      "error_type": "LineTooLong",
+      "case_kind": "edge",
+      "expected": "LineTooLong",
+      "predicted": "UnusedVariable",
+      "pass": false,
+      "rule_types": [
+        "LineTooLong",
+        "UnusedVariable"
+      ],
+      "degraded_mode": false,
+      "warnings": [],
+      "code": "public class Main { public static void main(String[] args) { String q = \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\" + \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"; } }\n"
     },
     {
       "language": "Java",
@@ -923,20 +649,6 @@
       "degraded_mode": false,
       "warnings": [],
       "code": "public class Main {\n    public static void main(String[] args) {\n        int i = 0;\n        while (i < 1) { break; }\n    }\n}\n"
-    },
-    {
-      "language": "JavaScript",
-      "error_type": "UnreachableCode",
-      "case_kind": "normal2",
-      "expected": "UnreachableCode",
-      "predicted": "DuplicateDefinition",
-      "pass": false,
-      "rule_types": [
-        "DuplicateDefinition"
-      ],
-      "degraded_mode": false,
-      "warnings": [],
-      "code": "function g() {\n  throw new Error('x');\n  let y = 1;\n}\n"
     }
   ],
   "records": [
@@ -1108,10 +820,11 @@
       "error_type": "UnmatchedBracket",
       "case_kind": "normal1",
       "expected": "UnmatchedBracket",
-      "predicted": "UnclosedString",
-      "pass": false,
+      "predicted": "UnmatchedBracket",
+      "pass": true,
       "rule_types": [
-        "UnclosedString"
+        "SyntaxError",
+        "UnmatchedBracket"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1122,10 +835,10 @@
       "error_type": "UnmatchedBracket",
       "case_kind": "normal2",
       "expected": "UnmatchedBracket",
-      "predicted": "UnclosedString",
-      "pass": false,
+      "predicted": "UnmatchedBracket",
+      "pass": true,
       "rule_types": [
-        "UnclosedString"
+        "UnmatchedBracket"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1136,10 +849,10 @@
       "error_type": "UnmatchedBracket",
       "case_kind": "edge",
       "expected": "UnmatchedBracket",
-      "predicted": "UnclosedString",
-      "pass": false,
+      "predicted": "UnmatchedBracket",
+      "pass": true,
       "rule_types": [
-        "UnclosedString"
+        "UnmatchedBracket"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1165,6 +878,7 @@
       "predicted": "WildcardImport",
       "pass": true,
       "rule_types": [
+        "UnusedVariable",
         "WildcardImport"
       ],
       "degraded_mode": false,
@@ -1179,6 +893,7 @@
       "predicted": "WildcardImport",
       "pass": true,
       "rule_types": [
+        "UnusedVariable",
         "WildcardImport"
       ],
       "degraded_mode": false,
@@ -1193,6 +908,7 @@
       "predicted": "WildcardImport",
       "pass": true,
       "rule_types": [
+        "UnusedVariable",
         "WildcardImport"
       ],
       "degraded_mode": false,
@@ -1244,9 +960,11 @@
       "error_type": "MutableDefault",
       "case_kind": "edge",
       "expected": "MutableDefault",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "MutableDefault",
+      "pass": true,
+      "rule_types": [
+        "MutableDefault"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "def tags(x, s=set()):\n    s.add(x)\n    return s\n"
@@ -1285,7 +1003,8 @@
       "predicted": "NameError",
       "pass": true,
       "rule_types": [
-        "NameError"
+        "NameError",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1299,7 +1018,8 @@
       "predicted": "NameError",
       "pass": true,
       "rule_types": [
-        "NameError"
+        "NameError",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1325,7 +1045,8 @@
       "predicted": "DivisionByZero",
       "pass": true,
       "rule_types": [
-        "DivisionByZero"
+        "DivisionByZero",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1339,7 +1060,8 @@
       "predicted": "DivisionByZero",
       "pass": true,
       "rule_types": [
-        "DivisionByZero"
+        "DivisionByZero",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1404,9 +1126,12 @@
       "error_type": "ImportError",
       "case_kind": "edge",
       "expected": "ImportError",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "ImportError",
+      "pass": true,
+      "rule_types": [
+        "ImportError",
+        "UnusedVariable"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "import importlib\nmod = importlib.import_module('imaginary_pkg_123')\n"
@@ -1445,7 +1170,8 @@
       "predicted": "MissingImport",
       "pass": true,
       "rule_types": [
-        "MissingImport"
+        "MissingImport",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1459,7 +1185,8 @@
       "predicted": "MissingImport",
       "pass": true,
       "rule_types": [
-        "MissingImport"
+        "MissingImport",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1513,7 +1240,8 @@
       "predicted": "InfiniteLoop",
       "pass": true,
       "rule_types": [
-        "InfiniteLoop"
+        "InfiniteLoop",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1536,9 +1264,11 @@
       "error_type": "UnreachableCode",
       "case_kind": "normal1",
       "expected": "UnreachableCode",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "UnreachableCode",
+      "pass": true,
+      "rule_types": [
+        "UnreachableCode"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "def f():\n    return 1\n    print('never')\n"
@@ -1562,10 +1292,10 @@
       "error_type": "UnreachableCode",
       "case_kind": "edge",
       "expected": "UnreachableCode",
-      "predicted": "NameError",
-      "pass": false,
+      "predicted": "UnreachableCode",
+      "pass": true,
       "rule_types": [
-        "NameError"
+        "UnreachableCode"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1591,8 +1321,7 @@
       "predicted": "DuplicateDefinition",
       "pass": true,
       "rule_types": [
-        "DuplicateDefinition",
-        "UnreachableCode"
+        "DuplicateDefinition"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1620,8 +1349,7 @@
       "predicted": "DuplicateDefinition",
       "pass": true,
       "rule_types": [
-        "DuplicateDefinition",
-        "UnreachableCode"
+        "DuplicateDefinition"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1644,9 +1372,11 @@
       "error_type": "UnusedVariable",
       "case_kind": "normal1",
       "expected": "UnusedVariable",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "UnusedVariable",
+      "pass": true,
+      "rule_types": [
+        "UnusedVariable"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "def f():\n    tmp = 10\n    return 1\n"
@@ -1656,9 +1386,11 @@
       "error_type": "UnusedVariable",
       "case_kind": "normal2",
       "expected": "UnusedVariable",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "UnusedVariable",
+      "pass": true,
+      "rule_types": [
+        "UnusedVariable"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "x = 3\ny = 4\nprint(x)\n"
@@ -1668,10 +1400,10 @@
       "error_type": "UnusedVariable",
       "case_kind": "edge",
       "expected": "UnusedVariable",
-      "predicted": "NameError",
-      "pass": false,
+      "predicted": "UnusedVariable",
+      "pass": true,
       "rule_types": [
-        "NameError"
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1776,9 +1508,12 @@
       "error_type": "TypeMismatch",
       "case_kind": "edge",
       "expected": "TypeMismatch",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "TypeMismatch",
+      "pass": true,
+      "rule_types": [
+        "TypeMismatch",
+        "UnusedVariable"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "items: list[int] = ['a']\n"
@@ -1800,10 +1535,10 @@
       "error_type": "UndeclaredIdentifier",
       "case_kind": "normal1",
       "expected": "UndeclaredIdentifier",
-      "predicted": "UndeclaredIdentifier",
-      "pass": true,
+      "predicted": "NameError",
+      "pass": false,
       "rule_types": [
-        "UndeclaredIdentifier"
+        "NameError"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1828,10 +1563,10 @@
       "error_type": "UndeclaredIdentifier",
       "case_kind": "edge",
       "expected": "UndeclaredIdentifier",
-      "predicted": "NameError",
-      "pass": false,
+      "predicted": "UndeclaredIdentifier",
+      "pass": true,
       "rule_types": [
-        "NameError"
+        "UndeclaredIdentifier"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1854,9 +1589,11 @@
       "error_type": "DanglingPointer",
       "case_kind": "normal1",
       "expected": "DanglingPointer",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "DanglingPointer",
+      "pass": true,
+      "rule_types": [
+        "DanglingPointer"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "import ctypes\n\ndef bad_ptr():\n    value = ctypes.c_int(10)\n    return ctypes.pointer(value)\n"
@@ -1866,9 +1603,11 @@
       "error_type": "DanglingPointer",
       "case_kind": "normal2",
       "expected": "DanglingPointer",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "DanglingPointer",
+      "pass": true,
+      "rule_types": [
+        "DanglingPointer"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "import ctypes\n\nbuf = ctypes.c_int(3)\nptr = ctypes.pointer(buf)\nprint(ptr.contents.value)\n"
@@ -1878,9 +1617,11 @@
       "error_type": "DanglingPointer",
       "case_kind": "edge",
       "expected": "DanglingPointer",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "DanglingPointer",
+      "pass": true,
+      "rule_types": [
+        "DanglingPointer"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "import ctypes\n\ndef g():\n    local = ctypes.c_int(5)\n    p = ctypes.pointer(local)\n    return p\n"
@@ -1902,9 +1643,10 @@
       "error_type": "InvalidAssignment",
       "case_kind": "normal1",
       "expected": "InvalidAssignment",
-      "predicted": "SyntaxError",
-      "pass": false,
+      "predicted": "InvalidAssignment",
+      "pass": true,
       "rule_types": [
+        "InvalidAssignment",
         "SyntaxError"
       ],
       "degraded_mode": false,
@@ -1916,9 +1658,10 @@
       "error_type": "InvalidAssignment",
       "case_kind": "normal2",
       "expected": "InvalidAssignment",
-      "predicted": "SyntaxError",
-      "pass": false,
+      "predicted": "InvalidAssignment",
+      "pass": true,
       "rule_types": [
+        "InvalidAssignment",
         "SyntaxError"
       ],
       "degraded_mode": false,
@@ -1933,7 +1676,8 @@
       "predicted": "InvalidAssignment",
       "pass": true,
       "rule_types": [
-        "InvalidAssignment"
+        "InvalidAssignment",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -1959,7 +1703,8 @@
       "predicted": "MissingDelimiter",
       "pass": true,
       "rule_types": [
-        "MissingDelimiter"
+        "MissingDelimiter",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2123,7 +1868,8 @@
       "predicted": "MissingImport",
       "pass": true,
       "rule_types": [
-        "MissingImport"
+        "MissingImport",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2137,7 +1883,8 @@
       "predicted": "MissingImport",
       "pass": true,
       "rule_types": [
-        "MissingImport"
+        "MissingImport",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2178,7 +1925,8 @@
       "predicted": "TypeMismatch",
       "pass": true,
       "rule_types": [
-        "TypeMismatch"
+        "TypeMismatch",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2192,7 +1940,8 @@
       "predicted": "TypeMismatch",
       "pass": true,
       "rule_types": [
-        "TypeMismatch"
+        "TypeMismatch",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2206,7 +1955,8 @@
       "predicted": "TypeMismatch",
       "pass": true,
       "rule_types": [
-        "TypeMismatch"
+        "TypeMismatch",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2246,7 +1996,8 @@
       "predicted": "UndeclaredIdentifier",
       "pass": true,
       "rule_types": [
-        "UndeclaredIdentifier"
+        "UndeclaredIdentifier",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2286,7 +2037,8 @@
       "predicted": "DivisionByZero",
       "pass": true,
       "rule_types": [
-        "DivisionByZero"
+        "DivisionByZero",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2300,7 +2052,8 @@
       "predicted": "DivisionByZero",
       "pass": true,
       "rule_types": [
-        "DivisionByZero"
+        "DivisionByZero",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2314,7 +2067,8 @@
       "predicted": "DivisionByZero",
       "pass": true,
       "rule_types": [
-        "DivisionByZero"
+        "DivisionByZero",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2394,7 +2148,8 @@
       "predicted": "UnreachableCode",
       "pass": true,
       "rule_types": [
-        "UnreachableCode"
+        "UnreachableCode",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2405,9 +2160,11 @@
       "error_type": "UnreachableCode",
       "case_kind": "normal2",
       "expected": "UnreachableCode",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "UnreachableCode",
+      "pass": true,
+      "rule_types": [
+        "UnreachableCode"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "public class Main {\n    static void f() {\n        throw new RuntimeException();\n        System.out.println(1);\n    }\n}\n"
@@ -2421,7 +2178,8 @@
       "pass": true,
       "rule_types": [
         "InfiniteLoop",
-        "UnreachableCode"
+        "UnreachableCode",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2498,9 +2256,11 @@
       "error_type": "InvalidAssignment",
       "case_kind": "normal1",
       "expected": "InvalidAssignment",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "InvalidAssignment",
+      "pass": true,
+      "rule_types": [
+        "InvalidAssignment"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "public class Main {\n    public static void main(String[] args) {\n        final int x = 1;\n        x = 2;\n    }\n}\n"
@@ -2510,9 +2270,11 @@
       "error_type": "InvalidAssignment",
       "case_kind": "normal2",
       "expected": "InvalidAssignment",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "InvalidAssignment",
+      "pass": true,
+      "rule_types": [
+        "InvalidAssignment"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "public class Main {\n    public static void main(String[] args) {\n        5 = 3;\n    }\n}\n"
@@ -2566,7 +2328,8 @@
       "pass": false,
       "rule_types": [
         "LineTooLong",
-        "UnmatchedBracket"
+        "UnmatchedBracket",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2577,10 +2340,11 @@
       "error_type": "LineTooLong",
       "case_kind": "edge",
       "expected": "LineTooLong",
-      "predicted": "LineTooLong",
-      "pass": true,
+      "predicted": "UnusedVariable",
+      "pass": false,
       "rule_types": [
-        "LineTooLong"
+        "LineTooLong",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2657,9 +2421,11 @@
       "error_type": "UnusedVariable",
       "case_kind": "normal1",
       "expected": "UnusedVariable",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "UnusedVariable",
+      "pass": true,
+      "rule_types": [
+        "UnusedVariable"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "public class Main {\n    public static void main(String[] args) {\n        int temp = 1;\n        System.out.println(\"ok\");\n    }\n}\n"
@@ -2669,9 +2435,11 @@
       "error_type": "UnusedVariable",
       "case_kind": "normal2",
       "expected": "UnusedVariable",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "UnusedVariable",
+      "pass": true,
+      "rule_types": [
+        "UnusedVariable"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "public class Main {\n    public static void main(String[] args) {\n        String name = \"x\";\n    }\n}\n"
@@ -2710,7 +2478,8 @@
       "predicted": "MissingDelimiter",
       "pass": true,
       "rule_types": [
-        "MissingDelimiter"
+        "MissingDelimiter",
+        "UndeclaredIdentifier"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2819,7 +2588,8 @@
       "predicted": "UnmatchedBracket",
       "pass": true,
       "rule_types": [
-        "UnmatchedBracket"
+        "UnmatchedBracket",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2929,7 +2699,8 @@
       "predicted": "TypeMismatch",
       "pass": true,
       "rule_types": [
-        "TypeMismatch"
+        "TypeMismatch",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2943,7 +2714,8 @@
       "predicted": "TypeMismatch",
       "pass": true,
       "rule_types": [
-        "TypeMismatch"
+        "TypeMismatch",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -2957,7 +2729,8 @@
       "predicted": "TypeMismatch",
       "pass": true,
       "rule_types": [
-        "TypeMismatch"
+        "TypeMismatch",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3145,7 +2918,8 @@
       "predicted": "UnreachableCode",
       "pass": true,
       "rule_types": [
-        "UnreachableCode"
+        "UnreachableCode",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3159,7 +2933,8 @@
       "predicted": "UnreachableCode",
       "pass": true,
       "rule_types": [
-        "UnreachableCode"
+        "UnreachableCode",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3174,7 +2949,8 @@
       "pass": true,
       "rule_types": [
         "InfiniteLoop",
-        "UnreachableCode"
+        "UnreachableCode",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3200,7 +2976,8 @@
       "predicted": "MissingDelimiter",
       "pass": true,
       "rule_types": [
-        "MissingDelimiter"
+        "MissingDelimiter",
+        "UndeclaredIdentifier"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3211,9 +2988,11 @@
       "error_type": "MissingDelimiter",
       "case_kind": "normal2",
       "expected": "MissingDelimiter",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "MissingDelimiter",
+      "pass": true,
+      "rule_types": [
+        "MissingDelimiter"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "#include <iostream>\nint main() {\n    std::cout << 1\n    return 0;\n}\n"
@@ -3223,9 +3002,12 @@
       "error_type": "MissingDelimiter",
       "case_kind": "edge",
       "expected": "MissingDelimiter",
-      "predicted": "NoError",
-      "pass": false,
-      "rule_types": [],
+      "predicted": "MissingDelimiter",
+      "pass": true,
+      "rule_types": [
+        "MissingDelimiter",
+        "UndeclaredIdentifier"
+      ],
       "degraded_mode": false,
       "warnings": [],
       "code": "#include <iostream>\nint main() {\n    int x = 1 std::cout << x;\n    return 0;\n}\n"
@@ -3304,7 +3086,8 @@
       "predicted": "UnmatchedBracket",
       "pass": true,
       "rule_types": [
-        "UnmatchedBracket"
+        "UnmatchedBracket",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3413,7 +3196,8 @@
       "predicted": "TypeMismatch",
       "pass": true,
       "rule_types": [
-        "TypeMismatch"
+        "TypeMismatch",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3427,7 +3211,8 @@
       "predicted": "TypeMismatch",
       "pass": true,
       "rule_types": [
-        "TypeMismatch"
+        "TypeMismatch",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3441,7 +3226,8 @@
       "predicted": "TypeMismatch",
       "pass": true,
       "rule_types": [
-        "TypeMismatch"
+        "TypeMismatch",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3683,7 +3469,8 @@
       "predicted": "UnreachableCode",
       "pass": true,
       "rule_types": [
-        "UnreachableCode"
+        "UnreachableCode",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3697,7 +3484,8 @@
       "predicted": "UnreachableCode",
       "pass": true,
       "rule_types": [
-        "UnreachableCode"
+        "UnreachableCode",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3712,7 +3500,8 @@
       "pass": true,
       "rule_types": [
         "InfiniteLoop",
-        "UnreachableCode"
+        "UnreachableCode",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3876,7 +3665,8 @@
       "predicted": "UnmatchedBracket",
       "pass": true,
       "rule_types": [
-        "UnmatchedBracket"
+        "UnmatchedBracket",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -3916,7 +3706,8 @@
       "predicted": "UndeclaredIdentifier",
       "pass": true,
       "rule_types": [
-        "UndeclaredIdentifier"
+        "UndeclaredIdentifier",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -4010,7 +3801,8 @@
       "predicted": "DivisionByZero",
       "pass": true,
       "rule_types": [
-        "DivisionByZero"
+        "DivisionByZero",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -4024,7 +3816,8 @@
       "predicted": "DivisionByZero",
       "pass": true,
       "rule_types": [
-        "DivisionByZero"
+        "DivisionByZero",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -4038,7 +3831,8 @@
       "predicted": "DivisionByZero",
       "pass": true,
       "rule_types": [
-        "DivisionByZero"
+        "DivisionByZero",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -4129,10 +3923,11 @@
       "error_type": "UnreachableCode",
       "case_kind": "normal2",
       "expected": "UnreachableCode",
-      "predicted": "DuplicateDefinition",
-      "pass": false,
+      "predicted": "UnreachableCode",
+      "pass": true,
       "rule_types": [
-        "DuplicateDefinition"
+        "UnreachableCode",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
@@ -4147,7 +3942,8 @@
       "pass": true,
       "rule_types": [
         "InfiniteLoop",
-        "UnreachableCode"
+        "UnreachableCode",
+        "UnusedVariable"
       ],
       "degraded_mode": false,
       "warnings": [],
