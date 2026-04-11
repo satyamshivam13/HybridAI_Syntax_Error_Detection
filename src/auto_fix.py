@@ -73,6 +73,24 @@ class AutoFixer:
         self.fixes_applied.append("Standardized indentation to 4 spaces")
         return '\n'.join(fixed_lines)
     
+    def suggest_indentation_fix(self, line_num: int | None = None) -> None:
+        """
+        Keep indentation fixes suggestion-only to avoid accidental block rewrites.
+        """
+        location = f"line {line_num + 1}" if line_num is not None and line_num >= 0 else "the reported line"
+        self.fixes_applied.append(
+            f"Suggestion-only: check indentation at {location}; align with the parent block using 4 spaces (no tabs)."
+        )
+
+    def suggest_unclosed_string_fix(self, line_num: int | None = None) -> None:
+        """
+        Keep unclosed-string fixes suggestion-only to avoid inserting the wrong quote.
+        """
+        location = f"line {line_num + 1}" if line_num is not None and line_num >= 0 else "the reported line"
+        self.fixes_applied.append(
+            f"Suggestion-only: close the string literal at {location} by adding the matching quote before end-of-line."
+        )
+
     def fix_unmatched_brackets(self, code: str) -> str:
         """
         Balance brackets/parentheses/braces
@@ -286,13 +304,13 @@ class AutoFixer:
                 fixed_code = self.fix_missing_semicolon(code, line_num)
             
             elif error_type == "IndentationError":
-                fixed_code = self.fix_indentation(code)
+                self.suggest_indentation_fix(line_num)
             
             elif error_type == "UnmatchedBracket":
                 fixed_code = self.fix_unmatched_brackets(code)
             
             elif error_type in ["UnclosedQuotes", "UnclosedString"]:
-                fixed_code = self.fix_unclosed_quotes(code)
+                self.suggest_unclosed_string_fix(line_num)
             
             # New auto-fix support
             elif error_type == "MissingImport":

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 
+from src.auto_fix import AutoFixer
 from src.error_engine import detect_errors
 
 
@@ -167,3 +168,22 @@ def test_error_and_repair_matrix(case: dict[str, str]):
         f"{case['id']} repaired-code mismatch: expected NoError, "
         f"got {repaired_result['predicted_error']}"
     )
+
+
+
+def test_suggestion_only_autofix_preserves_indentation_error_snippet():
+    fixer = AutoFixer()
+    code = "def test():\nprint('x')\n"
+    result = fixer.apply_fixes(code, "IndentationError", 1, "Python")
+    assert result["success"] is True
+    assert result["fixed_code"] == code
+    assert any("Suggestion-only" in change for change in result["changes"])
+
+
+def test_suggestion_only_autofix_preserves_unclosed_string_snippet():
+    fixer = AutoFixer()
+    code = "name = \"Asha\nprint(name)\n"
+    result = fixer.apply_fixes(code, "UnclosedString", 0, "Python")
+    assert result["success"] is True
+    assert result["fixed_code"] == code
+    assert any("Suggestion-only" in change for change in result["changes"])

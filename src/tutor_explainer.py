@@ -8,16 +8,16 @@ EXPLANATIONS = {
         "fix": "Add the correct delimiter for your language (':' for Python control/def lines, ';' for C/C++/Java statements)."
     },
     "IndentationError": {
-        "why": "Python uses indentation to define code blocks. Inconsistent indentation causes errors.",
-        "fix": "Indent the statement correctly (use 4 spaces per indentation level). Avoid mixing tabs and spaces."
+        "why": "Python uses indentation to define code blocks, so one misaligned line can break the whole block.",
+        "fix": "Go to the flagged line and align it with the surrounding block using 4 spaces per level; do not mix tabs and spaces."
     },
     "UnclosedString": {
-        "why": "A string literal was started but not properly closed with a matching quote.",
-        "fix": "Add the missing closing quote (' or \") to properly terminate the string."
+        "why": "A string literal was opened but not closed before the line or file ended.",
+        "fix": "On the flagged line, add the matching closing quote before the end of the statement."
     },
     "UnclosedQuotes": {
-        "why": "A string literal was started but not properly closed with a matching quote.",
-        "fix": "Add the missing closing quote (' or \") to properly terminate the string."
+        "why": "A string literal was opened but not closed before the line or file ended.",
+        "fix": "On the flagged line, add the matching closing quote before the end of the statement."
     },
     "UnmatchedBracket": {
         "why": "Every opening bracket '{', '(', '[' must have a matching closing bracket '}', ')', ']'.",

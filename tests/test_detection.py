@@ -216,6 +216,24 @@ class TestAutoFixer(unittest.TestCase):
         self.assertIn('success', result)
 
 
+    def test_indentation_error_fix_is_suggestion_only_and_location_aware(self):
+        code = "def test():\nprint('hi')"
+        result = self.fixer.apply_fixes(code, "IndentationError", 1, "Python")
+        self.assertTrue(result['success'])
+        self.assertEqual(result['fixed_code'], code)
+        self.assertTrue(any("Suggestion-only" in change for change in result['changes']))
+        self.assertTrue(any("line 2" in change for change in result['changes']))
+
+    def test_unclosed_string_fix_is_suggestion_only_and_location_aware(self):
+        code = "name = \"Asha\nprint(name)"
+        result = self.fixer.apply_fixes(code, "UnclosedString", 0, "Python")
+        self.assertTrue(result['success'])
+        self.assertEqual(result['fixed_code'], code)
+        self.assertTrue(any("Suggestion-only" in change for change in result['changes']))
+        self.assertTrue(any("line 1" in change for change in result['changes']))
+
+
+
 # ==============================================================
 # 5. Quality Analyzer Tests
 # ==============================================================
