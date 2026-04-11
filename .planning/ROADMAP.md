@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Cross-Language Reliability** — Phases 1–5 (shipped 2026-03-27) — [archive](milestones/v1.0-ROADMAP.md)
-- 📋 **v1.1** — Planned (run `$gsd-new-milestone` to define)
+- 📋 **v1.1 Reliability Refinement** — Planned
 
 ## Phases
 
@@ -20,7 +20,12 @@
 
 ### 📋 v1.1 (Planned)
 
-*No phases defined yet. Run `$gsd-new-milestone` to start requirements and planning.*
+<details>
+<summary>📋 v1.1 Reliability Refinement (Phase 6) — Planned</summary>
+
+- [ ] Phase 6: Python and Java Reliability Refinement
+
+</details>
 
 ## Progress
 
@@ -31,3 +36,4 @@
 | 3. Runtime Health and ML Recovery | v1.0 | 3/3 | ✅ Complete | 2026-03-27 |
 | 4. QA Hardening and Release Readiness | v1.0 | 2/2 | ✅ Complete | 2026-03-27 |
 | 5. Cross-Language Reliability Hardening | v1.0 | 4/4 | ✅ Complete | 2026-03-27 |
+| 6. Python and Java Reliability Refinement | v1.1 | 0/3 | 📋 Planned | — |

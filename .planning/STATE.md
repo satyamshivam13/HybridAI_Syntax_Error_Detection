@@ -18,17 +18,17 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-03-27)
+See: `.planning/PROJECT.md` (updated 2026-04-11)
 
 **Core value:** Students should get accurate, actionable code-error feedback even when the ML layer is unavailable.
-**Current focus:** Planning next milestone (v1.1)
+**Current focus:** Planning v1.1 reliability refinement
 
 ## Current Position
 
-Milestone v1.0 — Cross-Language Reliability: COMPLETE ✅
-All Phases: 5 of 5 completed | All Plans: 10 of 10 completed
-Status: v1.0 archived; ready to begin v1.1 planning
-Last activity: 2026-03-27 -- v1.0 milestone archived
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-04-11 — Milestone v1.1 started
 
 Progress: [██████████] 100%
 
@@ -64,6 +64,7 @@ Recent decisions affecting current work:
 ### Roadmap Evolution
 
 - Phase 5 added: Cross-Language Reliability Hardening
+- v1.1 milestone started: Reliability Refinement
 
 ### Pending Todos
 

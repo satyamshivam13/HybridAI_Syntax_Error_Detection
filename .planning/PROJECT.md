@@ -25,7 +25,17 @@ Students should get accurate, actionable code-error feedback even when the ML la
 
 ### Active
 
-*No active requirements yet — define via `$gsd-new-milestone` for v1.1.*
+- v1.1 focuses on closing the remaining reliability gaps in Python and Java.
+- v1.1 should preserve the v1.0 entry-point parity and degraded-mode guarantees while tightening regression coverage around the known gaps.
+
+## Current Milestone: v1.1 Reliability Refinement
+
+**Goal:** Close the known Python and Java reliability gaps without regressing the shared API, CLI, and Streamlit contracts.
+
+**Target features:**
+- Python `--all-errors` should preserve semantic ML handling when appropriate.
+- Autofix behavior for `IndentationError` and `UnclosedString` should be more precise.
+- Java should avoid the known false-positive `UndeclaredIdentifier` alongside `TypeMismatch`.
 
 ### Out of Scope
 
@@ -41,6 +51,8 @@ OmniSyntax v1.0 shipped a hardened hybrid analysis pipeline for educational use 
 - **Rule-based coverage**: 11+ patterns for C/Java/JavaScript covering syntax, semantic, and runtime error classes.
 - **Entry-point parity**: CLI, API, and Streamlit now share warning payloads and consistent label/column output.
 - **Test coverage**: 153 automated tests including API regressions, C/Java/JavaScript-specific regressions, and 13 smoke tests.
+
+v1.1 continues from that baseline by tightening the remaining semantic and autofix edge cases while preserving the entry-point parity established in v1.0.
 
 **Known gaps at v1.0:**
 - `--all-errors` mode skips ML for Python semantic errors
@@ -68,6 +80,23 @@ OmniSyntax v1.0 shipped a hardened hybrid analysis pipeline for educational use 
 | Pin scikit-learn==1.7.2 to match the bundle metadata contract | Prevents silent model incompatibility; degraded mode handles drift | ✓ Good |
 | Accept auto-fix imprecision for IndentationError and UnclosedString | Precise rewriting is high-risk; suggestion-based fix is safer and still useful | ⚠️ Revisit |
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
-*Last updated: 2026-03-27 after v1.0 milestone*
+*Last updated: 2026-04-11 after v1.1 milestone start*
 
