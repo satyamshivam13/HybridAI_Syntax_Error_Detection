@@ -1155,6 +1155,8 @@ class SemanticAnalyzer:
         for stmt in program.statements:
             if stmt.kind != "assignment" or not stmt.metadata.get("declaration") or not stmt.name:
                 continue
+            if program.language in {"Java", "JavaScript"} and stmt.scope_depth > 0:
+                continue
             if stmt.name.startswith("_"):
                 continue
             used = False
@@ -1172,20 +1174,33 @@ class SemanticAnalyzer:
     def _js_asi_ambiguity(self, program: IRProgram) -> list[AnalysisIssue]:
         if program.language != "JavaScript":
             return []
-        risky_lines: list[int] = []
         lines = program.code.splitlines()
-        for idx, raw in enumerate(lines, 1):
-            stripped = raw.strip()
-            if not stripped or stripped.startswith("//"):
+        top_level_risky: list[int] = []
+        for idx in range(1, len(lines)):
+            prev_raw = lines[idx - 1]
+            curr_raw = lines[idx]
+            prev = prev_raw.strip()
+            curr = curr_raw.strip()
+            if not prev or not curr or prev.startswith("//") or curr.startswith("//"):
                 continue
-            if stripped.endswith((";", "{", "}")):
+            if prev.endswith((";", "{", "}", ",", ":")):
                 continue
-            if re.match(r"^(const|let|var)\s+[A-Za-z_]\w*\s*=", stripped):
-                risky_lines.append(idx)
-            elif re.match(r"^[A-Za-z_]\w*\s*\(", stripped):
-                risky_lines.append(idx)
-        if len(risky_lines) >= 2:
-            first = risky_lines[0]
+
+            # Track top-level statement chains without delimiters (ASI-prone).
+            if prev_raw == prev_raw.lstrip() and curr_raw == curr_raw.lstrip():
+                if re.match(r"^(const|let|var)\s+[A-Za-z_]\w*\s*=", prev):
+                    top_level_risky.append(idx)
+                elif re.match(r"^[A-Za-z_][\w.]*\s*\(", prev):
+                    top_level_risky.append(idx)
+
+            # Restrict ASI warnings to high-confidence hazard boundaries.
+            if re.match(r"^(return|throw|break|continue)\b", prev):
+                return [_issue(program, "MissingDelimiter", "JavaScript statement relies on ambiguous automatic semicolon insertion.", idx, 0.8, suggestion="Terminate statements explicitly with semicolons in ambiguous contexts.", ambiguity=0.12, evidence="parser_statement")]
+            if curr[:1] in {"(", "[", "+", "-", "/", "."}:
+                return [_issue(program, "MissingDelimiter", "JavaScript statement relies on ambiguous automatic semicolon insertion.", idx, 0.8, suggestion="Terminate statements explicitly with semicolons in ambiguous contexts.", ambiguity=0.12, evidence="parser_statement")]
+
+        if len(top_level_risky) >= 2:
+            first = top_level_risky[0]
             return [_issue(program, "MissingDelimiter", "JavaScript statement relies on ambiguous automatic semicolon insertion.", first, 0.8, suggestion="Terminate statements explicitly with semicolons in ambiguous contexts.", ambiguity=0.12, evidence="parser_statement")]
         return []
 

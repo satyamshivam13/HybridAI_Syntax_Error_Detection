@@ -3,7 +3,7 @@
 Hybrid syntax and code-quality assistant for Python, Java, C, C++, and JavaScript.
 
 ## Current state
-- Core unit tests pass locally (`pytest tests/ -v`).
+- Latest local verification (2026-04-11): `python -m pytest tests/ -q` => 179 passed, 1 skipped, 1 xfailed.
 - API, CLI, and Streamlit entrypoints are available.
 - ML-backed classification is enabled with metadata-aware model compatibility control.
 - System reports degraded mode explicitly when ML models cannot load or are incompatible.
@@ -72,12 +72,18 @@ python -m pytest tests/test_script_smoke.py -q
 
 ### Full test suite
 ```bash
-python -m pytest tests/ -v -p no:cacheprovider
+python -m pytest tests/ -q
+python scripts/production_validation.py
+python scripts/adversarial_validation.py
+python scripts/check_links.py
+```
+
+### Optional evaluation scripts
+```bash
 python scripts/test_accuracy.py --samples 100 --skip-pipeline
 python scripts/test_false_positives.py --lang Python
 python scripts/generate_results.py --smoke
 python scripts/advanced_metrics.py --smoke
-python scripts/check_links.py
 ```
 
 ## Model compatibility

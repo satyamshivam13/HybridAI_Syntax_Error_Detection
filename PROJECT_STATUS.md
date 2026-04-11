@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-03-27
+Last updated: 2026-04-11
 
 ## Overall
 - Active development in a brownfield codebase
@@ -16,6 +16,11 @@ Last updated: 2026-03-27
 - Automated tests in `tests/`
 - CI runs full test suite plus markdown link validation
 - Additional QA and evaluation outputs are tracked under `artifacts/` and `results/`
+
+## Latest verification snapshot
+- `python -m pytest tests/ -q` => 179 passed, 1 skipped, 1 xfailed
+- `python scripts/production_validation.py` => all production gates passing, confidence_ece 0.0391
+- `python scripts/adversarial_validation.py` => mutation_accuracy 97.08, real_world_accuracy 97.3, verdict PRODUCTION_READY
 
 ## Recommended verification commands
 ```bash

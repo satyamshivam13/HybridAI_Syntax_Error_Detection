@@ -21,30 +21,30 @@
   },
   "mutation_metrics": {
     "total": 240,
-    "correct": 234,
-    "accuracy": 97.5,
+    "correct": 233,
+    "accuracy": 97.08,
     "coverage": {
       "covered": 61,
-      "weak": 4,
-      "missing": 0
+      "weak": 3,
+      "missing": 1
     },
-    "robustness": 96.25,
-    "confidence_reliability": 9.86,
-    "ece": 0.0202,
+    "robustness": 95.62,
+    "confidence_reliability": 9.9,
+    "ece": 0.0147,
     "confidence_one_rate": 0.0
   },
   "real_world_metrics": {
     "total": 37,
-    "correct": 35,
-    "accuracy": 94.59,
+    "correct": 36,
+    "accuracy": 97.3,
     "coverage": {
-      "covered": 33,
+      "covered": 34,
       "weak": 0,
-      "missing": 2
+      "missing": 1
     },
-    "robustness": 91.89,
-    "confidence_reliability": 9.88,
-    "ece": 0.0178,
+    "robustness": 95.95,
+    "confidence_reliability": 9.89,
+    "ece": 0.0154,
     "confidence_one_rate": 0.0
   },
   "multi_error_metrics": {
@@ -55,11 +55,11 @@
     "single_only_failures": 0
   },
   "confidence_audit": {
-    "confidence_reliability_score": 9.89,
-    "ece": 0.0157,
+    "confidence_reliability_score": 9.9,
+    "ece": 0.0148,
     "confidence_one_rate": 0.0,
-    "mean_confidence_correct": 0.9556,
-    "mean_confidence_incorrect": 0.9487
+    "mean_confidence_correct": 0.9564,
+    "mean_confidence_incorrect": 0.9562
   },
   "cross_language_metrics": {
     "overall_consistency": 1.0,
@@ -71,8 +71,8 @@
   },
   "overfitting": {
     "baseline_accuracy_pct": 100.0,
-    "mutation_accuracy_pct": 97.5,
-    "accuracy_drop_pct": 2.5,
+    "mutation_accuracy_pct": 97.08,
+    "accuracy_drop_pct": 2.92,
     "performance_drop_detected": true
   },
   "failure_clusters": {
@@ -84,15 +84,14 @@
       "Python::UndeclaredIdentifier->NameError": 3,
       "Java::ImportError->NoError": 1,
       "Java::LineTooLong->UnmatchedBracket": 1,
-      "Java::LineTooLong->UnusedVariable": 2,
+      "Java::UnusedVariable->NoError": 2,
       "Java::UnusedVariable->InfiniteLoop": 1
     },
     "by_root_cause": {
       "identifier_rename": 2,
-      "noise_only": 2,
-      "line_long_with_comment_noise": 2,
-      "name_vs_undeclared_bias": 1,
-      "style_long_line": 1
+      "noise_only": 4,
+      "line_long_with_comment_noise": 1,
+      "name_vs_undeclared_bias": 1
     }
   },
   "verdict": "PRODUCTION_READY",
@@ -1082,8 +1081,7 @@
         "category": "mutation",
         "root_cause_hint": "noise_only",
         "rule_types": [
-          "MissingDelimiter",
-          "UnusedVariable"
+          "MissingDelimiter"
         ]
       },
       {
@@ -1234,12 +1232,11 @@
         "expected": "MissingImport",
         "predicted": "MissingImport",
         "correct": true,
-        "confidence": 0.96,
+        "confidence": 0.97,
         "category": "mutation",
         "root_cause_hint": "noise_only",
         "rule_types": [
-          "MissingImport",
-          "UnusedVariable"
+          "MissingImport"
         ]
       },
       {
@@ -1248,13 +1245,12 @@
         "expected": "MissingImport",
         "predicted": "MissingImport",
         "correct": true,
-        "confidence": 0.88,
+        "confidence": 0.96,
         "category": "mutation",
         "root_cause_hint": "noise_only",
         "rule_types": [
           "MissingImport",
-          "MissingImport",
-          "UnusedVariable"
+          "MissingImport"
         ]
       },
       {
@@ -1292,8 +1288,7 @@
         "category": "mutation",
         "root_cause_hint": "noise_only",
         "rule_types": [
-          "TypeMismatch",
-          "UnusedVariable"
+          "TypeMismatch"
         ]
       },
       {
@@ -1306,8 +1301,7 @@
         "category": "mutation",
         "root_cause_hint": "noise_only",
         "rule_types": [
-          "TypeMismatch",
-          "UnusedVariable"
+          "TypeMismatch"
         ]
       },
       {
@@ -1320,8 +1314,7 @@
         "category": "mutation",
         "root_cause_hint": "noise_only",
         "rule_types": [
-          "TypeMismatch",
-          "UnusedVariable"
+          "TypeMismatch"
         ]
       },
       {
@@ -1354,12 +1347,11 @@
         "expected": "UndeclaredIdentifier",
         "predicted": "UndeclaredIdentifier",
         "correct": true,
-        "confidence": 0.88,
+        "confidence": 0.96,
         "category": "mutation",
         "root_cause_hint": "identifier_rename",
         "rule_types": [
-          "UndeclaredIdentifier",
-          "UnusedVariable"
+          "UndeclaredIdentifier"
         ]
       },
       {
@@ -1392,12 +1384,11 @@
         "expected": "DivisionByZero",
         "predicted": "DivisionByZero",
         "correct": true,
-        "confidence": 0.96,
+        "confidence": 0.97,
         "category": "mutation",
         "root_cause_hint": "nonliteral_zero",
         "rule_types": [
-          "DivisionByZero",
-          "UnusedVariable"
+          "DivisionByZero"
         ]
       },
       {
@@ -1406,12 +1397,11 @@
         "expected": "DivisionByZero",
         "predicted": "DivisionByZero",
         "correct": true,
-        "confidence": 0.96,
+        "confidence": 0.97,
         "category": "mutation",
         "root_cause_hint": "nonliteral_zero",
         "rule_types": [
-          "DivisionByZero",
-          "UnusedVariable"
+          "DivisionByZero"
         ]
       },
       {
@@ -1420,12 +1410,11 @@
         "expected": "DivisionByZero",
         "predicted": "DivisionByZero",
         "correct": true,
-        "confidence": 0.96,
+        "confidence": 0.97,
         "category": "mutation",
         "root_cause_hint": "noise_only",
         "rule_types": [
-          "DivisionByZero",
-          "UnusedVariable"
+          "DivisionByZero"
         ]
       },
       {
@@ -1499,8 +1488,7 @@
         "category": "mutation",
         "root_cause_hint": "noise_only",
         "rule_types": [
-          "UnreachableCode",
-          "UnusedVariable"
+          "UnreachableCode"
         ]
       },
       {
@@ -1527,8 +1515,7 @@
         "root_cause_hint": "noise_only",
         "rule_types": [
           "UnreachableCode",
-          "InfiniteLoop",
-          "UnusedVariable"
+          "InfiniteLoop"
         ]
       },
       {
@@ -1661,13 +1648,12 @@
         "expected": "LineTooLong",
         "predicted": "UnmatchedBracket",
         "correct": false,
-        "confidence": 0.88,
+        "confidence": 0.96,
         "category": "mutation",
         "root_cause_hint": "line_long_with_comment_noise",
         "rule_types": [
           "UnmatchedBracket",
           "UnmatchedBracket",
-          "UnusedVariable",
           "LineTooLong"
         ]
       },
@@ -1675,13 +1661,12 @@
         "case_id": "mut-123",
         "language": "Java",
         "expected": "LineTooLong",
-        "predicted": "UnusedVariable",
-        "correct": false,
+        "predicted": "LineTooLong",
+        "correct": true,
         "confidence": 0.96,
         "category": "mutation",
         "root_cause_hint": "line_long_with_comment_noise",
         "rule_types": [
-          "UnusedVariable",
           "LineTooLong"
         ]
       },
@@ -1750,27 +1735,23 @@
         "case_id": "mut-129",
         "language": "Java",
         "expected": "UnusedVariable",
-        "predicted": "UnusedVariable",
-        "correct": true,
-        "confidence": 0.96,
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 0.95,
         "category": "mutation",
         "root_cause_hint": "noise_only",
-        "rule_types": [
-          "UnusedVariable"
-        ]
+        "rule_types": []
       },
       {
         "case_id": "mut-130",
         "language": "Java",
         "expected": "UnusedVariable",
-        "predicted": "UnusedVariable",
-        "correct": true,
-        "confidence": 0.96,
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 0.95,
         "category": "mutation",
         "root_cause_hint": "noise_only",
-        "rule_types": [
-          "UnusedVariable"
-        ]
+        "rule_types": []
       },
       {
         "case_id": "mut-131",
@@ -3154,8 +3135,7 @@
         "category": "mutation",
         "root_cause_hint": "noise_only",
         "rule_types": [
-          "UnreachableCode",
-          "UnusedVariable"
+          "UnreachableCode"
         ]
       },
       {
@@ -3169,8 +3149,7 @@
         "root_cause_hint": "noise_only",
         "rule_types": [
           "UnreachableCode",
-          "InfiniteLoop",
-          "UnusedVariable"
+          "InfiniteLoop"
         ]
       },
       {
@@ -3296,12 +3275,11 @@
         "expected": "MissingImport",
         "predicted": "MissingImport",
         "correct": true,
-        "confidence": 0.96,
+        "confidence": 0.97,
         "category": "real_world",
         "root_cause_hint": "java_import_symbol_gap",
         "rule_types": [
-          "MissingImport",
-          "UnusedVariable"
+          "MissingImport"
         ]
       },
       {
@@ -3327,8 +3305,7 @@
         "category": "real_world",
         "root_cause_hint": "post_jump_statement",
         "rule_types": [
-          "UnreachableCode",
-          "UnusedVariable"
+          "UnreachableCode"
         ]
       },
       {
@@ -3362,13 +3339,12 @@
         "case_id": "rw-java-06",
         "language": "Java",
         "expected": "LineTooLong",
-        "predicted": "UnusedVariable",
-        "correct": false,
+        "predicted": "LineTooLong",
+        "correct": true,
         "confidence": 0.96,
         "category": "real_world",
         "root_cause_hint": "style_long_line",
         "rule_types": [
-          "UnusedVariable",
           "LineTooLong"
         ]
       },
@@ -3680,12 +3656,11 @@
         ],
         "expected_primary": "TypeMismatch",
         "single_predicted": "TypeMismatch",
-        "single_confidence": 0.55,
+        "single_confidence": 0.96,
         "all_detected_types": [
           "MissingImport",
           "TypeMismatch",
-          "UnreachableCode",
-          "UnusedVariable"
+          "UnreachableCode"
         ],
         "all_recall": 1.0,
         "full_multi_match": true,

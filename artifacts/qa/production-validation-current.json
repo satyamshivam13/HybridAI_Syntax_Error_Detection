@@ -4,7 +4,7 @@
     "real_world_messy_accuracy": 1.0,
     "multi_error_recall": 1.0,
     "cross_language_consistency": 1.0,
-    "confidence_ece": 0.0394,
+    "confidence_ece": 0.0391,
     "confidence_constant": false
   },
   "thresholds": {
@@ -63,7 +63,7 @@
         "language": "Java",
         "expected": "MissingImport",
         "predicted": "MissingImport",
-        "confidence": 0.96,
+        "confidence": 0.97,
         "correct": true
       },
       {
@@ -185,8 +185,7 @@
         "found": [
           "MissingImport",
           "TypeMismatch",
-          "UnreachableCode",
-          "UnusedVariable"
+          "UnreachableCode"
         ],
         "recall": 1.0,
         "full_match": true
