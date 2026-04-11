@@ -1,0 +1,3754 @@
+{
+  "baseline_summary": {
+    "total_cases": 240,
+    "total_pass": 240,
+    "total_fail": 0,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "misclassified": 0,
+    "degraded_mode_cases": 0,
+    "coverage_counts": {
+      "Covered": 60,
+      "Weak": 0,
+      "Missing": 0
+    },
+    "scores": {
+      "accuracy": 10.0,
+      "coverage": 10.0,
+      "robustness": 10.0,
+      "production_readiness": 10.0
+    }
+  },
+  "mutation_metrics": {
+    "total": 240,
+    "correct": 207,
+    "accuracy": 86.25,
+    "coverage": {
+      "covered": 49,
+      "weak": 11,
+      "missing": 5
+    },
+    "robustness": 79.38,
+    "confidence_reliability": 8.59,
+    "ece": 0.1375,
+    "confidence_one_rate": 1.0
+  },
+  "real_world_metrics": {
+    "total": 37,
+    "correct": 18,
+    "accuracy": 48.65,
+    "coverage": {
+      "covered": 16,
+      "weak": 0,
+      "missing": 19
+    },
+    "robustness": 22.97,
+    "confidence_reliability": 5.96,
+    "ece": 0.5135,
+    "confidence_one_rate": 1.0
+  },
+  "multi_error_metrics": {
+    "cases": 5,
+    "primary_correct_rate": 1.0,
+    "full_multi_match_rate": 0.0,
+    "avg_multi_recall": 0.433,
+    "single_only_failures": 3
+  },
+  "confidence_audit": {
+    "confidence_reliability_score": 8.24,
+    "ece": 0.1877,
+    "confidence_one_rate": 1.0,
+    "mean_confidence_correct": 1.0,
+    "mean_confidence_incorrect": 1.0
+  },
+  "cross_language_metrics": {
+    "overall_consistency": 0.083,
+    "families": {
+      "division_expr_zero": 0.0,
+      "infinite_condition_expr": 0.0,
+      "unreachable_after_jump": 0.25
+    }
+  },
+  "overfitting": {
+    "baseline_accuracy_pct": 100.0,
+    "mutation_accuracy_pct": 86.25,
+    "accuracy_drop_pct": 13.75,
+    "performance_drop_detected": true
+  },
+  "failure_clusters": {
+    "by_language": {
+      "Python": 23,
+      "Java": 10,
+      "C": 6,
+      "C++": 6,
+      "JavaScript": 7
+    },
+    "by_expected_vs_predicted": {
+      "Python::NameError->NoError": 1,
+      "Python::NameError->UndeclaredIdentifier": 1,
+      "Python::DivisionByZero->UnusedVariable": 2,
+      "Python::DivisionByZero->NoError": 2,
+      "Python::ImportError->NoError": 3,
+      "Python::ImportError->UnusedVariable": 1,
+      "Python::MissingImport->NameError": 4,
+      "Python::InfiniteLoop->NoError": 3,
+      "Python::InfiniteLoop->UnusedVariable": 1,
+      "Python::LineTooLong->NoError": 3,
+      "Python::InvalidAssignment->NameError": 2,
+      "Java::DivisionByZero->NoError": 3,
+      "Java::InfiniteLoop->NoError": 2,
+      "Java::InvalidAssignment->UndeclaredIdentifier": 2,
+      "C::DivisionByZero->NoError": 3,
+      "C::InfiniteLoop->NoError": 2,
+      "C++::DivisionByZero->NoError": 3,
+      "C++::InfiniteLoop->NoError": 2,
+      "JavaScript::DivisionByZero->NoError": 3,
+      "JavaScript::InfiniteLoop->NoError": 2,
+      "Java::MissingImport->NoError": 1,
+      "Java::UnreachableCode->NoError": 1,
+      "Java::ImportError->NoError": 1,
+      "C::UnreachableCode->NoError": 1,
+      "C++::DanglingPointer->NoError": 1,
+      "JavaScript::UnreachableCode->NoError": 1,
+      "JavaScript::MissingDelimiter->NoError": 1
+    },
+    "by_root_cause": {
+      "identifier_rename": 2,
+      "nonliteral_zero": 11,
+      "importerror_nonplaceholder_name": 5,
+      "unknown_import_symbol_set": 3,
+      "equivalent_loop_condition": 8,
+      "line_long_via_expression": 3,
+      "tuple_unpack_scalar": 2,
+      "array_scalar_assignment_expr": 2,
+      "static_import_dictionary_gap": 1,
+      "literal_only_zero_detector": 5,
+      "rigid_loop_pattern": 4,
+      "java_import_symbol_gap": 1,
+      "post_jump_statement": 3,
+      "lifetime_static_pattern": 1,
+      "asi_ambiguity": 1
+    }
+  },
+  "verdict": "OVERFITTED_UNSAFE",
+  "details": {
+    "mutation_results": [
+      {
+        "case_id": "mut-001",
+        "language": "Python",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-002",
+        "language": "Python",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-003",
+        "language": "Python",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-004",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-005",
+        "language": "Python",
+        "expected": "IndentationError",
+        "predicted": "IndentationError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "IndentationError",
+          "SyntaxError"
+        ]
+      },
+      {
+        "case_id": "mut-006",
+        "language": "Python",
+        "expected": "IndentationError",
+        "predicted": "IndentationError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "IndentationError"
+        ]
+      },
+      {
+        "case_id": "mut-007",
+        "language": "Python",
+        "expected": "IndentationError",
+        "predicted": "IndentationError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "IndentationError"
+        ]
+      },
+      {
+        "case_id": "mut-008",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-009",
+        "language": "Python",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString"
+        ]
+      },
+      {
+        "case_id": "mut-010",
+        "language": "Python",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString"
+        ]
+      },
+      {
+        "case_id": "mut-011",
+        "language": "Python",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString"
+        ]
+      },
+      {
+        "case_id": "mut-012",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-013",
+        "language": "Python",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket",
+          "SyntaxError",
+          "UnclosedString"
+        ]
+      },
+      {
+        "case_id": "mut-014",
+        "language": "Python",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket",
+          "UnclosedString"
+        ]
+      },
+      {
+        "case_id": "mut-015",
+        "language": "Python",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket",
+          "UnclosedString"
+        ]
+      },
+      {
+        "case_id": "mut-016",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-017",
+        "language": "Python",
+        "expected": "WildcardImport",
+        "predicted": "WildcardImport",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "WildcardImport"
+        ]
+      },
+      {
+        "case_id": "mut-018",
+        "language": "Python",
+        "expected": "WildcardImport",
+        "predicted": "WildcardImport",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "WildcardImport"
+        ]
+      },
+      {
+        "case_id": "mut-019",
+        "language": "Python",
+        "expected": "WildcardImport",
+        "predicted": "WildcardImport",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "WildcardImport"
+        ]
+      },
+      {
+        "case_id": "mut-020",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-021",
+        "language": "Python",
+        "expected": "MutableDefault",
+        "predicted": "MutableDefault",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MutableDefault"
+        ]
+      },
+      {
+        "case_id": "mut-022",
+        "language": "Python",
+        "expected": "MutableDefault",
+        "predicted": "MutableDefault",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MutableDefault"
+        ]
+      },
+      {
+        "case_id": "mut-023",
+        "language": "Python",
+        "expected": "MutableDefault",
+        "predicted": "MutableDefault",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MutableDefault"
+        ]
+      },
+      {
+        "case_id": "mut-024",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-025",
+        "language": "Python",
+        "expected": "NameError",
+        "predicted": "NameError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "NameError"
+        ]
+      },
+      {
+        "case_id": "mut-026",
+        "language": "Python",
+        "expected": "NameError",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-027",
+        "language": "Python",
+        "expected": "NameError",
+        "predicted": "UndeclaredIdentifier",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-028",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-029",
+        "language": "Python",
+        "expected": "DivisionByZero",
+        "predicted": "UnusedVariable",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "nonliteral_zero",
+        "rule_types": [
+          "UnusedVariable"
+        ]
+      },
+      {
+        "case_id": "mut-030",
+        "language": "Python",
+        "expected": "DivisionByZero",
+        "predicted": "UnusedVariable",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "nonliteral_zero",
+        "rule_types": [
+          "UnusedVariable"
+        ]
+      },
+      {
+        "case_id": "mut-031",
+        "language": "Python",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "nonliteral_zero",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-032",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-033",
+        "language": "Python",
+        "expected": "ImportError",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "importerror_nonplaceholder_name",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-034",
+        "language": "Python",
+        "expected": "ImportError",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "importerror_nonplaceholder_name",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-035",
+        "language": "Python",
+        "expected": "ImportError",
+        "predicted": "UnusedVariable",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "importerror_nonplaceholder_name",
+        "rule_types": [
+          "UnusedVariable"
+        ]
+      },
+      {
+        "case_id": "mut-036",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-037",
+        "language": "Python",
+        "expected": "MissingImport",
+        "predicted": "NameError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "unknown_import_symbol_set",
+        "rule_types": [
+          "NameError"
+        ]
+      },
+      {
+        "case_id": "mut-038",
+        "language": "Python",
+        "expected": "MissingImport",
+        "predicted": "NameError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "unknown_import_symbol_set",
+        "rule_types": [
+          "NameError"
+        ]
+      },
+      {
+        "case_id": "mut-039",
+        "language": "Python",
+        "expected": "MissingImport",
+        "predicted": "NameError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "unknown_import_symbol_set",
+        "rule_types": [
+          "NameError"
+        ]
+      },
+      {
+        "case_id": "mut-040",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-041",
+        "language": "Python",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "equivalent_loop_condition",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-042",
+        "language": "Python",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "equivalent_loop_condition",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-043",
+        "language": "Python",
+        "expected": "InfiniteLoop",
+        "predicted": "UnusedVariable",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "equivalent_loop_condition",
+        "rule_types": [
+          "UnusedVariable"
+        ]
+      },
+      {
+        "case_id": "mut-044",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-045",
+        "language": "Python",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode"
+        ]
+      },
+      {
+        "case_id": "mut-046",
+        "language": "Python",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode"
+        ]
+      },
+      {
+        "case_id": "mut-047",
+        "language": "Python",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode"
+        ]
+      },
+      {
+        "case_id": "mut-048",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-049",
+        "language": "Python",
+        "expected": "DuplicateDefinition",
+        "predicted": "DuplicateDefinition",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DuplicateDefinition"
+        ]
+      },
+      {
+        "case_id": "mut-050",
+        "language": "Python",
+        "expected": "DuplicateDefinition",
+        "predicted": "DuplicateDefinition",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DuplicateDefinition"
+        ]
+      },
+      {
+        "case_id": "mut-051",
+        "language": "Python",
+        "expected": "DuplicateDefinition",
+        "predicted": "DuplicateDefinition",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DuplicateDefinition"
+        ]
+      },
+      {
+        "case_id": "mut-052",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-053",
+        "language": "Python",
+        "expected": "UnusedVariable",
+        "predicted": "UnusedVariable",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnusedVariable"
+        ]
+      },
+      {
+        "case_id": "mut-054",
+        "language": "Python",
+        "expected": "UnusedVariable",
+        "predicted": "UnusedVariable",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnusedVariable"
+        ]
+      },
+      {
+        "case_id": "mut-055",
+        "language": "Python",
+        "expected": "UnusedVariable",
+        "predicted": "UnusedVariable",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnusedVariable"
+        ]
+      },
+      {
+        "case_id": "mut-056",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-057",
+        "language": "Python",
+        "expected": "LineTooLong",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "line_long_via_expression",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-058",
+        "language": "Python",
+        "expected": "LineTooLong",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "line_long_via_expression",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-059",
+        "language": "Python",
+        "expected": "LineTooLong",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "line_long_via_expression",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-060",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-061",
+        "language": "Python",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "mut-062",
+        "language": "Python",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "mut-063",
+        "language": "Python",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "mut-064",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-065",
+        "language": "Python",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-066",
+        "language": "Python",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-067",
+        "language": "Python",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-068",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-069",
+        "language": "Python",
+        "expected": "DanglingPointer",
+        "predicted": "DanglingPointer",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DanglingPointer"
+        ]
+      },
+      {
+        "case_id": "mut-070",
+        "language": "Python",
+        "expected": "DanglingPointer",
+        "predicted": "DanglingPointer",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DanglingPointer"
+        ]
+      },
+      {
+        "case_id": "mut-071",
+        "language": "Python",
+        "expected": "DanglingPointer",
+        "predicted": "DanglingPointer",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DanglingPointer"
+        ]
+      },
+      {
+        "case_id": "mut-072",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-073",
+        "language": "Python",
+        "expected": "InvalidAssignment",
+        "predicted": "NameError",
+        "correct": false,
+        "confidence": 0.9999999995637789,
+        "category": "mutation",
+        "root_cause_hint": "tuple_unpack_scalar",
+        "rule_types": [
+          "SyntaxError"
+        ]
+      },
+      {
+        "case_id": "mut-074",
+        "language": "Python",
+        "expected": "InvalidAssignment",
+        "predicted": "NameError",
+        "correct": false,
+        "confidence": 0.999999999505613,
+        "category": "mutation",
+        "root_cause_hint": "tuple_unpack_scalar",
+        "rule_types": [
+          "SyntaxError"
+        ]
+      },
+      {
+        "case_id": "mut-075",
+        "language": "Python",
+        "expected": "InvalidAssignment",
+        "predicted": "InvalidAssignment",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "tuple_unpack_scalar",
+        "rule_types": [
+          "InvalidAssignment"
+        ]
+      },
+      {
+        "case_id": "mut-076",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-077",
+        "language": "Java",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-078",
+        "language": "Java",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-079",
+        "language": "Java",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-080",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-081",
+        "language": "Java",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString",
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-082",
+        "language": "Java",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString"
+        ]
+      },
+      {
+        "case_id": "mut-083",
+        "language": "Java",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString",
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-084",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-085",
+        "language": "Java",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-086",
+        "language": "Java",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket",
+          "UnmatchedBracket",
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-087",
+        "language": "Java",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-088",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-089",
+        "language": "Java",
+        "expected": "MissingImport",
+        "predicted": "MissingImport",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingImport"
+        ]
+      },
+      {
+        "case_id": "mut-090",
+        "language": "Java",
+        "expected": "MissingImport",
+        "predicted": "MissingImport",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingImport",
+          "MissingImport"
+        ]
+      },
+      {
+        "case_id": "mut-091",
+        "language": "Java",
+        "expected": "MissingImport",
+        "predicted": "MissingImport",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingImport"
+        ]
+      },
+      {
+        "case_id": "mut-092",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-093",
+        "language": "Java",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "mut-094",
+        "language": "Java",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "mut-095",
+        "language": "Java",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch",
+          "UnusedVariable"
+        ]
+      },
+      {
+        "case_id": "mut-096",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-097",
+        "language": "Java",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-098",
+        "language": "Java",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-099",
+        "language": "Java",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-100",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-101",
+        "language": "Java",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "nonliteral_zero",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-102",
+        "language": "Java",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "nonliteral_zero",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-103",
+        "language": "Java",
+        "expected": "DivisionByZero",
+        "predicted": "DivisionByZero",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DivisionByZero"
+        ]
+      },
+      {
+        "case_id": "mut-104",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-105",
+        "language": "Java",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "equivalent_loop_condition",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-106",
+        "language": "Java",
+        "expected": "InfiniteLoop",
+        "predicted": "InfiniteLoop",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-107",
+        "language": "Java",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "equivalent_loop_condition",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-108",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-109",
+        "language": "Java",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode"
+        ]
+      },
+      {
+        "case_id": "mut-110",
+        "language": "Java",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode"
+        ]
+      },
+      {
+        "case_id": "mut-111",
+        "language": "Java",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode",
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-112",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-113",
+        "language": "Java",
+        "expected": "ImportError",
+        "predicted": "ImportError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "ImportError"
+        ]
+      },
+      {
+        "case_id": "mut-114",
+        "language": "Java",
+        "expected": "ImportError",
+        "predicted": "ImportError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "ImportError"
+        ]
+      },
+      {
+        "case_id": "mut-115",
+        "language": "Java",
+        "expected": "ImportError",
+        "predicted": "ImportError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "ImportError"
+        ]
+      },
+      {
+        "case_id": "mut-116",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-117",
+        "language": "Java",
+        "expected": "InvalidAssignment",
+        "predicted": "InvalidAssignment",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "array_scalar_assignment_expr",
+        "rule_types": [
+          "InvalidAssignment"
+        ]
+      },
+      {
+        "case_id": "mut-118",
+        "language": "Java",
+        "expected": "InvalidAssignment",
+        "predicted": "InvalidAssignment",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "array_scalar_assignment_expr",
+        "rule_types": [
+          "InvalidAssignment"
+        ]
+      },
+      {
+        "case_id": "mut-119",
+        "language": "Java",
+        "expected": "InvalidAssignment",
+        "predicted": "UndeclaredIdentifier",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "array_scalar_assignment_expr",
+        "rule_types": [
+          "UndeclaredIdentifier",
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-120",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-121",
+        "language": "Java",
+        "expected": "LineTooLong",
+        "predicted": "LineTooLong",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "line_long_with_comment_noise",
+        "rule_types": [
+          "LineTooLong"
+        ]
+      },
+      {
+        "case_id": "mut-122",
+        "language": "Java",
+        "expected": "LineTooLong",
+        "predicted": "LineTooLong",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "line_long_with_comment_noise",
+        "rule_types": [
+          "UnmatchedBracket",
+          "UnmatchedBracket",
+          "LineTooLong"
+        ]
+      },
+      {
+        "case_id": "mut-123",
+        "language": "Java",
+        "expected": "LineTooLong",
+        "predicted": "LineTooLong",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "line_long_with_comment_noise",
+        "rule_types": [
+          "LineTooLong"
+        ]
+      },
+      {
+        "case_id": "mut-124",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-125",
+        "language": "Java",
+        "expected": "DuplicateDefinition",
+        "predicted": "DuplicateDefinition",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DuplicateDefinition"
+        ]
+      },
+      {
+        "case_id": "mut-126",
+        "language": "Java",
+        "expected": "DuplicateDefinition",
+        "predicted": "DuplicateDefinition",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DuplicateDefinition"
+        ]
+      },
+      {
+        "case_id": "mut-127",
+        "language": "Java",
+        "expected": "DuplicateDefinition",
+        "predicted": "DuplicateDefinition",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DuplicateDefinition"
+        ]
+      },
+      {
+        "case_id": "mut-128",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-129",
+        "language": "Java",
+        "expected": "UnusedVariable",
+        "predicted": "UnusedVariable",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnusedVariable"
+        ]
+      },
+      {
+        "case_id": "mut-130",
+        "language": "Java",
+        "expected": "UnusedVariable",
+        "predicted": "UnusedVariable",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnusedVariable"
+        ]
+      },
+      {
+        "case_id": "mut-131",
+        "language": "Java",
+        "expected": "UnusedVariable",
+        "predicted": "UnusedVariable",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnusedVariable"
+        ]
+      },
+      {
+        "case_id": "mut-132",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-133",
+        "language": "C",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-134",
+        "language": "C",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-135",
+        "language": "C",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-136",
+        "language": "C",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-137",
+        "language": "C",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString"
+        ]
+      },
+      {
+        "case_id": "mut-138",
+        "language": "C",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString",
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-139",
+        "language": "C",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString"
+        ]
+      },
+      {
+        "case_id": "mut-140",
+        "language": "C",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-141",
+        "language": "C",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-142",
+        "language": "C",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-143",
+        "language": "C",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-144",
+        "language": "C",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-145",
+        "language": "C",
+        "expected": "MissingInclude",
+        "predicted": "MissingInclude",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "mut-146",
+        "language": "C",
+        "expected": "MissingInclude",
+        "predicted": "MissingInclude",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "mut-147",
+        "language": "C",
+        "expected": "MissingInclude",
+        "predicted": "MissingInclude",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "mut-148",
+        "language": "C",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-149",
+        "language": "C",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "mut-150",
+        "language": "C",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "mut-151",
+        "language": "C",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "mut-152",
+        "language": "C",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-153",
+        "language": "C",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-154",
+        "language": "C",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-155",
+        "language": "C",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-156",
+        "language": "C",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-157",
+        "language": "C",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "nonliteral_zero",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-158",
+        "language": "C",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "nonliteral_zero",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-159",
+        "language": "C",
+        "expected": "DivisionByZero",
+        "predicted": "DivisionByZero",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DivisionByZero"
+        ]
+      },
+      {
+        "case_id": "mut-160",
+        "language": "C",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-161",
+        "language": "C",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "equivalent_loop_condition",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-162",
+        "language": "C",
+        "expected": "InfiniteLoop",
+        "predicted": "InfiniteLoop",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-163",
+        "language": "C",
+        "expected": "InfiniteLoop",
+        "predicted": "InfiniteLoop",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-164",
+        "language": "C",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-165",
+        "language": "C",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode"
+        ]
+      },
+      {
+        "case_id": "mut-166",
+        "language": "C",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode",
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-167",
+        "language": "C",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode",
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-168",
+        "language": "C",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-169",
+        "language": "C++",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-170",
+        "language": "C++",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-171",
+        "language": "C++",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-172",
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-173",
+        "language": "C++",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString",
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-174",
+        "language": "C++",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString",
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-175",
+        "language": "C++",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString",
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "mut-176",
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-177",
+        "language": "C++",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-178",
+        "language": "C++",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-179",
+        "language": "C++",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-180",
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-181",
+        "language": "C++",
+        "expected": "MissingInclude",
+        "predicted": "MissingInclude",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "mut-182",
+        "language": "C++",
+        "expected": "MissingInclude",
+        "predicted": "MissingInclude",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "mut-183",
+        "language": "C++",
+        "expected": "MissingInclude",
+        "predicted": "MissingInclude",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "mut-184",
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-185",
+        "language": "C++",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "mut-186",
+        "language": "C++",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "mut-187",
+        "language": "C++",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "mut-188",
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-189",
+        "language": "C++",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-190",
+        "language": "C++",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-191",
+        "language": "C++",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier",
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "mut-192",
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-193",
+        "language": "C++",
+        "expected": "DanglingPointer",
+        "predicted": "DanglingPointer",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DanglingPointer"
+        ]
+      },
+      {
+        "case_id": "mut-194",
+        "language": "C++",
+        "expected": "DanglingPointer",
+        "predicted": "DanglingPointer",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DanglingPointer",
+          "DanglingPointer"
+        ]
+      },
+      {
+        "case_id": "mut-195",
+        "language": "C++",
+        "expected": "DanglingPointer",
+        "predicted": "DanglingPointer",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DanglingPointer",
+          "UnreachableCode"
+        ]
+      },
+      {
+        "case_id": "mut-196",
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-197",
+        "language": "C++",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "nonliteral_zero",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-198",
+        "language": "C++",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "nonliteral_zero",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-199",
+        "language": "C++",
+        "expected": "DivisionByZero",
+        "predicted": "DivisionByZero",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DivisionByZero"
+        ]
+      },
+      {
+        "case_id": "mut-200",
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-201",
+        "language": "C++",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "equivalent_loop_condition",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-202",
+        "language": "C++",
+        "expected": "InfiniteLoop",
+        "predicted": "InfiniteLoop",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-203",
+        "language": "C++",
+        "expected": "InfiniteLoop",
+        "predicted": "InfiniteLoop",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-204",
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-205",
+        "language": "C++",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode"
+        ]
+      },
+      {
+        "case_id": "mut-206",
+        "language": "C++",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode",
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-207",
+        "language": "C++",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode",
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-208",
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-209",
+        "language": "JavaScript",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-210",
+        "language": "JavaScript",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-211",
+        "language": "JavaScript",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mut-212",
+        "language": "JavaScript",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-213",
+        "language": "JavaScript",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString"
+        ]
+      },
+      {
+        "case_id": "mut-214",
+        "language": "JavaScript",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString"
+        ]
+      },
+      {
+        "case_id": "mut-215",
+        "language": "JavaScript",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnclosedString",
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-216",
+        "language": "JavaScript",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-217",
+        "language": "JavaScript",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-218",
+        "language": "JavaScript",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket",
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-219",
+        "language": "JavaScript",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mut-220",
+        "language": "JavaScript",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-221",
+        "language": "JavaScript",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-222",
+        "language": "JavaScript",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-223",
+        "language": "JavaScript",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "identifier_rename",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mut-224",
+        "language": "JavaScript",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-225",
+        "language": "JavaScript",
+        "expected": "DuplicateDefinition",
+        "predicted": "DuplicateDefinition",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DuplicateDefinition"
+        ]
+      },
+      {
+        "case_id": "mut-226",
+        "language": "JavaScript",
+        "expected": "DuplicateDefinition",
+        "predicted": "DuplicateDefinition",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DuplicateDefinition"
+        ]
+      },
+      {
+        "case_id": "mut-227",
+        "language": "JavaScript",
+        "expected": "DuplicateDefinition",
+        "predicted": "DuplicateDefinition",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DuplicateDefinition",
+          "DuplicateDefinition"
+        ]
+      },
+      {
+        "case_id": "mut-228",
+        "language": "JavaScript",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-229",
+        "language": "JavaScript",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "nonliteral_zero",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-230",
+        "language": "JavaScript",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "nonliteral_zero",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-231",
+        "language": "JavaScript",
+        "expected": "DivisionByZero",
+        "predicted": "DivisionByZero",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "DivisionByZero"
+        ]
+      },
+      {
+        "case_id": "mut-232",
+        "language": "JavaScript",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-233",
+        "language": "JavaScript",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "equivalent_loop_condition",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-234",
+        "language": "JavaScript",
+        "expected": "InfiniteLoop",
+        "predicted": "InfiniteLoop",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-235",
+        "language": "JavaScript",
+        "expected": "InfiniteLoop",
+        "predicted": "InfiniteLoop",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-236",
+        "language": "JavaScript",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      },
+      {
+        "case_id": "mut-237",
+        "language": "JavaScript",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode"
+        ]
+      },
+      {
+        "case_id": "mut-238",
+        "language": "JavaScript",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode"
+        ]
+      },
+      {
+        "case_id": "mut-239",
+        "language": "JavaScript",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": [
+          "UnreachableCode",
+          "InfiniteLoop"
+        ]
+      },
+      {
+        "case_id": "mut-240",
+        "language": "JavaScript",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mutation",
+        "root_cause_hint": "noise_only",
+        "rule_types": []
+      }
+    ],
+    "real_world_results": [
+      {
+        "case_id": "rw-py-01",
+        "language": "Python",
+        "expected": "MissingImport",
+        "predicted": "NameError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "static_import_dictionary_gap",
+        "rule_types": [
+          "NameError"
+        ]
+      },
+      {
+        "case_id": "rw-py-02",
+        "language": "Python",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "literal_only_zero_detector",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-py-03",
+        "language": "Python",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "rigid_loop_pattern",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-py-04",
+        "language": "Python",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "nested_unreachable",
+        "rule_types": [
+          "UnreachableCode"
+        ]
+      },
+      {
+        "case_id": "rw-py-05",
+        "language": "Python",
+        "expected": "TypeMismatch",
+        "predicted": "TypeMismatch",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "annotation_semantics",
+        "rule_types": [
+          "TypeMismatch"
+        ]
+      },
+      {
+        "case_id": "rw-py-06",
+        "language": "Python",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "name_vs_undeclared_bias",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "rw-py-07",
+        "language": "Python",
+        "expected": "ImportError",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "importerror_nonplaceholder_name",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-py-08",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "clean_reference",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-java-01",
+        "language": "Java",
+        "expected": "MissingImport",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "java_import_symbol_gap",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-java-02",
+        "language": "Java",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "literal_only_zero_detector",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-java-03",
+        "language": "Java",
+        "expected": "UnreachableCode",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "post_jump_statement",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-java-04",
+        "language": "Java",
+        "expected": "InvalidAssignment",
+        "predicted": "UndeclaredIdentifier",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "array_scalar_assignment_expr",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "rw-java-05",
+        "language": "Java",
+        "expected": "ImportError",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "importerror_nonplaceholder_name",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-java-06",
+        "language": "Java",
+        "expected": "LineTooLong",
+        "predicted": "LineTooLong",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "style_long_line",
+        "rule_types": [
+          "LineTooLong"
+        ]
+      },
+      {
+        "case_id": "rw-java-07",
+        "language": "Java",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "clean_reference",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-c-01",
+        "language": "C",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "literal_only_zero_detector",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-c-02",
+        "language": "C",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "rigid_loop_pattern",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-c-03",
+        "language": "C",
+        "expected": "UnreachableCode",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "post_jump_statement",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-c-04",
+        "language": "C",
+        "expected": "MissingInclude",
+        "predicted": "MissingInclude",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "include_symbol_mapping",
+        "rule_types": [
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "rw-c-05",
+        "language": "C",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "clean_reference",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-cpp-01",
+        "language": "C++",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "priority_include_vs_identifier",
+        "rule_types": [
+          "UndeclaredIdentifier",
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "rw-cpp-02",
+        "language": "C++",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "literal_only_zero_detector",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-cpp-03",
+        "language": "C++",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "rigid_loop_pattern",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-cpp-04",
+        "language": "C++",
+        "expected": "DanglingPointer",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "lifetime_static_pattern",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-cpp-05",
+        "language": "C++",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "clean_reference",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-js-01",
+        "language": "JavaScript",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "identifier_resolution",
+        "rule_types": [
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "rw-js-02",
+        "language": "JavaScript",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "rigid_loop_pattern",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-js-03",
+        "language": "JavaScript",
+        "expected": "UnreachableCode",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "post_jump_statement",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-js-04",
+        "language": "JavaScript",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "literal_only_zero_detector",
+        "rule_types": []
+      },
+      {
+        "case_id": "rw-js-05",
+        "language": "JavaScript",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "real_world",
+        "root_cause_hint": "clean_reference",
+        "rule_types": []
+      },
+      {
+        "case_id": "mx-01",
+        "language": "JavaScript",
+        "expected": "UndeclaredIdentifier",
+        "predicted": "UndeclaredIdentifier",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "mixed_language",
+        "root_cause_hint": "language_bias_leak",
+        "rule_types": [
+          "UndeclaredIdentifier",
+          "UndeclaredIdentifier"
+        ]
+      },
+      {
+        "case_id": "mx-02",
+        "language": "C++",
+        "expected": "MissingInclude",
+        "predicted": "MissingInclude",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "partial_snippet",
+        "root_cause_hint": "partial_file_header_missing",
+        "rule_types": [
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "mx-03",
+        "language": "Python",
+        "expected": "MissingDelimiter",
+        "predicted": "MissingDelimiter",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "partial_snippet",
+        "root_cause_hint": "partial_function_fragment",
+        "rule_types": [
+          "MissingDelimiter"
+        ]
+      },
+      {
+        "case_id": "mx-04",
+        "language": "Java",
+        "expected": "UnmatchedBracket",
+        "predicted": "UnmatchedBracket",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "partial_snippet",
+        "root_cause_hint": "truncated_file",
+        "rule_types": [
+          "UnmatchedBracket",
+          "UnmatchedBracket",
+          "UnmatchedBracket"
+        ]
+      },
+      {
+        "case_id": "mx-05",
+        "language": "C",
+        "expected": "UnclosedString",
+        "predicted": "UnclosedString",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "partial_snippet",
+        "root_cause_hint": "unterminated_literal",
+        "rule_types": [
+          "UnclosedString",
+          "MissingDelimiter",
+          "MissingInclude"
+        ]
+      },
+      {
+        "case_id": "mx-06",
+        "language": "JavaScript",
+        "expected": "MissingDelimiter",
+        "predicted": "NoError",
+        "correct": false,
+        "confidence": 1.0,
+        "category": "messy_style",
+        "root_cause_hint": "asi_ambiguity",
+        "rule_types": []
+      },
+      {
+        "case_id": "mx-07",
+        "language": "Python",
+        "expected": "NoError",
+        "predicted": "NoError",
+        "correct": true,
+        "confidence": 1.0,
+        "category": "messy_style",
+        "root_cause_hint": "script_expression_ok",
+        "rule_types": []
+      }
+    ],
+    "multi_error_results": [
+      {
+        "case_id": "me-java-01",
+        "language": "Java",
+        "expected_types": [
+          "MissingImport",
+          "TypeMismatch",
+          "UnreachableCode"
+        ],
+        "expected_primary": "TypeMismatch",
+        "single_predicted": "TypeMismatch",
+        "single_confidence": 1.0,
+        "all_detected_types": [
+          "ImportError",
+          "MissingImport",
+          "TypeMismatch"
+        ],
+        "all_recall": 0.667,
+        "full_multi_match": false,
+        "primary_correct": true,
+        "single_only_failure": false,
+        "category": "overlap"
+      },
+      {
+        "case_id": "me-cpp-01",
+        "language": "C++",
+        "expected_types": [
+          "DanglingPointer",
+          "UndeclaredIdentifier"
+        ],
+        "expected_primary": "UndeclaredIdentifier",
+        "single_predicted": "UndeclaredIdentifier",
+        "single_confidence": 1.0,
+        "all_detected_types": [
+          "UndeclaredIdentifier"
+        ],
+        "all_recall": 0.5,
+        "full_multi_match": false,
+        "primary_correct": true,
+        "single_only_failure": true,
+        "category": "overlap"
+      },
+      {
+        "case_id": "me-c-01",
+        "language": "C",
+        "expected_types": [
+          "DivisionByZero",
+          "UnreachableCode"
+        ],
+        "expected_primary": "DivisionByZero",
+        "single_predicted": "DivisionByZero",
+        "single_confidence": 1.0,
+        "all_detected_types": [
+          "DivisionByZero",
+          "MissingInclude"
+        ],
+        "all_recall": 0.5,
+        "full_multi_match": false,
+        "primary_correct": true,
+        "single_only_failure": false,
+        "category": "overlap"
+      },
+      {
+        "case_id": "me-js-01",
+        "language": "JavaScript",
+        "expected_types": [
+          "DuplicateDefinition",
+          "UnreachableCode"
+        ],
+        "expected_primary": "DuplicateDefinition",
+        "single_predicted": "DuplicateDefinition",
+        "single_confidence": 1.0,
+        "all_detected_types": [
+          "DuplicateDefinition"
+        ],
+        "all_recall": 0.5,
+        "full_multi_match": false,
+        "primary_correct": true,
+        "single_only_failure": true,
+        "category": "overlap"
+      },
+      {
+        "case_id": "me-py-01",
+        "language": "Python",
+        "expected_types": [
+          "MissingImport",
+          "TypeMismatch"
+        ],
+        "expected_primary": "TypeMismatch",
+        "single_predicted": "TypeMismatch",
+        "single_confidence": 1.0,
+        "all_detected_types": [
+          "ImportError"
+        ],
+        "all_recall": 0.0,
+        "full_multi_match": false,
+        "primary_correct": true,
+        "single_only_failure": true,
+        "category": "overlap"
+      }
+    ],
+    "family_results": [
+      {
+        "family": "division_expr_zero",
+        "language": "Python",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false
+      },
+      {
+        "family": "division_expr_zero",
+        "language": "Java",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false
+      },
+      {
+        "family": "division_expr_zero",
+        "language": "C++",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false
+      },
+      {
+        "family": "division_expr_zero",
+        "language": "JavaScript",
+        "expected": "DivisionByZero",
+        "predicted": "NoError",
+        "correct": false
+      },
+      {
+        "family": "infinite_condition_expr",
+        "language": "Python",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false
+      },
+      {
+        "family": "infinite_condition_expr",
+        "language": "Java",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false
+      },
+      {
+        "family": "infinite_condition_expr",
+        "language": "C++",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false
+      },
+      {
+        "family": "infinite_condition_expr",
+        "language": "JavaScript",
+        "expected": "InfiniteLoop",
+        "predicted": "NoError",
+        "correct": false
+      },
+      {
+        "family": "unreachable_after_jump",
+        "language": "Python",
+        "expected": "UnreachableCode",
+        "predicted": "UnreachableCode",
+        "correct": true
+      },
+      {
+        "family": "unreachable_after_jump",
+        "language": "Java",
+        "expected": "UnreachableCode",
+        "predicted": "NoError",
+        "correct": false
+      },
+      {
+        "family": "unreachable_after_jump",
+        "language": "C++",
+        "expected": "UnreachableCode",
+        "predicted": "NoError",
+        "correct": false
+      },
+      {
+        "family": "unreachable_after_jump",
+        "language": "JavaScript",
+        "expected": "UnreachableCode",
+        "predicted": "NoError",
+        "correct": false
+      }
+    ]
+  }
+}
