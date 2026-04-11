@@ -1,0 +1,273 @@
+{
+  "summary": {
+    "total_cases": 12,
+    "pass_cases": 12,
+    "fail_cases": 0,
+    "stability_failures": 0,
+    "priority_mismatches": 0
+  },
+  "cases": [
+    {
+      "case_id": "py-overlap-missingimport-typemismatch",
+      "language": "Python",
+      "category": "multi_error_overlap",
+      "expected_any": [
+        "MissingImport",
+        "TypeMismatch"
+      ],
+      "predicted": "TypeMismatch",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "TypeMismatch",
+        "TypeMismatch",
+        "TypeMismatch"
+      ],
+      "priority_consistent": true,
+      "rule_types": [
+        "TypeMismatch"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "py-nested-unreachable",
+      "language": "Python",
+      "category": "nested_edge",
+      "expected_any": [
+        "UnreachableCode"
+      ],
+      "predicted": "UnreachableCode",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "UnreachableCode",
+        "UnreachableCode",
+        "UnreachableCode"
+      ],
+      "priority_consistent": true,
+      "rule_types": [
+        "UnreachableCode"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "py-large-line-and-unused",
+      "language": "Python",
+      "category": "large_snippet",
+      "expected_any": [
+        "LineTooLong"
+      ],
+      "predicted": "LineTooLong",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "LineTooLong",
+        "LineTooLong",
+        "LineTooLong"
+      ],
+      "priority_consistent": true,
+      "rule_types": [
+        "LineTooLong"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "java-overlap-import-typemismatch",
+      "language": "Java",
+      "category": "multi_error_overlap",
+      "expected_any": [
+        "TypeMismatch",
+        "MissingImport"
+      ],
+      "predicted": "TypeMismatch",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "TypeMismatch",
+        "TypeMismatch",
+        "TypeMismatch"
+      ],
+      "priority_consistent": true,
+      "rule_types": [
+        "TypeMismatch",
+        "MissingImport"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "java-overlap-unreachable-infinite",
+      "language": "Java",
+      "category": "multi_error_overlap",
+      "expected_any": [
+        "UnreachableCode"
+      ],
+      "predicted": "UnreachableCode",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "UnreachableCode",
+        "UnreachableCode",
+        "UnreachableCode"
+      ],
+      "priority_consistent": true,
+      "rule_types": [
+        "UnreachableCode",
+        "InfiniteLoop"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "java-large-line",
+      "language": "Java",
+      "category": "large_snippet",
+      "expected_any": [
+        "LineTooLong"
+      ],
+      "predicted": "LineTooLong",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "LineTooLong",
+        "LineTooLong",
+        "LineTooLong"
+      ],
+      "priority_consistent": true,
+      "rule_types": [
+        "LineTooLong"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "c-overlap-unreachable-infinite",
+      "language": "C",
+      "category": "multi_error_overlap",
+      "expected_any": [
+        "UnreachableCode"
+      ],
+      "predicted": "UnreachableCode",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "UnreachableCode",
+        "UnreachableCode",
+        "UnreachableCode"
+      ],
+      "priority_consistent": true,
+      "rule_types": [
+        "UnreachableCode",
+        "InfiniteLoop"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "cpp-overlap-include-undeclared",
+      "language": "C++",
+      "category": "multi_error_overlap",
+      "expected_any": [
+        "UndeclaredIdentifier"
+      ],
+      "predicted": "UndeclaredIdentifier",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "UndeclaredIdentifier",
+        "UndeclaredIdentifier",
+        "UndeclaredIdentifier"
+      ],
+      "priority_consistent": true,
+      "rule_types": [
+        "UndeclaredIdentifier",
+        "MissingInclude"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "cpp-nested-dangling",
+      "language": "C++",
+      "category": "nested_edge",
+      "expected_any": [
+        "DanglingPointer"
+      ],
+      "predicted": "DanglingPointer",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "DanglingPointer",
+        "DanglingPointer",
+        "DanglingPointer"
+      ],
+      "priority_consistent": true,
+      "rule_types": [
+        "DanglingPointer",
+        "UnreachableCode"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "js-overlap-unreachable-undeclared",
+      "language": "JavaScript",
+      "category": "multi_error_overlap",
+      "expected_any": [
+        "UnreachableCode",
+        "UndeclaredIdentifier"
+      ],
+      "predicted": "UndeclaredIdentifier",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "UndeclaredIdentifier",
+        "UndeclaredIdentifier",
+        "UndeclaredIdentifier"
+      ],
+      "priority_consistent": true,
+      "rule_types": [
+        "UndeclaredIdentifier",
+        "UnreachableCode"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "js-overlap-dup-unreachable",
+      "language": "JavaScript",
+      "category": "multi_error_overlap",
+      "expected_any": [
+        "DuplicateDefinition",
+        "UnreachableCode"
+      ],
+      "predicted": "DuplicateDefinition",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "DuplicateDefinition",
+        "DuplicateDefinition",
+        "DuplicateDefinition"
+      ],
+      "priority_consistent": true,
+      "rule_types": [
+        "DuplicateDefinition",
+        "UnreachableCode"
+      ],
+      "confidence": 1.0
+    },
+    {
+      "case_id": "js-large-line",
+      "language": "JavaScript",
+      "category": "large_snippet",
+      "expected_any": [
+        "LineTooLong",
+        "NoError"
+      ],
+      "predicted": "LineTooLong",
+      "pass_expected": true,
+      "stable_prediction": true,
+      "variant_predictions": [
+        "LineTooLong",
+        "LineTooLong",
+        "LineTooLong"
+      ],
+      "priority_consistent": true,
+      "rule_types": [],
+      "confidence": 0.9994683637958334
+    }
+  ]
+}

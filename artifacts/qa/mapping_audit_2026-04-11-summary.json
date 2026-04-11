@@ -1,0 +1,14 @@
+{
+  "total_cases": 240,
+  "total_pass": 194,
+  "total_fail": 46,
+  "false_positives": 0,
+  "false_negatives": 29,
+  "misclassified": 17,
+  "degraded_mode_cases": 0,
+  "coverage_counts": {
+    "Covered": 40,
+    "Weak": 9,
+    "Missing": 11
+  }
+}

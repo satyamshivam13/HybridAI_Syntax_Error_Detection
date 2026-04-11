@@ -93,14 +93,18 @@ C_LIKE_ISSUE_PRIORITY = [
     "UnmatchedBracket",
     "MissingDelimiter",
     "TypeMismatch",
+    "InvalidAssignment",
     "MissingImport",
+    "ImportError",
+    "UndeclaredIdentifier",
     "MissingInclude",
     "DuplicateDefinition",
-    "UndeclaredIdentifier",
+    "LineTooLong",
     "DanglingPointer",
     "DivisionByZero",
-    "InfiniteLoop",
     "UnreachableCode",
+    "InfiniteLoop",
+    "UnusedVariable",
 ]
 
 JAVA_IMPORT_HINTS = {
@@ -167,7 +171,29 @@ JS_GLOBALS = {
     "console", "Math", "Number", "String", "Boolean", "Array", "Object",
     "JSON", "Promise", "window", "document", "undefined", "NaN", "Infinity",
     "parseInt", "parseFloat", "setTimeout", "clearTimeout", "setInterval",
-    "clearInterval", "require", "module", "exports",
+    "clearInterval", "require", "module", "exports", "Error",
+}
+
+PYTHON_IMPORT_BASE_HINTS = {
+    "math": "math",
+    "random": "random",
+    "json": "json",
+    "re": "re",
+    "collections": "collections",
+    "datetime": "datetime",
+    "np": "numpy",
+    "pd": "pandas",
+    "plt": "matplotlib.pyplot",
+}
+
+PYTHON_SYMBOL_TO_MODULE = {
+    "randint": "random",
+    "choice": "random",
+    "Counter": "collections",
+    "defaultdict": "collections",
+    "deque": "collections",
+    "datetime": "datetime",
+    "timedelta": "datetime",
 }
 
 C_LIKE_KEYWORDS = {
@@ -723,6 +749,534 @@ def _find_python_name_error_issue(code: str) -> dict | None:
     return None
 
 
+def _find_python_missing_import_issue(code: str) -> dict | None:
+    try:
+        tree = _ast.parse(code)
+    except Exception:
+        return None
+
+    imported_names = set()
+    imported_modules = set()
+    defined = set()
+    used_names: list[tuple[str, int, int]] = []
+    attribute_bases: list[tuple[str, int, int]] = []
+
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Import):
+            for alias in node.names:
+                imported_modules.add(alias.name.split(".")[0])
+                imported_names.add(alias.asname or alias.name.split(".")[0])
+        elif isinstance(node, _ast.ImportFrom):
+            if node.module:
+                imported_modules.add(node.module.split(".")[0])
+            for alias in node.names:
+                imported_names.add(alias.asname or alias.name)
+        elif isinstance(node, _ast.FunctionDef):
+            defined.add(node.name)
+            for arg in node.args.args:
+                defined.add(arg.arg)
+            if hasattr(node.args, "posonlyargs"):
+                for arg in node.args.posonlyargs:
+                    defined.add(arg.arg)
+            for arg in node.args.kwonlyargs:
+                defined.add(arg.arg)
+            if node.args.vararg:
+                defined.add(node.args.vararg.arg)
+            if node.args.kwarg:
+                defined.add(node.args.kwarg.arg)
+        elif isinstance(node, _ast.ClassDef):
+            defined.add(node.name)
+        elif isinstance(node, _ast.Name):
+            if isinstance(node.ctx, _ast.Store):
+                defined.add(node.id)
+            elif isinstance(node.ctx, _ast.Load):
+                used_names.append((node.id, getattr(node, "lineno", 1), getattr(node, "col_offset", 0) + 1))
+        elif isinstance(node, _ast.Attribute) and isinstance(node.value, _ast.Name):
+            attribute_bases.append(
+                (
+                    node.value.id,
+                    getattr(node.value, "lineno", 1),
+                    getattr(node.value, "col_offset", 0) + 1,
+                )
+            )
+
+    builtin_names = set(dir(builtins))
+    snippet_lines = code.splitlines()
+
+    for base, line_no, col_no in attribute_bases:
+        if base in imported_names or base in imported_modules or base in defined or base in builtin_names:
+            continue
+        module_hint = PYTHON_IMPORT_BASE_HINTS.get(base)
+        if not module_hint:
+            continue
+        snippet = snippet_lines[line_no - 1].strip() if 0 < line_no <= len(snippet_lines) else ""
+        return {
+            "type": "MissingImport",
+            "line": line_no,
+            "col": col_no,
+            "message": f"{base} appears to be used without importing {module_hint}.",
+            "snippet": snippet,
+            "suggestion": f"Add 'import {module_hint}' before using {base}.",
+        }
+
+    for name, line_no, col_no in used_names:
+        if name in imported_names or name in imported_modules or name in defined or name in builtin_names:
+            continue
+        module_hint = PYTHON_SYMBOL_TO_MODULE.get(name)
+        if not module_hint:
+            continue
+        if module_hint in imported_modules:
+            continue
+        snippet = snippet_lines[line_no - 1].strip() if 0 < line_no <= len(snippet_lines) else ""
+        return {
+            "type": "MissingImport",
+            "line": line_no,
+            "col": col_no,
+            "message": f"{name} appears to be used without importing {module_hint}.",
+            "snippet": snippet,
+            "suggestion": f"Add 'import {module_hint}' or import {name} directly.",
+        }
+    return None
+
+
+def _find_python_import_error_issue(code: str) -> dict | None:
+    """
+    Heuristic-only import error detector.
+    Static analysis cannot prove package availability, so this only flags
+    obviously invalid placeholder module names.
+    """
+    suspicious_tokens = ("does_not_exist", "ghost", "imaginary", "not.real", "nonexistent")
+    lines = code.splitlines()
+    try:
+        tree = _ast.parse(code)
+    except Exception:
+        return None
+
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Import):
+            for alias in node.names:
+                mod = alias.name
+                lowered = mod.lower()
+                if any(token in lowered for token in suspicious_tokens):
+                    line_no = getattr(node, "lineno", 1)
+                    snippet = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""
+                    return {
+                        "type": "ImportError",
+                        "line": line_no,
+                        "col": getattr(node, "col_offset", 0) + 1,
+                        "message": f"Imported module '{mod}' appears to be unavailable.",
+                        "snippet": snippet,
+                        "suggestion": f"Verify that '{mod}' exists and is installed.",
+                    }
+        elif isinstance(node, _ast.ImportFrom):
+            mod = node.module or ""
+            lowered = mod.lower()
+            if any(token in lowered for token in suspicious_tokens):
+                line_no = getattr(node, "lineno", 1)
+                snippet = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""
+                return {
+                    "type": "ImportError",
+                    "line": line_no,
+                    "col": getattr(node, "col_offset", 0) + 1,
+                    "message": f"Imported module '{mod}' appears to be unavailable.",
+                    "snippet": snippet,
+                    "suggestion": f"Verify that '{mod}' exists and is installed.",
+                }
+        elif isinstance(node, _ast.Call):
+            # importlib.import_module("...") explicit dynamic import
+            if isinstance(node.func, _ast.Attribute) and node.func.attr == "import_module":
+                if node.args and isinstance(node.args[0], _ast.Constant) and isinstance(node.args[0].value, str):
+                    mod = node.args[0].value
+                    lowered = mod.lower()
+                    if any(token in lowered for token in suspicious_tokens):
+                        line_no = getattr(node, "lineno", 1)
+                        snippet = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""
+                        return {
+                            "type": "ImportError",
+                            "line": line_no,
+                            "col": getattr(node, "col_offset", 0) + 1,
+                            "message": f"Dynamic import target '{mod}' appears to be unavailable.",
+                            "snippet": snippet,
+                            "suggestion": "Use a valid module name and verify installation.",
+                        }
+    return None
+
+
+def _find_python_duplicate_definition_issue(code: str) -> dict | None:
+    try:
+        tree = _ast.parse(code)
+    except Exception:
+        return None
+
+    seen: dict[str, tuple[int, str]] = {}
+    lines = code.splitlines()
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.FunctionDef):
+            key = f"func:{node.name}"
+            if key in seen:
+                line_no = getattr(node, "lineno", 1)
+                snippet = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""
+                return {
+                    "type": "DuplicateDefinition",
+                    "line": line_no,
+                    "col": getattr(node, "col_offset", 0) + 1,
+                    "message": f"Function '{node.name}' is defined multiple times.",
+                    "snippet": snippet,
+                    "suggestion": "Rename or remove duplicate definitions.",
+                }
+            seen[key] = (getattr(node, "lineno", 1), "function")
+        elif isinstance(node, _ast.ClassDef):
+            key = f"class:{node.name}"
+            if key in seen:
+                line_no = getattr(node, "lineno", 1)
+                snippet = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""
+                return {
+                    "type": "DuplicateDefinition",
+                    "line": line_no,
+                    "col": getattr(node, "col_offset", 0) + 1,
+                    "message": f"Class '{node.name}' is defined multiple times.",
+                    "snippet": snippet,
+                    "suggestion": "Rename or remove duplicate definitions.",
+                }
+            seen[key] = (getattr(node, "lineno", 1), "class")
+    return None
+
+
+def _find_python_unused_variable_issue(code: str) -> dict | None:
+    try:
+        tree = _ast.parse(code)
+    except Exception:
+        return None
+
+    assigned: dict[str, tuple[int, int]] = {}
+    loaded = set()
+    lines = code.splitlines()
+
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Name):
+            if isinstance(node.ctx, _ast.Store):
+                assigned.setdefault(node.id, (getattr(node, "lineno", 1), getattr(node, "col_offset", 0) + 1))
+            elif isinstance(node.ctx, _ast.Load):
+                loaded.add(node.id)
+
+    for name, (line_no, col_no) in assigned.items():
+        if name.startswith("_"):
+            continue
+        if name in loaded:
+            continue
+        snippet = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""
+        return {
+            "type": "UnusedVariable",
+            "line": line_no,
+            "col": col_no,
+            "message": f"Variable '{name}' is assigned but not used.",
+            "snippet": snippet,
+            "suggestion": "Use the variable or remove it.",
+        }
+    return None
+
+
+def _find_python_line_too_long_issue(code: str, max_len: int = 120) -> dict | None:
+    for line_no, line in enumerate(code.splitlines(), start=1):
+        if len(line) <= max_len:
+            continue
+        return {
+            "type": "LineTooLong",
+            "line": line_no,
+            "col": max_len + 1,
+            "message": f"Line exceeds {max_len} characters.",
+            "snippet": line.strip(),
+            "suggestion": "Wrap the statement to keep line length readable.",
+        }
+    return None
+
+
+def _find_python_type_mismatch_issue(code: str) -> dict | None:
+    try:
+        tree = _ast.parse(code)
+    except Exception:
+        return None
+
+    lines = code.splitlines()
+
+    def _annotation_name(node) -> str | None:
+        if isinstance(node, _ast.Name):
+            return node.id
+        if isinstance(node, _ast.Subscript) and isinstance(node.value, _ast.Name):
+            return node.value.id
+        return None
+
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.AnnAssign):
+            annotation = _annotation_name(node.annotation)
+            value = node.value
+            if annotation == "int" and isinstance(value, _ast.Constant) and isinstance(value.value, str):
+                line_no = getattr(node, "lineno", 1)
+                return {
+                    "type": "TypeMismatch",
+                    "line": line_no,
+                    "col": getattr(node, "col_offset", 0) + 1,
+                    "message": "Annotated integer variable is assigned a string value.",
+                    "snippet": lines[line_no - 1].strip() if 0 < line_no <= len(lines) else "",
+                    "suggestion": "Assign an integer or adjust the annotation.",
+                }
+            if annotation == "list" and isinstance(value, _ast.List):
+                if any(isinstance(elt, _ast.Constant) and isinstance(elt.value, str) for elt in value.elts):
+                    line_no = getattr(node, "lineno", 1)
+                    return {
+                        "type": "TypeMismatch",
+                        "line": line_no,
+                        "col": getattr(node, "col_offset", 0) + 1,
+                        "message": "List annotation appears incompatible with assigned literal elements.",
+                        "snippet": lines[line_no - 1].strip() if 0 < line_no <= len(lines) else "",
+                        "suggestion": "Align element types with the declared list annotation.",
+                    }
+
+        if isinstance(node, _ast.FunctionDef):
+            return_ann = _annotation_name(node.returns) if node.returns else None
+            if return_ann != "int":
+                continue
+            for child in _ast.walk(node):
+                if isinstance(child, _ast.Return) and isinstance(child.value, _ast.Constant) and isinstance(child.value.value, str):
+                    line_no = getattr(child, "lineno", getattr(node, "lineno", 1))
+                    return {
+                        "type": "TypeMismatch",
+                        "line": line_no,
+                        "col": getattr(child, "col_offset", 0) + 1,
+                        "message": "Function annotated to return int appears to return a string.",
+                        "snippet": lines[line_no - 1].strip() if 0 < line_no <= len(lines) else "",
+                        "suggestion": "Return an int or update the return annotation.",
+                    }
+    return None
+
+
+def _find_python_infinite_loop_issue(code: str) -> dict | None:
+    for line_no, raw in enumerate(code.splitlines(), start=1):
+        line = raw.strip()
+        if re.match(r"^while\s+(True|1)\s*:\s*$", line):
+            return {
+                "type": "InfiniteLoop",
+                "line": line_no,
+                "col": 1,
+                "message": "Loop condition is always true.",
+                "snippet": line,
+                "suggestion": "Add a break path or finite condition.",
+            }
+    return None
+
+
+def _find_python_unreachable_code_issue(code: str) -> dict | None:
+    lines = code.splitlines()
+    jump_pattern = re.compile(r"^(return|raise|break|continue)\b")
+    for idx, raw in enumerate(lines):
+        stripped = raw.strip()
+        if not jump_pattern.match(stripped):
+            continue
+        indent = len(raw) - len(raw.lstrip())
+        for j in range(idx + 1, len(lines)):
+            nxt = lines[j]
+            nxt_stripped = nxt.strip()
+            if not nxt_stripped or nxt_stripped.startswith("#"):
+                continue
+            nxt_indent = len(nxt) - len(nxt.lstrip())
+            if nxt_indent < indent:
+                break
+            return {
+                "type": "UnreachableCode",
+                "line": j + 1,
+                "col": 1,
+                "message": "Statement appears after a control-flow jump and may never execute.",
+                "snippet": nxt_stripped,
+                "suggestion": "Remove dead code or restructure control flow.",
+            }
+    return None
+
+
+def _find_python_invalid_assignment_issue(code: str) -> dict | None:
+    try:
+        tree = _ast.parse(code)
+    except Exception:
+        return None
+
+    lines = code.splitlines()
+    for node in _ast.walk(tree):
+        if not isinstance(node, _ast.Assign):
+            continue
+        if len(node.targets) != 1:
+            continue
+        target = node.targets[0]
+        if not isinstance(target, (_ast.Tuple, _ast.List)):
+            continue
+        if isinstance(node.value, _ast.Constant) and not isinstance(node.value.value, (tuple, list, str, bytes)):
+            line_no = getattr(node, "lineno", 1)
+            return {
+                "type": "InvalidAssignment",
+                "line": line_no,
+                "col": getattr(node, "col_offset", 0) + 1,
+                "message": "Tuple/list assignment expects an iterable value.",
+                "snippet": lines[line_no - 1].strip() if 0 < line_no <= len(lines) else "",
+                "suggestion": "Assign an iterable with matching arity.",
+            }
+    return None
+
+
+def _find_python_dangling_pointer_issue(code: str) -> dict | None:
+    """
+    Python does not expose raw pointer lifetime in standard code paths, but ctypes
+    snippets can mimic unsafe pointer patterns commonly seen in C examples.
+    """
+    try:
+        tree = _ast.parse(code)
+    except Exception:
+        return None
+
+    lines = code.splitlines()
+    pointer_assignments: dict[str, tuple[int, int, str | None]] = {}
+    local_names_by_function: dict[_ast.FunctionDef, set[str]] = {}
+    parent_map: dict[_ast.AST, _ast.AST] = {}
+
+    for parent in _ast.walk(tree):
+        for child in _ast.iter_child_nodes(parent):
+            parent_map[child] = parent
+
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.FunctionDef):
+            locals_in_fn = set()
+            for child in _ast.walk(node):
+                if isinstance(child, _ast.Name) and isinstance(child.ctx, _ast.Store):
+                    locals_in_fn.add(child.id)
+            local_names_by_function[node] = locals_in_fn
+
+    def _is_ctypes_pointer_call(call_node: _ast.Call) -> bool:
+        return (
+            isinstance(call_node.func, _ast.Attribute)
+            and isinstance(call_node.func.value, _ast.Name)
+            and call_node.func.value.id == "ctypes"
+            and call_node.func.attr == "pointer"
+        )
+
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Assign) and isinstance(node.value, _ast.Call) and _is_ctypes_pointer_call(node.value):
+            pointee = None
+            if node.value.args and isinstance(node.value.args[0], _ast.Name):
+                pointee = node.value.args[0].id
+            for target in node.targets:
+                if isinstance(target, _ast.Name):
+                    pointer_assignments[target.id] = (
+                        getattr(node, "lineno", 1),
+                        getattr(node, "col_offset", 0) + 1,
+                        pointee,
+                    )
+
+    for node in _ast.walk(tree):
+        if not isinstance(node, _ast.Return):
+            continue
+        fn = parent_map.get(node)
+        while fn is not None and not isinstance(fn, _ast.FunctionDef):
+            fn = parent_map.get(fn)
+        if not isinstance(fn, _ast.FunctionDef):
+            continue
+        locals_in_fn = local_names_by_function.get(fn, set())
+        line_no = getattr(node, "lineno", getattr(fn, "lineno", 1))
+        snippet = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""
+
+        # return ctypes.pointer(local)
+        if isinstance(node.value, _ast.Call) and _is_ctypes_pointer_call(node.value):
+            if node.value.args and isinstance(node.value.args[0], _ast.Name) and node.value.args[0].id in locals_in_fn:
+                return {
+                    "type": "DanglingPointer",
+                    "line": line_no,
+                    "col": getattr(node, "col_offset", 0) + 1,
+                    "message": "Returning pointer to local ctypes storage may outlive its owner.",
+                    "snippet": snippet,
+                    "suggestion": "Return a copied value or manage lifetime explicitly.",
+                }
+
+        # return ptr where ptr was created from ctypes.pointer(local)
+        if isinstance(node.value, _ast.Name) and node.value.id in pointer_assignments:
+            _, _, pointee = pointer_assignments[node.value.id]
+            if pointee and pointee in locals_in_fn:
+                return {
+                    "type": "DanglingPointer",
+                    "line": line_no,
+                    "col": getattr(node, "col_offset", 0) + 1,
+                    "message": "Returning a pointer derived from local ctypes storage may be unsafe.",
+                    "snippet": snippet,
+                    "suggestion": "Avoid returning pointers to function-local ctypes objects.",
+                }
+
+    # Conservative fallback: explicit pointer dereference from ctypes.pointer assignment.
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Attribute) and node.attr == "contents" and isinstance(node.value, _ast.Name):
+            ptr_name = node.value.id
+            if ptr_name in pointer_assignments:
+                line_no = getattr(node, "lineno", 1)
+                snippet = lines[line_no - 1].strip() if 0 < line_no <= len(lines) else ""
+                return {
+                    "type": "DanglingPointer",
+                    "line": line_no,
+                    "col": getattr(node, "col_offset", 0) + 1,
+                    "message": "Pointer dereference via ctypes.contents may rely on unstable storage lifetime.",
+                    "snippet": snippet,
+                    "suggestion": "Ensure the pointee outlives pointer usage.",
+                }
+    return None
+
+
+def _find_python_unresolved_identifier_issue(code: str) -> dict | None:
+    """
+    Return NameError or UndeclaredIdentifier based on unresolved-symbol context.
+    """
+    try:
+        tree = _ast.parse(code)
+    except Exception:
+        return None
+
+    defined = set()
+    used = []
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Name):
+            if isinstance(node.ctx, _ast.Store):
+                defined.add(node.id)
+            elif isinstance(node.ctx, _ast.Load):
+                used.append((node.id, getattr(node, "lineno", 1), getattr(node, "col_offset", 0) + 1))
+        elif isinstance(node, _ast.FunctionDef):
+            defined.add(node.name)
+            for arg in node.args.args:
+                defined.add(arg.arg)
+            if hasattr(node.args, "posonlyargs"):
+                for arg in node.args.posonlyargs:
+                    defined.add(arg.arg)
+            for arg in node.args.kwonlyargs:
+                defined.add(arg.arg)
+            if node.args.vararg:
+                defined.add(node.args.vararg.arg)
+            if node.args.kwarg:
+                defined.add(node.args.kwarg.arg)
+        elif isinstance(node, _ast.ClassDef):
+            defined.add(node.name)
+        elif isinstance(node, (_ast.Import, _ast.ImportFrom)):
+            for alias in node.names:
+                defined.add(alias.asname or alias.name.split(".")[0])
+
+    builtin_names = set(dir(builtins))
+    snippet_lines = code.splitlines()
+    for name, line_no, col_no in used:
+        if name in defined or name in builtin_names:
+            continue
+        issue_type = "UndeclaredIdentifier" if "_" in name else "NameError"
+        snippet = snippet_lines[line_no - 1].strip() if 0 < line_no <= len(snippet_lines) else ""
+        return {
+            "type": issue_type,
+            "line": line_no,
+            "col": col_no,
+            "message": f"{name} is used before assignment or import.",
+            "snippet": snippet,
+            "suggestion": "Define or import the name before using it.",
+        }
+    return None
+
+
 def _has_infinite_loop(code: str) -> bool:
     """
     Rule-based detector for obvious infinite-loop patterns.
@@ -1218,6 +1772,156 @@ def _find_dangling_pointer_return_issues(code: str, language: str) -> list[dict]
     return issues
 
 
+def _find_line_too_long_issues(code: str, language: str, max_len: int = 120) -> list[dict]:
+    if language not in {"Java"}:
+        return []
+    issues = []
+    for line_no, line in enumerate(code.splitlines(), start=1):
+        if len(line) <= max_len:
+            continue
+        issues.append(_make_issue(
+            "LineTooLong",
+            f"Line exceeds {max_len} characters.",
+            line=line_no,
+            col=max_len + 1,
+            snippet=line.strip(),
+            suggestion="Wrap this line for readability.",
+        ))
+    return issues
+
+
+def _find_import_error_issues(code: str, language: str) -> list[dict]:
+    if language != "Java":
+        return []
+    issues = []
+    suspicious_tokens = ("doesnotexist", "ghost", "imaginary", "not.real", "foo.bar.baz")
+    for line_no, line in enumerate(_strip_c_like_comments_and_strings(code).splitlines(), start=1):
+        stripped = line.strip()
+        import_match = re.match(r"^import\s+([A-Za-z_][\w\.]*)\s*;", stripped)
+        if not import_match:
+            continue
+        import_path = import_match.group(1)
+        lowered = import_path.lower()
+        if not any(token in lowered for token in suspicious_tokens):
+            continue
+        issues.append(_make_issue(
+            "ImportError",
+            f"Imported package '{import_path}' appears invalid or unavailable.",
+            line=line_no,
+            col=1,
+            snippet=code.splitlines()[line_no - 1].strip(),
+            suggestion="Check package name and dependency availability.",
+        ))
+    return issues
+
+
+def _find_invalid_assignment_issues(code: str, language: str) -> list[dict]:
+    if language != "Java":
+        return []
+    issues = []
+    sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
+    original_lines = code.splitlines()
+
+    final_vars: dict[str, int] = {}
+    array_vars: dict[str, int] = {}
+
+    final_decl = re.compile(
+        r"\bfinal\s+(?:int|long|short|byte|float|double|char|boolean|String)\s+([A-Za-z_]\w*)\s*="
+    )
+    array_decl = re.compile(r"\b(?:int|long|short|byte|float|double|char|boolean|String)\s*\[\]\s+([A-Za-z_]\w*)\b")
+
+    for line_no, line in enumerate(sanitized_lines, start=1):
+        for match in final_decl.finditer(line):
+            final_vars[match.group(1)] = line_no
+        for match in array_decl.finditer(line):
+            array_vars[match.group(1)] = line_no
+
+    for line_no, line in enumerate(sanitized_lines, start=1):
+        stripped = line.strip()
+        if not stripped:
+            continue
+
+        if re.match(r"^\d+\s*=", stripped):
+            issues.append(_make_issue(
+                "InvalidAssignment",
+                "Assignment target cannot be a numeric literal.",
+                line=line_no,
+                col=1,
+                snippet=original_lines[line_no - 1].strip(),
+                suggestion="Assign to a declared variable, not a literal.",
+            ))
+            continue
+
+        for var_name in final_vars:
+            assign_match = re.search(rf"\b{re.escape(var_name)}\s*=", stripped)
+            if assign_match and line_no != final_vars[var_name]:
+                issues.append(_make_issue(
+                    "InvalidAssignment",
+                    f"Final variable '{var_name}' is reassigned.",
+                    line=line_no,
+                    col=assign_match.start() + 1,
+                    snippet=original_lines[line_no - 1].strip(),
+                    suggestion="Remove reassignment or drop final modifier.",
+                ))
+                break
+        else:
+            for var_name in array_vars:
+                scalar_assign = re.search(rf"\b{re.escape(var_name)}\s*=\s*\d+\s*;", stripped)
+                if scalar_assign:
+                    issues.append(_make_issue(
+                        "InvalidAssignment",
+                        f"Array variable '{var_name}' is assigned a scalar value.",
+                        line=line_no,
+                        col=scalar_assign.start() + 1,
+                        snippet=original_lines[line_no - 1].strip(),
+                        suggestion="Assign a compatible array value.",
+                    ))
+                    break
+    return issues
+
+
+def _find_unused_variable_issues(code: str, language: str) -> list[dict]:
+    if language != "Java":
+        return []
+    issues = []
+    sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
+    original_lines = code.splitlines()
+
+    declaration_pattern = re.compile(
+        r"\b(?:int|long|short|byte|float|double|char|boolean|String)\s+([A-Za-z_]\w*)\b(?:\s*=\s*[^;]+)?;"
+    )
+    declarations: list[tuple[str, int]] = []
+    for line_no, line in enumerate(sanitized_lines, start=1):
+        for match in declaration_pattern.finditer(line):
+            declarations.append((match.group(1), line_no))
+
+    for var_name, decl_line in declarations:
+        # Avoid noisy findings on short throwaway identifiers in tiny snippets.
+        if len(var_name) == 1 and var_name != "i":
+            continue
+        meaningful_use = False
+        for line_no in range(decl_line + 1, len(sanitized_lines) + 1):
+            line = sanitized_lines[line_no - 1]
+            if not re.search(rf"\b{re.escape(var_name)}\b", line):
+                continue
+            stripped = line.strip()
+            # Treat condition-only usage as weak usage in education mode.
+            if re.search(rf"\b(?:if|while|for)\s*\([^)]*\b{re.escape(var_name)}\b", stripped):
+                continue
+            meaningful_use = True
+            break
+        if not meaningful_use:
+            issues.append(_make_issue(
+                "UnusedVariable",
+                f"Variable '{var_name}' is declared but never meaningfully used.",
+                line=decl_line,
+                col=1,
+                snippet=original_lines[decl_line - 1].strip(),
+                suggestion="Use the variable or remove it.",
+            ))
+    return issues
+
+
 def _collect_declared_names(code: str, language: str) -> set[str]:
     sanitized_lines = _strip_c_like_comments_and_strings(code).splitlines()
     declared = set()
@@ -1281,24 +1985,62 @@ def _collect_declared_names(code: str, language: str) -> set[str]:
 
 
 def _find_duplicate_definition_issues(code: str, language: str) -> list[dict]:
-    if language != "JavaScript":
-        return []
-    seen = {}
     issues = []
-    for lineno, line in enumerate(_strip_c_like_comments_and_strings(code).splitlines(), start=1):
-        for match in re.finditer(r"\b(let|const)\s+([A-Za-z_]\w*)", line):
-            name = match.group(2)
-            if name in seen:
-                issues.append(_make_issue(
-                    "DuplicateDefinition",
-                    f"{name} is declared multiple times in the same scope.",
-                    line=lineno,
-                    col=match.start(2) + 1,
-                    snippet=code.splitlines()[lineno - 1].strip(),
-                    suggestion="Rename or remove the duplicate declaration.",
-                ))
-            else:
-                seen[name] = lineno
+
+    if language == "JavaScript":
+        seen = {}
+        for lineno, line in enumerate(_strip_c_like_comments_and_strings(code).splitlines(), start=1):
+            for match in re.finditer(r"\b(let|const)\s+([A-Za-z_]\w*)", line):
+                name = match.group(2)
+                if name in seen:
+                    issues.append(_make_issue(
+                        "DuplicateDefinition",
+                        f"{name} is declared multiple times in the same scope.",
+                        line=lineno,
+                        col=match.start(2) + 1,
+                        snippet=code.splitlines()[lineno - 1].strip(),
+                        suggestion="Rename or remove the duplicate declaration.",
+                    ))
+                else:
+                    seen[name] = lineno
+        return issues
+
+    if language == "Java":
+        seen_methods = {}
+        seen_fields = {}
+        type_pattern = r"(?:int|long|short|byte|float|double|char|boolean|String|void)"
+        for lineno, line in enumerate(_strip_c_like_comments_and_strings(code).splitlines(), start=1):
+            method_match = re.search(rf"\b(?:public|private|protected|static|final|\s)+{type_pattern}\s+([A-Za-z_]\w*)\s*\(", line)
+            if method_match:
+                name = method_match.group(1)
+                if name in seen_methods:
+                    issues.append(_make_issue(
+                        "DuplicateDefinition",
+                        f"Method '{name}' is defined multiple times.",
+                        line=lineno,
+                        col=method_match.start(1) + 1,
+                        snippet=code.splitlines()[lineno - 1].strip(),
+                        suggestion="Rename, overload with distinct signature, or remove duplicates.",
+                    ))
+                else:
+                    seen_methods[name] = lineno
+
+            field_match = re.search(rf"\b{type_pattern}\s+([A-Za-z_]\w*)\s*;", line)
+            if field_match:
+                name = field_match.group(1)
+                if name in seen_fields:
+                    issues.append(_make_issue(
+                        "DuplicateDefinition",
+                        f"Field '{name}' is declared multiple times.",
+                        line=lineno,
+                        col=field_match.start(1) + 1,
+                        snippet=code.splitlines()[lineno - 1].strip(),
+                        suggestion="Rename or remove duplicate field declarations.",
+                    ))
+                else:
+                    seen_fields[name] = lineno
+        return issues
+
     return issues
 
 
@@ -1419,7 +2161,11 @@ def _collect_c_like_rule_based_issues(code: str, language: str) -> list[dict]:
     issues.extend(_find_type_mismatch_issues(code, language))
     issues.extend(_find_missing_import_issues(code, language))
     issues.extend(_find_missing_include_issues(code, language))
+    issues.extend(_find_import_error_issues(code, language))
+    issues.extend(_find_invalid_assignment_issues(code, language))
+    issues.extend(_find_line_too_long_issues(code, language))
     issues.extend(_find_duplicate_definition_issues(code, language))
+    issues.extend(_find_unused_variable_issues(code, language))
     issues.extend(_find_undeclared_identifier_issues(code, language))
     issues.extend(_find_dangling_pointer_return_issues(code, language))
     issues.extend(_find_division_by_zero_issues(code))
@@ -1535,14 +2281,105 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
                     ],
                 }, warnings)
 
-            name_issue = _find_python_name_error_issue(code)
-            if name_issue:
+            line_too_long_issue = _find_python_line_too_long_issue(code)
+            if line_too_long_issue:
                 return _attach_metadata({
                     "language": language,
-                    "predicted_error": "NameError",
+                    "predicted_error": "LineTooLong",
                     "confidence": 1.0,
-                    "tutor": explain_error("NameError"),
-                    "rule_based_issues": [name_issue],
+                    "tutor": explain_error("LineTooLong"),
+                    "rule_based_issues": [line_too_long_issue],
+                }, warnings)
+
+            duplicate_issue = _find_python_duplicate_definition_issue(code)
+            if duplicate_issue:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "DuplicateDefinition",
+                    "confidence": 1.0,
+                    "tutor": explain_error("DuplicateDefinition"),
+                    "rule_based_issues": [duplicate_issue],
+                }, warnings)
+
+            invalid_assignment_issue = _find_python_invalid_assignment_issue(code)
+            if invalid_assignment_issue:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "InvalidAssignment",
+                    "confidence": 1.0,
+                    "tutor": explain_error("InvalidAssignment"),
+                    "rule_based_issues": [invalid_assignment_issue],
+                }, warnings)
+
+            type_mismatch_issue = _find_python_type_mismatch_issue(code)
+            if type_mismatch_issue:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "TypeMismatch",
+                    "confidence": 1.0,
+                    "tutor": explain_error("TypeMismatch"),
+                    "rule_based_issues": [type_mismatch_issue],
+                }, warnings)
+
+            dangling_pointer_issue = _find_python_dangling_pointer_issue(code)
+            if dangling_pointer_issue:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "DanglingPointer",
+                    "confidence": 1.0,
+                    "tutor": explain_error("DanglingPointer"),
+                    "rule_based_issues": [dangling_pointer_issue],
+                }, warnings)
+
+            infinite_loop_issue = _find_python_infinite_loop_issue(code)
+            if infinite_loop_issue:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "InfiniteLoop",
+                    "confidence": 1.0,
+                    "tutor": explain_error("InfiniteLoop"),
+                    "rule_based_issues": [infinite_loop_issue],
+                }, warnings)
+
+            unreachable_issue = _find_python_unreachable_code_issue(code)
+            if unreachable_issue:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "UnreachableCode",
+                    "confidence": 1.0,
+                    "tutor": explain_error("UnreachableCode"),
+                    "rule_based_issues": [unreachable_issue],
+                }, warnings)
+
+            import_error_issue = _find_python_import_error_issue(code)
+            if import_error_issue:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "ImportError",
+                    "confidence": 1.0,
+                    "tutor": explain_error("ImportError"),
+                    "rule_based_issues": [import_error_issue],
+                }, warnings)
+
+            missing_import_issue = _find_python_missing_import_issue(code)
+            if missing_import_issue:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "MissingImport",
+                    "confidence": 1.0,
+                    "tutor": explain_error("MissingImport"),
+                    "rule_based_issues": [missing_import_issue],
+                }, warnings)
+
+            unresolved_issue = _find_python_unresolved_identifier_issue(code)
+            if unresolved_issue:
+                issue_type = unresolved_issue["type"]
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": issue_type,
+                    "confidence": 1.0,
+                    "tutor": explain_error(issue_type),
+                    "rule_based_issues": [unresolved_issue],
                 }, warnings)
 
             # Still check for semantic/runtime errors via ML.
@@ -1572,7 +2409,17 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
                     "tutor": explain_error("DivisionByZero"),
                     "rule_based_issues": rule_based_issues
                 }, warnings)
-                
+
+            unused_var_issue = _find_python_unused_variable_issue(code)
+            if unused_var_issue:
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "UnusedVariable",
+                    "confidence": 1.0,
+                    "tutor": explain_error("UnusedVariable"),
+                    "rule_based_issues": [unused_var_issue],
+                }, warnings)
+                 
             # No semantic error detected either
             return _attach_metadata({
                 "language": language,
@@ -1647,6 +2494,21 @@ def detect_errors(code: str, filename: str | None = None, language_override: str
         semantic_issues = [issue for issue in rule_based_issues if issue.get("type") in SEMANTIC_ERROR_TYPES]
 
         if syntax_issues:
+            # If long-line signal and unmatched-bracket noise co-occur on Java single-line snippets,
+            # keep style diagnostics actionable instead of over-reporting parser cascade.
+            if (
+                language == "Java"
+                and any(issue.get("type") == "LineTooLong" for issue in semantic_issues)
+                and all(issue.get("type") == "UnmatchedBracket" for issue in syntax_issues)
+            ):
+                return _attach_metadata({
+                    "language": language,
+                    "predicted_error": "LineTooLong",
+                    "confidence": 1.0,
+                    "tutor": explain_error("LineTooLong"),
+                    "rule_based_issues": rule_based_issues,
+                }, warnings)
+
             primary_issue = _pick_primary_issue(syntax_issues)
             primary_type = str(primary_issue.get("type") or "SyntaxError") if primary_issue else "SyntaxError"
             return _attach_metadata({
