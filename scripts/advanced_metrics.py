@@ -5,6 +5,7 @@ Compute advanced evaluation metrics for the trained model.
 import argparse
 import os
 import sys
+from typing import cast
 
 import joblib
 import numpy as np
@@ -40,6 +41,9 @@ def main() -> int:
     if err:
         print(f"Skipping advanced metrics: model unavailable ({err})")
         return 0
+    if model is None or vectorizer is None or label_encoder is None:
+        print("Skipping advanced metrics: incomplete model bundle")
+        return 0
 
     df = pd.read_csv(args.dataset)
     if "buggy_code" not in df.columns or "error_type" not in df.columns:
@@ -47,6 +51,7 @@ def main() -> int:
         return 1
 
     texts = df["buggy_code"].fillna("").astype(str)
+    classes = np.asarray(label_encoder.classes_)
     y_true = label_encoder.transform(df["error_type"])
     x_text = vectorizer.transform(texts)
     try:
@@ -61,19 +66,25 @@ def main() -> int:
     accuracy = accuracy_score(y_true, y_pred)
     kappa = cohen_kappa_score(y_true, y_pred)
     mcc = matthews_corrcoef(y_true, y_pred)
-    precision, recall, f1, support = precision_recall_fscore_support(
-        y_true, y_pred, labels=range(len(label_encoder.classes_)), zero_division=0
+    metric_tuple = precision_recall_fscore_support(
+        y_true, y_pred, labels=list(range(len(classes))), zero_division=0
     )
+    precision = np.atleast_1d(metric_tuple[0])
+    recall = np.atleast_1d(metric_tuple[1])
+    f1 = np.atleast_1d(metric_tuple[2])
+    support_raw = metric_tuple[3]
+    support = np.atleast_1d(support_raw) if support_raw is not None else np.zeros(len(classes), dtype=int)
 
     if args.smoke:
-        print(f"Smoke OK: accuracy={accuracy:.4f}, classes={len(label_encoder.classes_)}")
+        print(f"Smoke OK: accuracy={accuracy:.4f}, classes={len(classes)}")
         return 0
 
     rows = []
-    for idx, label in enumerate(label_encoder.classes_):
+    for idx, label in enumerate(classes):
+        label_str = cast(str, label)
         rows.append(
-            f"{label:24s} prec={precision[idx]:.3f} rec={recall[idx]:.3f} "
-            f"f1={f1[idx]:.3f} support={int(support[idx])}"
+            f"{label_str:24s} prec={float(precision[idx]):.3f} rec={float(recall[idx]):.3f} "
+            f"f1={float(f1[idx]):.3f} support={int(support[idx])}"
         )
 
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)

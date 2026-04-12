@@ -29,7 +29,7 @@ class AutoFixer:
                 self.fixes_applied.append(f"Added colon at line {line_num + 1}")
         return '\n'.join(lines)
     
-    def fix_missing_semicolon(self, code: str, line_num: int = None) -> str:
+    def fix_missing_semicolon(self, code: str, line_num: int | None = None) -> str:
         """
         Add missing semicolon (for C/C++/Java/JavaScript)
         """
@@ -131,7 +131,7 @@ class AutoFixer:
         
         return code
     
-    def fix_missing_import(self, code: str, language: str = None) -> str:
+    def fix_missing_import(self, code: str, language: str | None = None) -> str:
         """
         Suggest common missing imports based on code content
         """
@@ -167,7 +167,7 @@ class AutoFixer:
         
         return code
     
-    def fix_missing_include(self, code: str, language: str = None) -> str:
+    def fix_missing_include(self, code: str, language: str | None = None) -> str:
         """
         Suggest common missing includes for C/C++
         """
@@ -268,7 +268,7 @@ class AutoFixer:
         self.fixes_applied.append("Suggestion: Break long lines into multiple lines for better readability and PEP8 compliance")
         return code
     
-    def apply_fixes(self, code: str, error_type: str, line_num: int = None, language: str = None) -> dict:
+    def apply_fixes(self, code: str, error_type: str, line_num: int | None = None, language: str | None = None) -> dict:
         """
         Apply appropriate fix based on error type and language
         
@@ -367,7 +367,7 @@ class AutoFixer:
             }
 
 
-def auto_fix_code(code: str, error_type: str, line_num: int = None) -> dict:
+def auto_fix_code(code: str, error_type: str, line_num: int | None = None) -> dict:
     """
     Convenience function for auto-fixing
     

@@ -13,6 +13,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 from statistics import mean
+from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
@@ -158,7 +159,7 @@ def run() -> dict:
         family_rows.extend({"family": family, **row} for row in rows)
     confidence_rows = mutation_rows + messy_rows + family_rows
     confidences = [round(float(row["confidence"]), 3) for row in confidence_rows]
-    payload = {
+    payload: dict[str, Any] = {
         "metrics": {
             "mutation_robustness": round(mutation_score, 3),
             "real_world_messy_accuracy": round(messy_score, 3),

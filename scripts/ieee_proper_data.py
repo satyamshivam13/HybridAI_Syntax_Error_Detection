@@ -9,6 +9,7 @@ import json
 import os
 import sys
 import warnings
+from typing import cast
 warnings.filterwarnings('ignore')
 
 sys.path.insert(0, os.path.abspath('.'))
@@ -19,7 +20,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score, StratifiedKFold, train_test_split
 from sklearn.preprocessing import LabelEncoder
-from scipy.sparse import hstack
+from scipy.sparse import hstack, csr_matrix
 
 from src.feature_utils import extract_numerical_features
 
@@ -31,16 +32,16 @@ labels = df["error_type"].astype(str).values
 languages = df["language"].astype(str).values
 
 le = LabelEncoder()
-y = le.fit_transform(labels)
+y = np.asarray(le.fit_transform(labels))
 
 print("Building features...")
 tfidf = TfidfVectorizer(analyzer='char_wb', ngram_range=(2, 4), max_features=5000, sublinear_tf=True)
 X_tfidf = tfidf.fit_transform(texts)
 X_num = np.array([extract_numerical_features(c) for c in texts])
-X = hstack([X_tfidf, X_num]).tocsr()
+X = cast(csr_matrix, csr_matrix(hstack([X_tfidf, csr_matrix(X_num)], format="csr")))
 
 X_train, X_test, y_train, y_test, idx_train, idx_test = train_test_split(
-    X, y, np.arange(len(y)), test_size=0.2, random_state=42, stratify=y
+    X, y, np.arange(len(texts)), test_size=0.2, random_state=42, stratify=y
 )
 
 test_texts = texts[idx_test]
@@ -119,6 +120,10 @@ cm = confusion_matrix(test_labels, hy_preds, labels=all_labels_union)
 prec_per, rec_per, f1_per, supp_per = precision_recall_fscore_support(
     test_labels, hy_preds, labels=all_labels_union, zero_division=0
 )
+prec_per = np.atleast_1d(prec_per)
+rec_per = np.atleast_1d(rec_per)
+f1_per = np.atleast_1d(f1_per)
+supp_per = np.atleast_1d(supp_per) if supp_per is not None else np.zeros(len(all_labels_union), dtype=int)
 
 # ── Feature importance from RF ──────────────────────────────────────────────
 rf.fit(X_train, y_train)
@@ -145,6 +150,8 @@ lang_dist = pd.Series(languages).value_counts().to_dict()
 err_dist = pd.Series(labels).value_counts().to_dict()
 avg_len = float(np.mean([len(t) for t in texts]))
 model_size = os.path.getsize("models/syntax_error_model.pkl") / (1024 * 1024)
+x_shape = getattr(X, "shape", None)
+feature_dim = int(x_shape[1]) if x_shape is not None and len(x_shape) > 1 else int(X_tfidf.shape[1] + X_num.shape[1])
 
 # ── DUMP ─────────────────────────────────────────────────────────────────────
 out = {
@@ -172,8 +179,8 @@ out = {
         "lang_dist": {str(k): int(v) for k, v in lang_dist.items()},
         "err_dist": {str(k): int(v) for k, v in err_dist.items()},
         "avg_length": avg_len,
-        "num_classes": int(len(le.classes_)),
-        "feature_dim": int(X.shape[1])
+        "num_classes": int(len(np.asarray(getattr(le, "classes_", np.array([]))))),
+        "feature_dim": feature_dim
     },
     "cv_rf": {"scores": cv_scores.tolist(), "mean": float(cv_scores.mean()), "std": float(cv_scores.std())},
     "cv_lr": {"scores": cv_lr.tolist(), "mean": float(cv_lr.mean()), "std": float(cv_lr.std())},

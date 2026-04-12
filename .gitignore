@@ -38,6 +38,7 @@ build/
 # Dataset Files (Keep active datasets, exclude backups)
 # ============================================================
 dataset/archieve/
+dataset/archive/
 dataset/temp/
 dataset/*.xlsx
 dataset/*.zip
@@ -125,6 +126,11 @@ site/
 # ============================================================
 config.local.json
 secrets.json
+
+# ============================================================
+# Local Graph Builds
+# ============================================================
+graphify-out/
 
 # ============================================================
 # Debug & Failed Models

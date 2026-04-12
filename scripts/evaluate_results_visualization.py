@@ -15,11 +15,12 @@ Error Types: 18 categories
 """
 
 import os, sys, warnings
+from typing import Any, cast
 warnings.filterwarnings("ignore")
 import pandas as pd
 import numpy as np
 import matplotlib
-matplotlib.use("Agg")          # headless – no display required
+matplotlib.use("Agg")          # headless ï¿½ no display required
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import (
@@ -38,7 +39,7 @@ os.makedirs(RESULTS, exist_ok=True)
 sns.set_theme(style="whitegrid", palette="muted")
 
 print("=" * 70)
-print("  EVALUATION & VISUALIZATION — OmniSyntax: A Hybrid AI Code Tutor")
+print("  EVALUATION & VISUALIZATION ï¿½ OmniSyntax: A Hybrid AI Code Tutor")
 print("  5 Languages | 18 Error Types | March 2026")
 print("=" * 70)
 
@@ -51,13 +52,16 @@ model, vec, le, load_err = load_model_bundle(MODELS)
 if load_err:
     print(f"  ?? Model loading issue: {load_err}")
     sys.exit(1)
+if model is None or vec is None or le is None:
+    print("  ?? Model bundle is incomplete (model/vectorizer/label encoder missing)")
+    sys.exit(1)
 
 # Import feature extractor
 sys.path.insert(0, ROOT)
 from src.feature_utils import extract_numerical_features, NUMERICAL_FEATURE_NAMES
 
 # -- 2. Build prediction dataframe ---------------------------------------------
-print("\n  Running predictions on the full dataset …")
+print("\n  Running predictions on the full dataset ï¿½")
 texts = df["buggy_code"].fillna("").tolist()
 
 num_feats = pd.DataFrame(
@@ -83,7 +87,8 @@ print(f"\n  Overall Accuracy  : {acc*100:.2f}%")
 print(f"  Weighted Precision: {prec*100:.2f}%")
 print(f"  Weighted Recall   : {rec*100:.2f}%")
 print(f"  Weighted F1-Score : {f1*100:.2f}%")
-print("\n" + classification_report(y_true, y_pred, zero_division=0))
+report_text = cast(str, classification_report(y_true, y_pred, zero_division=0, output_dict=False))
+print("\n" + report_text)
 
 # -- 4. Plot 1: Confusion Matrix -----------------------------------------------
 labels = sorted(set(y_true) | set(y_pred))
@@ -94,7 +99,7 @@ sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
             linewidths=0.4, ax=ax)
 ax.set_xlabel("Predicted", fontsize=12)
 ax.set_ylabel("True", fontsize=12)
-ax.set_title(f"Confusion Matrix — 18 Error Categories\n(Accuracy: {acc*100:.2f}%)", fontsize=14, fontweight="bold")
+ax.set_title(f"Confusion Matrix ï¿½ 18 Error Categories\n(Accuracy: {acc*100:.2f}%)", fontsize=14, fontweight="bold")
 plt.xticks(rotation=45, ha="right", fontsize=8)
 plt.yticks(rotation=0, fontsize=8)
 plt.tight_layout()
@@ -110,17 +115,18 @@ for err in sorted(df["error_type"].unique()):
     per_error[err] = accuracy_score(sub["error_type"], sub["predicted_error"]) * 100
 
 pe_series = pd.Series(per_error).sort_values(ascending=False)
+pe_vals = np.asarray(pe_series.values, dtype=float)
 fig, ax = plt.subplots(figsize=(14, 6))
-bars = ax.bar(pe_series.index, pe_series.values,
-              color=[plt.cm.RdYlGn(v / 100) for v in pe_series.values])
-ax.axhline(acc * 100, color="navy", linestyle="--", linewidth=1.2, label=f"Overall ({acc*100:.1f}%)")
+bars = ax.bar(pe_series.index.tolist(), pe_vals,
+              color=[plt.get_cmap("RdYlGn")(float(v) / 100.0) for v in pe_vals])
+ax.axhline(float(acc * 100), color="navy", linestyle="--", linewidth=1.2, label=f"Overall ({acc*100:.1f}%)")
 ax.set_xlabel("Error Type", fontsize=12)
 ax.set_ylabel("Accuracy (%)", fontsize=12)
-ax.set_title("Per-Error-Type Accuracy — 18 Categories", fontsize=14, fontweight="bold")
+ax.set_title("Per-Error-Type Accuracy ï¿½ 18 Categories", fontsize=14, fontweight="bold")
 ax.set_ylim(0, 110)
 plt.xticks(rotation=45, ha="right", fontsize=9)
 ax.legend(fontsize=10)
-for bar, val in zip(bars, pe_series.values):
+for bar, val in zip(bars, pe_vals):
     ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1,
             f"{val:.0f}%", ha="center", va="bottom", fontsize=7.5)
 plt.tight_layout()
@@ -136,17 +142,18 @@ if "language" in df.columns:
           .apply(lambda x: accuracy_score(x["error_type"], x["predicted_error"]) * 100)
           .sort_values(ascending=False)
     )
+    lang_vals = np.asarray(lang_acc.values, dtype=float)
     fig, ax = plt.subplots(figsize=(9, 5))
     colors = ["#4CAF50", "#2196F3", "#FF9800", "#9C27B0", "#F44336"]
-    bars = ax.bar(lang_acc.index, lang_acc.values,
+    bars = ax.bar(lang_acc.index.tolist(), lang_vals,
                   color=colors[:len(lang_acc)], width=0.5)
-    ax.axhline(acc * 100, color="navy", linestyle="--", linewidth=1.2, label=f"Overall ({acc*100:.1f}%)")
+    ax.axhline(float(acc * 100), color="navy", linestyle="--", linewidth=1.2, label=f"Overall ({acc*100:.1f}%)")
     ax.set_xlabel("Programming Language", fontsize=12)
     ax.set_ylabel("Accuracy (%)", fontsize=12)
-    ax.set_title("Language-wise Accuracy — 5 Languages", fontsize=14, fontweight="bold")
+    ax.set_title("Language-wise Accuracy ï¿½ 5 Languages", fontsize=14, fontweight="bold")
     ax.set_ylim(0, 110)
     ax.legend(fontsize=10)
-    for bar, val in zip(bars, lang_acc.values):
+    for bar, val in zip(bars, lang_vals):
         ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1,
                 f"{val:.1f}%", ha="center", va="bottom", fontsize=11, fontweight="bold")
     plt.tight_layout()
@@ -166,14 +173,15 @@ df["source"] = df["error_type"].apply(
 )
 source_counts = df["source"].value_counts()
 fig, ax = plt.subplots(figsize=(6, 6))
-wedges, texts, autotexts = ax.pie(
-    source_counts.values,
-    labels=source_counts.index,
+pie_result = ax.pie(
+    np.asarray(source_counts.values, dtype=float),
+    labels=source_counts.index.astype(str).tolist(),
     autopct="%1.1f%%",
     startangle=90,
     colors=["#42A5F5", "#EF5350"],
     shadow=True
 )
+autotexts = pie_result[2] if len(pie_result) > 2 else []
 for t in autotexts:
     t.set_fontsize(12)
     t.set_fontweight("bold")
@@ -185,19 +193,23 @@ plt.close()
 print(f"  [OK] Saved: {path4}")
 
 # -- 8. Plot 5: Per-class F1 Scores -------------------------------------------
-report = classification_report(y_true, y_pred, zero_division=0, output_dict=True)
-f1_scores = {k: v["f1-score"] for k, v in report.items()
-             if k not in ("accuracy", "macro avg", "weighted avg")}
+report_dict = cast(dict[str, Any], classification_report(y_true, y_pred, zero_division=0, output_dict=True))
+f1_scores = {
+    k: float(v.get("f1-score", 0.0))
+    for k, v in report_dict.items()
+    if k not in ("accuracy", "macro avg", "weighted avg") and isinstance(v, dict)
+}
 f1_series = pd.Series(f1_scores).sort_values(ascending=True)
+f1_vals = np.asarray(f1_series.values, dtype=float)
 fig, ax = plt.subplots(figsize=(8, 10))
-colors_f1 = [plt.cm.RdYlGn(v) for v in f1_series.values]
-ax.barh(f1_series.index, f1_series.values * 100, color=colors_f1)
-ax.axvline(f1 * 100, color="navy", linestyle="--", linewidth=1.2, label=f"Weighted F1 ({f1*100:.1f}%)")
+colors_f1 = [plt.get_cmap("RdYlGn")(float(v)) for v in f1_vals]
+ax.barh(f1_series.index.tolist(), f1_vals * 100.0, color=colors_f1)
+ax.axvline(float(f1 * 100), color="navy", linestyle="--", linewidth=1.2, label=f"Weighted F1 ({f1*100:.1f}%)")
 ax.set_xlabel("F1-Score (%)", fontsize=12)
-ax.set_title("Per-Class F1-Scores — 18 Error Types", fontsize=14, fontweight="bold")
+ax.set_title("Per-Class F1-Scores ï¿½ 18 Error Types", fontsize=14, fontweight="bold")
 ax.set_xlim(0, 115)
 ax.legend(fontsize=10)
-for i, (v) in enumerate(f1_series.values):
+for i, v in enumerate(f1_vals):
     ax.text(v * 100 + 1, i, f"{v*100:.1f}%", va="center", fontsize=8.5)
 plt.tight_layout()
 path5 = os.path.join(RESULTS, "05_class_f1_scores.png")
@@ -216,5 +228,5 @@ print(f"  Dataset Size     : {len(df):,} samples")
 print(f"  Overall Accuracy : {acc*100:.2f}%")
 print(f"  Weighted F1      : {f1*100:.2f}%")
 print(f"  Output Dir       : {RESULTS}")
-print(f"  Charts Saved     : 5 charts (01_–05_*.png)")
+print(f"  Charts Saved     : 5 charts (01_ï¿½05_*.png)")
 print("=" * 70)

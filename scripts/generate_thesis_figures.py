@@ -14,6 +14,7 @@ import matplotlib
 matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 import pandas as pd
 import seaborn as sns
 
@@ -38,7 +39,7 @@ plt.rcParams.update(
 )
 
 
-def _save(fig: plt.Figure, filename: str) -> None:
+def _save(fig: Figure, filename: str) -> None:
     path = FIGURES / filename
     fig.tight_layout()
     fig.savefig(path, bbox_inches="tight")

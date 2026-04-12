@@ -88,5 +88,5 @@ def detect_language(code: str, filename: str | None = None) -> str:
         scores["Python"] += 2
 
     # Return language with highest score (ties broken by dict order: Python first)
-    best = max(scores, key=scores.get)
+    best = max(scores, key=scores.__getitem__)
     return best if scores[best] > 0 else "Unknown"

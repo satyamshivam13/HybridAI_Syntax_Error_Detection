@@ -33,6 +33,9 @@ def main() -> int:
     if load_error:
         print(f"Skipping generation: {load_error}")
         return 0
+    if model is None or vectorizer is None or label_encoder is None:
+        print("Skipping generation: incomplete model bundle")
+        return 0
 
     df = pd.read_csv(args.dataset)
     if "buggy_code" not in df.columns:

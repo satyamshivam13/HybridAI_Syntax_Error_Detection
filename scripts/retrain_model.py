@@ -26,6 +26,7 @@ import argparse
 import warnings
 import time
 from collections import Counter
+from typing import Any, cast
 
 import numpy as np
 from scipy.sparse import hstack
@@ -40,10 +41,10 @@ for _p in (_src_root, _project_root, os.getcwd()):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from feature_utils import extract_numerical_features, NUMERICAL_FEATURE_NAMES
+from src.feature_utils import extract_numerical_features, NUMERICAL_FEATURE_NAMES
 
 # ─── Colour helpers ──────────────────────────────────────────────────────────
-from utils.cli_colors import GREEN, RED, YELLOW, CYAN, BOLD, RESET, green, red, yellow, bold, cyan
+from src.utils.cli_colors import GREEN, RED, YELLOW, CYAN, BOLD, RESET, green, red, yellow, bold, cyan
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
 DATASET_PATHS = [
@@ -72,8 +73,9 @@ MODEL_BUNDLE_METADATA = "bundle_metadata.json"
 def configure_console_output():
     for stream_name in ("stdout", "stderr"):
         stream = getattr(sys, stream_name, None)
-        if hasattr(stream, "reconfigure"):
-            stream.reconfigure(encoding="utf-8", errors="replace")
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            reconfigure(encoding="utf-8", errors="replace")
 
 
 def get_bundle_metadata():
@@ -177,10 +179,13 @@ def train_model(rows, model_dir, compare_old=False):
     train_idx, test_idx = train_test_split(
         indices, test_size=0.2, random_state=42, stratify=y
     )
+    train_idx = np.asarray(train_idx, dtype=np.intp)
+    test_idx = np.asarray(test_idx, dtype=np.intp)
+    y_arr = np.asarray(y)
     X_train = X[train_idx]
     X_test = X[test_idx]
-    y_train = y[train_idx]
-    y_test = y[test_idx]
+    y_train = y_arr[train_idx]
+    y_test = y_arr[test_idx]
     print(f"  Train: {X_train.shape[0]}  |  Test: {X_test.shape[0]}")
 
     # Optional: evaluate old model on same test set
@@ -204,7 +209,7 @@ def train_model(rows, model_dir, compare_old=False):
                 old_tfidf = _load_model_file(old_tfidf_path)
                 old_le    = _load_model_file(old_le_path)
 
-                old_codes_test = [codes[i] for i in test_idx]
+                old_codes_test = [codes[int(i)] for i in test_idx]
                 old_tfidf_test = old_tfidf.transform(old_codes_test)
                 if os.path.exists(old_num_path):
                     old_num_test = np.array([extract_numerical_features(c) for c in old_codes_test])
@@ -214,7 +219,7 @@ def train_model(rows, model_dir, compare_old=False):
 
                 old_pred = old_model.predict(old_X_test)
                 old_pred_labels = old_le.inverse_transform(old_pred)
-                y_test_labels = le.inverse_transform(y_test[:len(old_pred_labels)])
+                y_test_labels = le.inverse_transform(np.asarray(y_test)[:len(old_pred_labels)])
                 old_acc = accuracy_score(y_test_labels, old_pred_labels) * 100
                 print(f"\n  Old model accuracy on test set: {old_acc:.2f}%")
             except Exception as e:
@@ -243,17 +248,24 @@ def train_model(rows, model_dir, compare_old=False):
     print(f"  Test accuracy: {green(f'{acc:.4f}%')}")
 
     # Per-class metrics
-    report = classification_report(
-        y_test, y_pred,
-        target_names=le.classes_,
-        output_dict=True,
-        zero_division=0
+    report = cast(
+        dict[str, Any],
+        classification_report(
+            y_test,
+            y_pred,
+            target_names=le.classes_,
+            output_dict=True,
+            zero_division=0,
+        ),
     )
 
     print(f"\n  {'Error Type':<25} {'Prec':>6} {'Recall':>7} {'F1':>6} {'Support':>8}")
     print(f"  {'─'*25} {'─'*6} {'─'*7} {'─'*6} {'─'*8}")
     for cls in le.classes_:
-        m = report.get(cls, {})
+        m_raw = report.get(cls, {})
+        if not isinstance(m_raw, dict):
+            continue
+        m = cast(dict[str, Any], m_raw)
         p  = m.get('precision', 0)
         r  = m.get('recall', 0)
         f1 = m.get('f1-score', 0)
