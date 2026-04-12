@@ -20,7 +20,7 @@ import time
 from collections import defaultdict
 from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable, cast
 
 import joblib
 import pandas as pd
@@ -111,23 +111,23 @@ def load_supported_labels(dataset_path: Path, model_label_path: Path) -> list[st
 def load_dataset_samples(dataset_path: Path, seed: int) -> list[Sample]:
     df = pd.read_csv(dataset_path)
     out: list[Sample] = []
-    for i, row in df.iterrows():
-        language = str(row["language"])
+    for dataset_index, row in enumerate(df.itertuples(index=False), start=0):
+        language = str(row.language)
         if language not in LANGUAGES:
             continue
-        label = normalize_label(str(row["error_type"]))
-        code = str(row["buggy_code"])
+        label = normalize_label(str(row.error_type))
+        code = str(row.buggy_code)
         out.append(
             mk_sample(
                 language=language,
                 expected_label=label,
                 code=code,
                 source_path=str(dataset_path),
-                source_line=int(i + 2),
+                source_line=dataset_index + 2,
                 corpus_type="dataset",
                 generator="dataset/merged/all_errors_v3.csv",
                 seed=seed,
-                metadata={"dataset_index": int(i)},
+                metadata={"dataset_index": dataset_index},
             )
         )
     return out
@@ -587,7 +587,7 @@ def evaluate_samples(
     return df, route_summary
 
 
-def metrics_from_predictions(df: pd.DataFrame, labels: list[str]) -> dict[str, pd.DataFrame | dict]:
+def metrics_from_predictions(df: pd.DataFrame, labels: list[str]) -> dict[str, Any]:
     y_true = df["expected_label_norm"].tolist()
     y_pred = df["core_predicted"].tolist()
 
@@ -677,15 +677,17 @@ def calibration_bins(df: pd.DataFrame, bins: int = 10) -> pd.DataFrame:
 
 
 def confusion_highlights(cm_df: pd.DataFrame, top_k: int = 20) -> pd.DataFrame:
-    rows = []
+    rows: list[dict[str, Any]] = []
     for true_label in cm_df.index:
         for pred_label in cm_df.columns:
             if true_label == pred_label:
                 continue
-            count = int(cm_df.loc[true_label, pred_label])
+            count_value = cm_df.loc[true_label, pred_label]
+            count = int(cast(float | int, count_value))
             if count <= 0:
                 continue
-            total_true = int(cm_df.loc[true_label].sum())
+            total_true_value = cm_df.loc[true_label].sum()
+            total_true = int(cast(float | int, total_true_value))
             rows.append(
                 {
                     "true_label": true_label,
@@ -910,15 +912,12 @@ def main() -> int:
     available_failures = top_failures(available_df, top_n=20)
     forced_metrics = metrics_from_predictions(forced_df, labels=labels)
 
+    matches = compare_subset["expected_label_norm"].eq(compare_subset["core_predicted"])
     compare_summary = {
         "actual_available_model_loaded": bool(available_routes["health"].get("ml_model_loaded")),
         "forced_unavailable_model_loaded": bool(forced_routes["health"].get("ml_model_loaded")),
         "subset_size": int(len(forced_df)),
-        "accuracy_available_subset": float(
-            (compare_subset["expected_label_norm"] == compare_subset["core_predicted"]).mean()
-            if len(compare_subset)
-            else 0.0
-        ),
+        "accuracy_available_subset": float(matches.sum() / len(compare_subset)) if len(compare_subset) else 0.0,
         "accuracy_forced_unavailable_subset": float(forced_metrics["overall"]["overall_accuracy"]),
     }
 
