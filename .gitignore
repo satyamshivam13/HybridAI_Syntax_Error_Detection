@@ -131,6 +131,11 @@ secrets.json
 # Local Graph Builds
 # ============================================================
 graphify-out/
+.graphify_detect.json
+.graphify_python
+.graphify_uncached.txt
+.graphify_*.json
+.graphify_*.txt
 
 # ============================================================
 # Debug & Failed Models
