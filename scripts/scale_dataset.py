@@ -52,8 +52,11 @@ def build_scaled_rows(rows: list[dict[str, str]], target: int, seed: int) -> lis
         base = rows[idx]
         new_row = dict(base)
         language = (new_row.get("language") or "").strip()
+        suffix = comment_suffix(language, variant_id)
         code = new_row.get("buggy_code") or ""
-        new_row["buggy_code"] = f"{code}{comment_suffix(language, variant_id)}"
+        fixed_code = new_row.get("fixed_code") or ""
+        new_row["buggy_code"] = f"{code}{suffix}"
+        new_row["fixed_code"] = f"{fixed_code}{suffix}"
         scaled.append(new_row)
         variant_id += 1
 
@@ -63,7 +66,7 @@ def build_scaled_rows(rows: list[dict[str, str]], target: int, seed: int) -> lis
 def write_rows(output_path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> None:
     resolved_fields = fieldnames or ["language", "error_type", "buggy_code", "fixed_code", "line_no"]
     with output_path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=resolved_fields)
+        writer = csv.DictWriter(handle, fieldnames=resolved_fields, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -71,7 +74,16 @@ def write_rows(output_path: Path, rows: list[dict[str, str]], fieldnames: list[s
 def main() -> None:
     parser = argparse.ArgumentParser(description="Scale a CSV dataset to a target row count.")
     parser.add_argument("--input", default="dataset/merged/all_errors_v3.csv", help="Input CSV path")
-    parser.add_argument("--output", default=None, help="Output CSV path (default: overwrite input)")
+    parser.add_argument(
+        "--output",
+        default=None,
+        help="Output CSV path (default: <input>.scaled.csv)",
+    )
+    parser.add_argument(
+        "--overwrite-input",
+        action="store_true",
+        help="Allow writing directly to --input (disabled by default for safety)",
+    )
     parser.add_argument("--target", type=int, default=61024, help="Target row count (default: 61024)")
     parser.add_argument("--seed", type=int, default=42, help="RNG seed for reproducibility")
     args = parser.parse_args()
@@ -80,7 +92,11 @@ def main() -> None:
     if not input_path.exists():
         raise FileNotFoundError(f"Input file not found: {input_path}")
 
-    output_path = Path(args.output) if args.output else input_path
+    output_path = Path(args.output) if args.output else Path(f"{input_path}.scaled.csv")
+    if output_path.resolve() == input_path.resolve() and not args.overwrite_input:
+        raise ValueError(
+            "Refusing to overwrite input file. Use --output <path> or pass --overwrite-input explicitly."
+        )
 
     rows, fieldnames = load_rows(input_path)
     scaled_rows = build_scaled_rows(rows, args.target, args.seed)
