@@ -4,6 +4,8 @@
 **Domain:** Cross-language reliability hardening for the shared detection engine, ML bundle health, and entry-point parity
 **Confidence:** HIGH
 
+> Historical snapshot note (added 2026-04-14): This is a pre-execution research artifact. Any unchecked actions here reflect planning-time state and were later resolved during execution and milestone completion.
+
 <user_constraints>
 ## User Constraints (from CONTEXT.md)
 

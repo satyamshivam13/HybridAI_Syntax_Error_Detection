@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 Cross-Language Reliability** — Phases 1–5 (shipped 2026-03-27) — [archive](milestones/v1.0-ROADMAP.md)
-- 📋 **v1.1 Reliability Refinement** — Planned
+- ✅ **v1.1 Reliability Refinement** — Phase 6 (completed 2026-04-11)
 
 ## Phases
 
@@ -18,7 +18,7 @@
 
 </details>
 
-### v1.1 (Planned)
+### v1.1 (Complete)
 
 ### Phase 6: Python and Java Reliability Refinement
 **Goal**: Close the remaining Python and Java reliability gaps without regressing the shared API, CLI, and Streamlit contracts established in v1.0.

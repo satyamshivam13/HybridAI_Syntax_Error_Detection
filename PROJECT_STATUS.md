@@ -1,6 +1,6 @@
 # Project Status
 
-Last updated: 2026-04-11
+Last updated: 2026-04-14
 
 ## Overall
 - Active development in a brownfield codebase
@@ -21,6 +21,7 @@ Last updated: 2026-04-11
 - `python -m pytest tests/ -q` => 179 passed, 1 skipped, 1 xfailed
 - `python scripts/production_validation.py` => all production gates passing, confidence_ece 0.0391
 - `python scripts/adversarial_validation.py` => mutation_accuracy 97.08, real_world_accuracy 97.3, verdict PRODUCTION_READY
+- `node "$HOME/.copilot/get-shit-done/bin/gsd-tools.cjs" audit-uat --raw` => 0 outstanding UAT/verification items (all clear)
 
 ## Recommended verification commands
 ```bash

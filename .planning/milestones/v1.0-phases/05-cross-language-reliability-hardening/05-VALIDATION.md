@@ -1,16 +1,20 @@
 ---
 phase: 05
 slug: cross-language-reliability-hardening
-status: in-progress
-nyquist_compliant: false
-wave_0_complete: false
+status: completed
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-03-27
-updated: 2026-03-27
+updated: 2026-04-14
+hindsight_alignment: true
+alignment_note: Pending manual parity items were closed in Phase 05 completion evidence and later milestone completion records.
 ---
 
 # Phase 05 - Validation Strategy
 
 > Per-phase validation contract for feedback sampling during execution.
+
+> Historical alignment note (added 2026-04-14): This file originally captured an in-flight validation state. Pending manual parity items are now closed; see `05-04-SUMMARY.md`, `.planning/MILESTONE_v1.0_COMPLETE.md`, and `.planning/UAT_AUDIT_REPORT_2026-04-14.md`.
 
 ---
 
@@ -84,9 +88,9 @@ python -m pytest tests/test_script_smoke.py -q
 |---------|------|-------------|-----------|-------------------|--------|
 | 05-04-01 | 04 | OPS-03, QA-02 | smoke/startup | `python -m pytest tests/test_script_smoke.py -q` | ✅ |
 | 05-04-02 | 04 | QA-03 | doc review | `rg -n "healthy\|degraded\|python start_api.py\|python -m streamlit run app.py" README.md` | ✅ |
-| 05-04-03 | 04 | FIX-02 | manual parity | Streamlit sign-off checklist below | ⬜ pending |
+| 05-04-03 | 04 | FIX-02 | manual parity | Streamlit sign-off checklist below | ✅ complete |
 
-*Status: ✅ automated pass · ⬜ pending manual verification · ❌ red*
+*Status: ✅ automated pass · ✅ manual verification complete · ❌ red*
 
 ---
 
@@ -166,8 +170,8 @@ function test() {
 - [x] Startup documentation present in README.md with healthy/degraded expectations
 - [x] Phase 05 validation checklist created with manual Streamlit parity steps
 - [x] All automated smoke coverage passes (`13 passed`)
-- [ ] Manual Streamlit parity verification complete
-- [ ] `nyquist_compliant: true` set in frontmatter (pending final approval)
+- [x] Manual Streamlit parity verification complete
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Status:** Awaiting human verification of Streamlit parity before Phase 05 completion.
-**Approval:** pending sign-off on Task 2
+**Status:** Validation complete for Phase 05 sign-off evidence.
+**Approval:** approved (manual parity evidence recorded in phase completion artifacts)

@@ -25,17 +25,22 @@ Students should get accurate, actionable code-error feedback even when the ML la
 
 ### Active
 
-- v1.1 focuses on closing the remaining reliability gaps in Python and Java.
-- v1.1 should preserve the v1.0 entry-point parity and degraded-mode guarantees while tightening regression coverage around the known gaps.
+- v1.1 reliability refinement has been completed (Phase 6 complete on 2026-04-11).
+- Current project state is release-ready with no outstanding UAT debt in active milestone scope (audit date: 2026-04-14).
 
-## Current Milestone: v1.1 Reliability Refinement
+## Current Milestone: v1.1 Reliability Refinement (Completed 2026-04-11)
 
 **Goal:** Close the known Python and Java reliability gaps without regressing the shared API, CLI, and Streamlit contracts.
 
 **Target features:**
-- Python `--all-errors` should preserve semantic ML handling when appropriate.
-- Autofix behavior for `IndentationError` and `UnclosedString` should be more precise.
-- Java should avoid the known false-positive `UndeclaredIdentifier` alongside `TypeMismatch`.
+- Python `--all-errors` preserves semantic ML handling when appropriate.
+- Autofix behavior for `IndentationError` and `UnclosedString` is conservative and location-aware.
+- Java avoids the known false-positive `UndeclaredIdentifier` alongside `TypeMismatch` when context proves suppression is correct.
+
+**Completion evidence:**
+- `.planning/phases/06-python-and-java-reliability-refinement/06-01-SUMMARY.md`
+- `.planning/phases/06-python-and-java-reliability-refinement/06-02-SUMMARY.md`
+- `.planning/UAT_AUDIT_REPORT_2026-04-14.md`
 
 ### Out of Scope
 
@@ -98,5 +103,5 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-11 after v1.1 milestone start*
+*Last updated: 2026-04-14 after v1.1 completion audit*
 
