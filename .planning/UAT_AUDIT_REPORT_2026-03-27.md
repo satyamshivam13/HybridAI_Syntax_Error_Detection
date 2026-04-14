@@ -8,6 +8,8 @@ total_plans: 10
 completed_plans: 10
 automated_tests: 97 passed, 1 skipped, 1 xfailed
 pending_uat_items: 1 (Streamlit manual parity)
+historical_snapshot: true
+superseded_by: .planning/MILESTONE_v1.0_COMPLETE.md
 ---
 
 # UAT Audit Report: OmniSyntax v1.0
@@ -15,6 +17,8 @@ pending_uat_items: 1 (Streamlit manual parity)
 **Report Date:** 2026-03-27  
 **Scope:** Cross-phase audit of all UAT and verification items for milestone v1.0  
 **Prepared By:** OmniSyntax GSD Workflow  
+
+**Historical Note (added 2026-04-14):** This report is a point-in-time snapshot from 2026-03-27. Its pending manual sign-off items were later closed and superseded by `.planning/MILESTONE_v1.0_COMPLETE.md` and subsequent v1.1 completion artifacts.
 
 ---
 

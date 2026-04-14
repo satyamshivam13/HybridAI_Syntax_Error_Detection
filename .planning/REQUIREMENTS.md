@@ -7,15 +7,15 @@ Close the remaining reliability gaps in Python and Java without regressing the s
 ## Requirements
 
 ### Detection Reliability
-- [ ] **DET-01**: Users can get Python semantic findings in `--all-errors` mode when ML inference is available and confident enough to contribute useful results.
-- [ ] **DET-02**: Users do not see the misleading Java `UndeclaredIdentifier` false positive when `TypeMismatch` is the actual primary issue in mixed-error cases.
+- [x] **DET-01**: Users can get Python semantic findings in `--all-errors` mode when ML inference is available and confident enough to contribute useful results.
+- [x] **DET-02**: Users do not see the misleading Java `UndeclaredIdentifier` false positive when `TypeMismatch` is the actual primary issue in mixed-error cases.
 
 ### Autofix Precision
-- [ ] **FIX-01**: Users receive a more precise `IndentationError` fix suggestion that targets the correct indentation location.
-- [ ] **FIX-02**: Users receive a more precise `UnclosedString` fix suggestion that closes the string in the most helpful location.
+- [x] **FIX-01**: Users receive a more precise `IndentationError` fix suggestion that targets the correct indentation location.
+- [x] **FIX-02**: Users receive a more precise `UnclosedString` fix suggestion that closes the string in the most helpful location.
 
 ### Regression Coverage
-- [ ] **QA-01**: Users can rely on automated regression coverage for the repaired Python and Java scenarios across the supported entry points.
+- [x] **QA-01**: Users can rely on automated regression coverage for the repaired Python and Java scenarios across the supported entry points.
 
 ## Future Requirements
 
@@ -33,8 +33,14 @@ Close the remaining reliability gaps in Python and Java without regressing the s
 
 | Requirement | Planned Phase | Status |
 |-------------|---------------|--------|
-| DET-01 | Phase 6 | Planned |
-| DET-02 | Phase 6 | Planned |
-| FIX-01 | Phase 6 | Planned |
-| FIX-02 | Phase 6 | Planned |
-| QA-01 | Phase 6 | Planned |
+| DET-01 | Phase 6 | Complete (2026-04-11) |
+| DET-02 | Phase 6 | Complete (2026-04-11) |
+| FIX-01 | Phase 6 | Complete (2026-04-11) |
+| FIX-02 | Phase 6 | Complete (2026-04-11) |
+| QA-01 | Phase 6 | Complete (2026-04-11) |
+
+## Completion Evidence
+
+- Implementation and verification summary: `.planning/phases/06-python-and-java-reliability-refinement/06-01-SUMMARY.md`
+- Implementation and verification summary: `.planning/phases/06-python-and-java-reliability-refinement/06-02-SUMMARY.md`
+- Milestone runtime snapshot: `PROJECT_STATUS.md`
