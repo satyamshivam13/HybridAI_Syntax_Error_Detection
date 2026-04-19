@@ -198,8 +198,24 @@ class _RedisRateLimiter(_BaseRateLimiter):
             )
 
 
+class _InvalidRateLimiter(_BaseRateLimiter):
+    backend = "invalid"
+
+    def __init__(self, reason: str):
+        self._reason = reason
+
+    def is_ready(self) -> tuple[bool, str | None]:
+        return False, self._reason
+
+    def enforce(self, request: Request, scope: str) -> None:
+        _raise_api_error(503, "RATE_LIMIT_BACKEND_UNAVAILABLE", self._reason)
+
+
 def _build_rate_limiter() -> _BaseRateLimiter:
     backend = config.get_rate_limit_backend()
+    valid_backend, valid_reason = config.is_rate_limit_backend_valid()
+    if not valid_backend:
+        return _InvalidRateLimiter(valid_reason or "Invalid rate-limit backend")
     if backend == "redis":
         limiter = _RedisRateLimiter()
         ready, reason = limiter.is_ready()
@@ -494,11 +510,12 @@ async def health_live():
 @app.get("/health/ready", response_model=ReadinessResponse, tags=["Info"])
 async def health_ready():
     auth_ok, auth_reason = config.is_runtime_auth_config_valid()
+    backend_ok, backend_reason = config.is_rate_limit_backend_valid()
     limiter_ok, limiter_reason = _RATE_LIMITER.is_ready()
-    if auth_ok and limiter_ok:
+    if auth_ok and backend_ok and limiter_ok:
         return {"status": "ready", "ready": True, "reason": None}
 
-    reasons = [reason for reason in [auth_reason, limiter_reason] if reason]
+    reasons = [reason for reason in [auth_reason, backend_reason, limiter_reason] if reason]
     return {
         "status": "not_ready",
         "ready": False,
@@ -601,7 +618,7 @@ async def auto_fix(http_request: Request, request: AutoFixRequest):
                     fixed_code=fixed_code,
                     language=language,
                     filename=None,
-                    expected_original_error=request.error_type.value,
+                    expected_original_error=None,
                 )
                 verified = verification.verified
                 success = verified

@@ -40,7 +40,7 @@ Health semantics are split:
 - `rate_limit_per_minute`
 
 ## Request limits
-`/check`, `/fix`, and `/quality` enforce the same max payload size (`MAX_CODE_SIZE`, default `100000` chars).
+`/check`, `/fix`, `/quality`, and `/check-and-fix` enforce the same max payload size (`MAX_CODE_SIZE`, default `100000` chars).
 Oversized payloads return `413`.
 
 ## Structured error format

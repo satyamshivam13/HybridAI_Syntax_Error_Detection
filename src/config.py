@@ -57,6 +57,13 @@ def get_rate_limit_backend() -> str:
     return os.getenv("RATE_LIMIT_BACKEND", "memory").strip().lower() or "memory"
 
 
+def is_rate_limit_backend_valid() -> tuple[bool, str | None]:
+    backend = get_rate_limit_backend()
+    if backend in {"memory", "redis"}:
+        return True, None
+    return False, "RATE_LIMIT_BACKEND must be one of: memory, redis"
+
+
 def get_rate_limit_redis_url() -> str:
     return os.getenv("RATE_LIMIT_REDIS_URL", "").strip()
 
@@ -150,6 +157,7 @@ __all__ = [
     "get_max_code_size",
     "get_rate_limit_per_minute",
     "get_rate_limit_backend",
+    "is_rate_limit_backend_valid",
     "get_rate_limit_redis_url",
     "get_rate_limit_key_header",
     "get_api_version",
