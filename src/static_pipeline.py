@@ -121,6 +121,101 @@ class AnalysisIssue:
         }
 
 
+@dataclass(frozen=True)
+class DetectionAnalysis:
+    language: str
+    program: IRProgram
+    symbols: SymbolTable
+    issues: list[AnalysisIssue]
+    primary: AnalysisIssue | None
+    degraded_mode: bool
+    warnings: list[str]
+    pipeline: list[str]
+
+    def to_single_result(self) -> dict[str, Any]:
+        issues = [issue.as_dict() for issue in self.issues]
+        if self.primary:
+            predicted = self.primary.type
+            confidence = self.primary.confidence
+            tutor = explain_error(predicted)
+        else:
+            predicted = "NoError"
+            confidence = ConfidenceCalibrator().no_error(self.program)
+            tutor = {
+                "why": "No semantic or structural issue was detected.",
+                "fix": "No direct fix is required.",
+            }
+        return {
+            "language": self.language,
+            "predicted_error": predicted,
+            "primary_error": issues[0] if issues else None,
+            "confidence": confidence,
+            "tutor": tutor,
+            "rule_based_issues": issues,
+            "errors": issues,
+            "degraded_mode": self.degraded_mode,
+            "warnings": self.warnings,
+            "analysis_pipeline": self.pipeline,
+            "confidence_model": {
+                "kind": "evidence_calibrated",
+                "constant_output": False,
+                "value_states": [state.value for state in ValueState],
+            },
+        }
+
+    def to_grouped_result(self) -> dict[str, Any]:
+        single = self.to_single_result()
+        grouped: dict[str, dict[str, Any]] = {}
+        for issue in single.get("errors", []):
+            kind = issue["type"]
+            grouped.setdefault(
+                kind,
+                {
+                    "type": kind,
+                    "count": 0,
+                    "locations": [],
+                    "confidence": issue.get("confidence", 0.0),
+                    "tutor": explain_error(kind),
+                },
+            )
+            grouped[kind]["count"] += 1
+            grouped[kind]["confidence"] = max(grouped[kind]["confidence"], issue.get("confidence", 0.0))
+            grouped[kind]["locations"].append(
+                {
+                    "line": issue.get("line"),
+                    "col": issue.get("col"),
+                    "message": issue.get("message"),
+                    "suggestion": issue.get("suggestion"),
+                    "snippet": issue.get("snippet"),
+                    "confidence": issue.get("confidence"),
+                }
+            )
+        errors = list(grouped.values())
+        return {
+            "language": single["language"],
+            "errors": errors,
+            "primary_error": single.get("primary_error"),
+            "errors_by_type": {
+                err["type"]: [
+                    {
+                        "line": loc.get("line", 0),
+                        "message": loc.get("message", f"{err['type']} detected"),
+                        "snippet": loc.get("snippet", ""),
+                    }
+                    for loc in err.get("locations", [])
+                ]
+                for err in errors
+            },
+            "total_errors": sum(err["count"] for err in errors),
+            "has_errors": bool(errors),
+            "rule_based_issues": single.get("errors", []),
+            "degraded_mode": single.get("degraded_mode", False),
+            "warnings": single.get("warnings", []),
+            "analysis_pipeline": single.get("analysis_pipeline", []),
+            "confidence_model": single.get("confidence_model", {}),
+        }
+
+
 PRIORITY = [
     "UnclosedString",
     "UnmatchedBracket",
@@ -1406,68 +1501,25 @@ def _engine() -> StaticAnalysisEngine:
     return StaticAnalysisEngine(Path.cwd())
 
 
-def detect_errors_static(code: str, filename: str | None = None, language_override: str | None = None) -> dict[str, Any]:
+def analyze_source(code: str, filename: str | None = None, language_override: str | None = None) -> DetectionAnalysis:
     analysis = _engine().analyze(code, filename, language_override)
-    primary: AnalysisIssue | None = analysis["primary"]
-    program: IRProgram = analysis["program"]
-    issues = [issue.as_dict() for issue in analysis["issues"]]
-    if primary:
-        predicted = primary.type
-        confidence = primary.confidence
-        tutor = explain_error(predicted)
-    else:
-        predicted = "NoError"
-        confidence = ConfidenceCalibrator().no_error(program)
-        tutor = {"why": "No semantic or structural issue was detected.", "fix": "No direct fix is required."}
-    return {
-        "language": analysis["language"],
-        "predicted_error": predicted,
-        "primary_error": issues[0] if issues else None,
-        "confidence": confidence,
-        "tutor": tutor,
-        "rule_based_issues": issues,
-        "errors": issues,
-        "degraded_mode": analysis["degraded_mode"],
-        "warnings": analysis["warnings"],
-        "analysis_pipeline": analysis["pipeline"],
-        "confidence_model": {
-            "kind": "evidence_calibrated",
-            "constant_output": False,
-            "value_states": [state.value for state in ValueState],
-        },
-    }
+    return DetectionAnalysis(
+        language=analysis["language"],
+        program=analysis["program"],
+        symbols=analysis["symbols"],
+        issues=analysis["issues"],
+        primary=analysis["primary"],
+        degraded_mode=analysis["degraded_mode"],
+        warnings=analysis["warnings"],
+        pipeline=analysis["pipeline"],
+    )
+
+
+def detect_errors_static(code: str, filename: str | None = None, language_override: str | None = None) -> dict[str, Any]:
+    analysis = analyze_source(code, filename, language_override)
+    return analysis.to_single_result()
 
 
 def detect_all_errors_static(code: str, filename: str | None = None, language_override: str | None = None) -> dict[str, Any]:
-    single = detect_errors_static(code, filename, language_override)
-    grouped: dict[str, dict[str, Any]] = {}
-    for issue in single.get("errors", []):
-        kind = issue["type"]
-        grouped.setdefault(kind, {"type": kind, "count": 0, "locations": [], "confidence": issue.get("confidence", 0.0), "tutor": explain_error(kind)})
-        grouped[kind]["count"] += 1
-        grouped[kind]["confidence"] = max(grouped[kind]["confidence"], issue.get("confidence", 0.0))
-        grouped[kind]["locations"].append({
-            "line": issue.get("line"),
-            "col": issue.get("col"),
-            "message": issue.get("message"),
-            "suggestion": issue.get("suggestion"),
-            "snippet": issue.get("snippet"),
-            "confidence": issue.get("confidence"),
-        })
-    errors = list(grouped.values())
-    return {
-        "language": single["language"],
-        "errors": errors,
-        "primary_error": single.get("primary_error"),
-        "errors_by_type": {
-            err["type"]: [{"line": loc.get("line", 0), "message": loc.get("message", f"{err['type']} detected"), "snippet": loc.get("snippet", "")} for loc in err.get("locations", [])]
-            for err in errors
-        },
-        "total_errors": sum(err["count"] for err in errors),
-        "has_errors": bool(errors),
-        "rule_based_issues": single.get("errors", []),
-        "degraded_mode": single.get("degraded_mode", False),
-        "warnings": single.get("warnings", []),
-        "analysis_pipeline": single.get("analysis_pipeline", []),
-        "confidence_model": single.get("confidence_model", {}),
-    }
+    analysis = analyze_source(code, filename, language_override)
+    return analysis.to_grouped_result()
