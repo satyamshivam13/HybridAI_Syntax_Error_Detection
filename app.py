@@ -6,10 +6,8 @@
 import html
 
 import streamlit as st
+from src import static_pipeline
 from src.auto_fix import AutoFixer
-from src.error_engine import detect_errors
-from src.language_detector import detect_language
-from src.multi_error_detector import detect_all_errors
 from src.quality_analyzer import CodeQualityAnalyzer
 
 # ------------------------------------------------------------
@@ -87,11 +85,11 @@ with col_toggle:
 if code_input.strip():
     filename = uploaded.name if uploaded else None
 
-    # Detect language up front so quality analysis always uses the same guess.
-    detected_language = detect_language(code_input, filename)
+    analysis = static_pipeline.analyze_source(code_input, filename)
+    detected_language = analysis.language
 
     if st.session_state.show_all_errors:
-        all_errors = detect_all_errors(code_input, filename)
+        all_errors = analysis.to_grouped_result()
         warnings = all_errors.get("warnings", [])
         if warnings:
             st.warning("Runtime warnings:\n- " + "\n- ".join(warnings))
@@ -127,7 +125,7 @@ if code_input.strip():
                         error_lines.add(error["line"])
 
     else:
-        result = detect_errors(code_input, filename=filename)
+        result = analysis.to_single_result()
         warnings = result.get("warnings", [])
         if warnings:
             st.warning("Runtime warnings:\n- " + "\n- ".join(warnings))

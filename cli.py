@@ -10,9 +10,8 @@ import io
 if sys.stdout.encoding != 'utf-8':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
+from src import static_pipeline
 from src.auto_fix import AutoFixer
-from src.error_engine import detect_errors
-from src.multi_error_detector import detect_all_errors
 from src.quality_analyzer import CodeQualityAnalyzer
 
 
@@ -54,9 +53,9 @@ def main():
     # 3. Detect Errors (PASS FILENAME ðŸ”¥)
     # --------------------------------------------------------
     if show_all_errors:
-        result = detect_all_errors(code, filename=file_path)
+        result = static_pipeline.analyze_source(code, file_path).to_grouped_result()
     else:
-        result = detect_errors(code, filename=file_path)
+        result = static_pipeline.analyze_source(code, file_path).to_single_result()
 
     # --------------------------------------------------------
     # 4. Print Results

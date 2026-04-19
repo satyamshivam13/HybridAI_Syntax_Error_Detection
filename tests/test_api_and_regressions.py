@@ -83,6 +83,19 @@ def test_quality_complexity_baseline():
     assert analyzer.calculate_complexity() == 1
 
 
+def test_static_pipeline_contract_is_exported_and_reusable():
+    from src import DetectionAnalysis, analyze_source
+
+    analysis = analyze_source("x = 1\n", "x.py")
+
+    assert isinstance(analysis, DetectionAnalysis)
+    single = analysis.to_single_result()
+    grouped = analysis.to_grouped_result()
+    assert single["language"] == grouped["language"] == analysis.language
+    assert "predicted_error" in single
+    assert "errors" in grouped
+
+
 def test_multi_error_ignores_brackets_inside_strings():
     result = detect_all_errors("print(')')", "a.py")
     assert result["has_errors"] is False

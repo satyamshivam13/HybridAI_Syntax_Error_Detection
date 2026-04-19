@@ -60,8 +60,8 @@ def test_streamlit_parity_for_c_java_js_cases():
 def test_streamlit_degraded_mode_shows_warning_banner():
     code = "int main() {\n    return 0;\n}\n"
 
-    with patch("src.error_engine.is_model_available", return_value=False), patch(
-        "src.error_engine.get_model_status", return_value={"error": "forced-unavailable"}
+    with patch("src.static_pipeline.is_model_available", return_value=False), patch(
+        "src.static_pipeline.get_model_status", return_value={"error": "forced-unavailable"}
     ):
         app = _run_app(code)
 
@@ -93,7 +93,28 @@ def test_streamlit_all_errors_mode_displays_grouped_results():
         "warnings": [],
     }
 
-    with patch("src.multi_error_detector.detect_all_errors", return_value=fake_result):
+    class _FakeAnalysis:
+        language = "Python"
+
+        def to_grouped_result(self):
+            return fake_result
+
+        def to_single_result(self):
+            return {
+                "language": "Python",
+                "predicted_error": "MissingColon",
+                "confidence": 1.0,
+                "tutor": {"why": "", "fix": ""},
+                "rule_based_issues": [],
+                "errors": [],
+                "degraded_mode": False,
+                "warnings": [],
+                "analysis_pipeline": [],
+                "confidence_model": {},
+                "primary_error": None,
+            }
+
+    with patch("src.static_pipeline.analyze_source", return_value=_FakeAnalysis()):
         app = _run_app("def broken()\n    return 10 / 0\n", show_all_errors=True)
 
     assert any("Detected Language: **Python**" in item.value for item in app.success)

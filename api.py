@@ -14,8 +14,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from src import config
+from src import static_pipeline
 from src.auto_fix import AutoFixer
-from src.error_engine import detect_errors
 from src.ml_engine import get_model_status
 from src.quality_analyzer import CodeQualityAnalyzer
 
@@ -269,8 +269,8 @@ def _verify_fix_result(
     filename: str | None,
     expected_original_error: str | None = None,
 ) -> "FixVerificationSummary":
-    original_result = detect_errors(original_code, filename, language)
-    result_result = detect_errors(fixed_code, filename, language)
+    original_result = static_pipeline.analyze_source(original_code, filename, language).to_single_result()
+    result_result = static_pipeline.analyze_source(fixed_code, filename, language).to_single_result()
     original_error = expected_original_error or original_result["predicted_error"]
     result_error = result_result["predicted_error"]
     status = _resolve_verification_status(original_error, result_error)
@@ -570,7 +570,7 @@ async def check_code(http_request: Request, request: CodeCheckRequest):
 
     try:
         language = request.language.value if request.language else None
-        result = detect_errors(request.code, request.filename, language)
+        result = static_pipeline.analyze_source(request.code, request.filename, language).to_single_result()
         return ErrorResponse(
             language=result["language"],
             predicted_error=result["predicted_error"],
@@ -685,7 +685,7 @@ async def check_and_fix(http_request: Request, request: CodeCheckRequest):
 
     try:
         language = request.language.value if request.language else None
-        error_result = detect_errors(request.code, request.filename, language)
+        error_result = static_pipeline.analyze_source(request.code, request.filename, language).to_single_result()
         fix_response = None
         if error_result["predicted_error"] != "NoError":
             fixer = AutoFixer()
