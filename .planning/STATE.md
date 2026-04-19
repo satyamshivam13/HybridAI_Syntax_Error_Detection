@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Production Hardening and Product Foundations
 status: ready
-stopped_at: Phase 7 discuss decisions locked
-last_updated: "2026-04-19T19:05:00.000Z"
-last_activity: 2026-04-19 -- Phase 7 discuss-phase decisions locked for auth, throttling, health, validation, and docs exposure
+stopped_at: Phase 7 replanned after discuss lock
+last_updated: "2026-04-19T19:25:00.000Z"
+last_activity: 2026-04-19 -- Phase 7 re-researched and replanned with concrete runtime knobs, threat model, and verification-aware API tasks
 progress:
   total_phases: 7
   completed_phases: 0
@@ -28,7 +28,7 @@ See: `.planning/PROJECT.md` (updated 2026-04-19)
 Phase: 07 (Security and API Hardening) - PLANNED
 Plan: 1 of 1
 Status: Ready to execute
-Last activity: 2026-04-19 -- Phase 7 decisions locked after discuss-phase refinement
+Last activity: 2026-04-19 -- Phase 7 plan refreshed after discuss-phase refinement
 
 Progress: [----------] 0%
 
@@ -84,7 +84,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-- Execute Phase 7 plan 07-01 with the locked discuss-phase decisions in `07-DISCUSSION-LOG.md`.
+- Execute Phase 7 plan 07-01 with the locked discuss-phase decisions in `07-DISCUSSION-LOG.md` and the refreshed research in `07-RESEARCH.md`.
 - Preserve degraded-mode correctness while adding deployment-safe API controls.
 - Keep Phase 8 engine cleanup gated behind parity tests.
 - Keep newly added scale and educator-surface work behind the earlier platform-hardening phases.
@@ -98,9 +98,10 @@ Recent decisions affecting current work:
 
 - Deep production audit (2026-04-19): identified security, architecture, DevOps, performance, and productization gaps; converted into Phases 7-13
 - Discuss-phase refinement (2026-04-19): Phase 07 defaults locked around API-key access control, Redis-capable throttling seam, explicit health endpoints, strict validation, compact fix verification, and docs-off-by-default production posture
+- Plan-phase refresh (2026-04-19): Phase 07 research and execution plan now specify concrete config knobs, threat model, typed contract targets, and acceptance criteria
 
 ## Session Continuity
 
 Last session: 2026-04-19T18:30:00.000Z
-Stopped at: Phase 7 discuss decisions locked
+Stopped at: Phase 7 replanned after discuss lock
 Resume file: .planning/phases/07-security-and-api-hardening/07-01-PLAN.md
