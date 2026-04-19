@@ -5,6 +5,8 @@ Provides safe, conservative auto-correction suggestions
 
 import re
 
+from src.config import get_supported_fix_error_types
+
 
 class AutoFixer:
     """
@@ -14,6 +16,10 @@ class AutoFixer:
     
     def __init__(self):
         self.fixes_applied = []
+
+    @staticmethod
+    def supported_error_types() -> list[str]:
+        return get_supported_fix_error_types()
     
     def fix_missing_colon(self, code: str, line_num: int) -> str:
         """
@@ -287,6 +293,14 @@ class AutoFixer:
         """
         self.fixes_applied = []
         fixed_code = code
+
+        if error_type not in self.supported_error_types():
+            return {
+                'fixed_code': code,
+                'changes': [],
+                'success': False,
+                'error': f"Unsupported error_type: {error_type}"
+            }
         
         try:
             # MissingDelimiter - language-specific

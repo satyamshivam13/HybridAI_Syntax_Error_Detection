@@ -12,11 +12,33 @@ from src.multi_error_detector import detect_all_errors
 from src.quality_analyzer import CodeQualityAnalyzer
 
 
-def _load_api(monkeypatch: pytest.MonkeyPatch, rate_limit: str = "100"):
-    monkeypatch.setenv("RATE_LIMIT_PER_MINUTE", rate_limit)
-    monkeypatch.setenv("MAX_CODE_SIZE", "100000")
+def _load_api(
+    monkeypatch: pytest.MonkeyPatch,
+    rate_limit: str = "100",
+    **env_overrides,
+):
+    defaults = {
+        "RATE_LIMIT_PER_MINUTE": rate_limit,
+        "MAX_CODE_SIZE": "100000",
+        "PRODUCTION": "false",
+        "API_AUTH_MODE": "disabled",
+        "ALLOW_UNSAFE_PUBLIC_API": "false",
+        "ENABLE_API_DOCS": "true",
+        "RATE_LIMIT_BACKEND": "memory",
+        "API_KEYS": None,
+        "RATE_LIMIT_REDIS_URL": None,
+    }
+    defaults.update(env_overrides)
+
+    for key, value in defaults.items():
+        if value is None:
+            monkeypatch.delenv(key, raising=False)
+        else:
+            monkeypatch.setenv(key, value)
     if "api" in sys.modules:
         del sys.modules["api"]
+    if "src.config" in sys.modules:
+        del sys.modules["src.config"]
     import api
 
     return importlib.reload(api)
@@ -105,6 +127,154 @@ def test_health_degraded_contract_has_reason(monkeypatch: pytest.MonkeyPatch):
     assert payload["status"] == "degraded"
     assert payload["ml_model_loaded"] is False
     assert payload["degraded_reason"] == "forced-unavailable"
+
+
+def test_auth_required_in_production_mode(monkeypatch: pytest.MonkeyPatch):
+    api = _load_api(
+        monkeypatch,
+        rate_limit="100",
+        PRODUCTION="true",
+        API_AUTH_MODE="api_key",
+        API_KEYS="secret-key",
+    )
+    client = TestClient(api.app)
+
+    missing = client.post("/check", json={"code": "x=1", "filename": "x.py"})
+    assert missing.status_code == 401
+    assert missing.json()["detail"]["error_code"] == "AUTH_REQUIRED"
+
+    invalid = client.post(
+        "/check",
+        json={"code": "x=1", "filename": "x.py"},
+        headers={"X-API-Key": "bad-key"},
+    )
+    assert invalid.status_code == 403
+    assert invalid.json()["detail"]["error_code"] == "AUTH_INVALID"
+
+    allowed = client.post(
+        "/check",
+        json={"code": "x=1", "filename": "x.py"},
+        headers={"X-API-Key": "secret-key"},
+    )
+    assert allowed.status_code == 200
+
+
+def test_production_without_auth_is_not_ready_and_rejected(monkeypatch: pytest.MonkeyPatch):
+    api = _load_api(
+        monkeypatch,
+        rate_limit="100",
+        PRODUCTION="true",
+        API_AUTH_MODE="disabled",
+        ALLOW_UNSAFE_PUBLIC_API="false",
+    )
+    client = TestClient(api.app)
+
+    ready = client.get("/health/ready")
+    assert ready.status_code == 200
+    assert ready.json()["ready"] is False
+
+    blocked = client.post("/check", json={"code": "x=1", "filename": "x.py"})
+    assert blocked.status_code == 503
+    assert blocked.json()["detail"]["error_code"] == "AUTH_CONFIG_ERROR"
+
+
+def test_docs_can_be_disabled_in_production(monkeypatch: pytest.MonkeyPatch):
+    api = _load_api(
+        monkeypatch,
+        rate_limit="100",
+        PRODUCTION="true",
+        API_AUTH_MODE="api_key",
+        API_KEYS="secret-key",
+        ENABLE_API_DOCS="false",
+    )
+    client = TestClient(api.app)
+
+    assert api.app.docs_url is None
+    assert api.app.redoc_url is None
+    assert client.get("/docs").status_code == 404
+
+
+def test_health_endpoints_are_split(monkeypatch: pytest.MonkeyPatch):
+    api = _load_api(monkeypatch, rate_limit="100")
+    client = TestClient(api.app)
+
+    live = client.get("/health/live")
+    ready = client.get("/health/ready")
+    capabilities = client.get("/health/capabilities")
+
+    assert live.status_code == 200
+    assert live.json()["status"] == "alive"
+
+    assert ready.status_code == 200
+    assert "ready" in ready.json()
+
+    assert capabilities.status_code == 200
+    payload = capabilities.json()
+    assert "ml_model_loaded" in payload
+    assert "degraded_mode" in payload
+
+
+def test_invalid_language_rejected_with_422(monkeypatch: pytest.MonkeyPatch):
+    api = _load_api(monkeypatch, rate_limit="100")
+    client = TestClient(api.app)
+
+    response = client.post(
+        "/check",
+        json={"code": "x=1", "filename": "x.py", "language": "Ruby"},
+    )
+    assert response.status_code == 422
+
+
+def test_invalid_fix_type_rejected_with_422(monkeypatch: pytest.MonkeyPatch):
+    api = _load_api(monkeypatch, rate_limit="100")
+    client = TestClient(api.app)
+
+    response = client.post(
+        "/fix",
+        json={"code": "x=1", "error_type": "NotARealFixType", "language": "Python"},
+    )
+    assert response.status_code == 422
+
+
+def test_fix_response_is_verification_aware(monkeypatch: pytest.MonkeyPatch):
+    api = _load_api(monkeypatch, rate_limit="100")
+    client = TestClient(api.app)
+
+    response = client.post(
+        "/fix",
+        json={
+            "code": "def test()\n    pass",
+            "error_type": "MissingColon",
+            "language": "Python",
+            "line_num": 0,
+        },
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["generated"] is True
+    assert "verification" in payload
+    assert payload["verification"]["status"] in {
+        "verified_removed",
+        "verified_improved",
+        "unchanged",
+        "worsened",
+        "not_verified",
+    }
+
+
+def test_check_and_fix_has_typed_contract(monkeypatch: pytest.MonkeyPatch):
+    api = _load_api(monkeypatch, rate_limit="100")
+    client = TestClient(api.app)
+
+    response = client.post(
+        "/check-and-fix",
+        json={"code": "def test()\n    pass", "filename": "x.py", "language": "Python"},
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert "error_detection" in payload
+    assert "auto_fix" in payload
+    assert "fix_available" in payload
 
 
 def test_phase5_tutor_entries_are_not_generic():
