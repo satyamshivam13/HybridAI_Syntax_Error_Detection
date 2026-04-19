@@ -27,3 +27,22 @@
 - Roadmap: `.planning/milestones/v1.0-ROADMAP.md`
 - Requirements: `.planning/milestones/v1.0-REQUIREMENTS.md`
 - Phases: `.planning/milestones/v1.0-phases/`
+
+## v1.1 — Reliability Refinement
+
+**Shipped:** 2026-04-11
+**Phases:** 6 | **Plans:** 2 | **Timeline:** 2026-03-28 → 2026-04-11
+
+### Key Accomplishments
+
+1. Python `--all-errors` now merges confident semantic ML findings when they add useful signal.
+2. `IndentationError` and `UnclosedString` fix guidance became conservative and location-aware instead of pretending to rewrite code safely.
+3. Java mixed-error precedence no longer emits the known `UndeclaredIdentifier` false positive when `TypeMismatch` is the real issue.
+4. API, CLI, and Streamlit parity was kept intact through the v1.1 regression work.
+
+### Residual Gaps After v1.1
+
+- API still lacks production-safe access control and shared-store rate limiting.
+- Shared detection architecture still contains legacy dead paths and dict-heavy contracts.
+- CI, deployment, and observability are below production standards.
+- Product foundations such as persistence, analytics, and quota/billing readiness are still missing.

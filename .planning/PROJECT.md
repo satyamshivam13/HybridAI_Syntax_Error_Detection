@@ -25,22 +25,22 @@ Students should get accurate, actionable code-error feedback even when the ML la
 
 ### Active
 
-- v1.1 reliability refinement has been completed (Phase 6 complete on 2026-04-11).
-- Current project state is release-ready with no outstanding UAT debt in active milestone scope (audit date: 2026-04-14).
+- v1.2 production hardening and product foundations is now active (kickoff 2026-04-19).
+- Secure public deployment path before any broad external exposure.
+- Make the static pipeline authoritative and reduce legacy engine surface area.
+- Add delivery, observability, and product foundations without weakening degraded-mode correctness.
 
-## Current Milestone: v1.1 Reliability Refinement (Completed 2026-04-11)
+## Current Milestone: v1.2 Production Hardening and Product Foundations
 
-**Goal:** Close the known Python and Java reliability gaps without regressing the shared API, CLI, and Streamlit contracts.
+**Goal:** Make OmniSyntax deployable, secure, observable, and extensible for classroom and beta usage while preserving the reliability gains already delivered in v1.0 and v1.1.
 
 **Target features:**
-- Python `--all-errors` preserves semantic ML handling when appropriate.
-- Autofix behavior for `IndentationError` and `UnclosedString` is conservative and location-aware.
-- Java avoids the known false-positive `UndeclaredIdentifier` alongside `TypeMismatch` when context proves suppression is correct.
-
-**Completion evidence:**
-- `.planning/phases/06-python-and-java-reliability-refinement/06-01-SUMMARY.md`
-- `.planning/phases/06-python-and-java-reliability-refinement/06-02-SUMMARY.md`
-- `.planning/UAT_AUDIT_REPORT_2026-04-14.md`
+- Secure and typed API contracts with production-safe access control, rate limiting, and health semantics.
+- Consolidated shared engine contracts with dead legacy branches removed, package boundaries clarified, and entry-point parity preserved.
+- Delivery baseline: containers, CI quality gates, structured logging, tracing/alert hooks, and operational metrics.
+- Runtime scale readiness through worker/isolation options, prewarm/cache strategy, and measurable load/perf gates.
+- Student-facing diffed fix previews, clearer evidence/confidence surfacing, better code-quality scoring, and persistence foundations for saved analysis history.
+- Project-mode multi-file analysis plus lightweight educator feedback workflows after the platform hardening layers are in place.
 
 ### Out of Scope
 
@@ -57,12 +57,9 @@ OmniSyntax v1.0 shipped a hardened hybrid analysis pipeline for educational use 
 - **Entry-point parity**: CLI, API, and Streamlit now share warning payloads and consistent label/column output.
 - **Test coverage**: 153 automated tests including API regressions, C/Java/JavaScript-specific regressions, and 13 smoke tests.
 
-v1.1 continues from that baseline by tightening the remaining semantic and autofix edge cases while preserving the entry-point parity established in v1.0.
+v1.1 tightened the remaining Python and Java reliability gaps while preserving entry-point parity.
 
-**Known gaps at v1.0:**
-- `--all-errors` mode skips ML for Python semantic errors
-- IndentationError and UnclosedString auto-fixes are imprecise
-- Occasional false-positive UndeclaredIdentifier alongside TypeMismatch in Java
+v1.2 shifts from reliability repair into platform hardening. The April 19, 2026 audit found that the codebase is functionally healthy but still carries major production debt in API security, legacy engine complexity, deployability, observability, and product readiness. The current milestone turns those findings into ordered execution phases instead of leaving them as one-off audit notes.
 
 **Stack:** Python, FastAPI, Streamlit, scikit-learn 1.7.2, pytest
 
@@ -84,6 +81,9 @@ v1.1 continues from that baseline by tightening the remaining semantic and autof
 | Use `.planning/codebase/` maps before deeper phase planning | Reliable repo context reduced rediscovery overhead across phases | ✓ Good |
 | Pin scikit-learn==1.7.2 to match the bundle metadata contract | Prevents silent model incompatibility; degraded mode handles drift | ✓ Good |
 | Accept auto-fix imprecision for IndentationError and UnclosedString | Precise rewriting is high-risk; suggestion-based fix is safer and still useful | ⚠️ Revisit |
+| Prioritize API security and operational hardening before monetization or hosted product work | The audit showed internet exposure and delivery maturity are the real blockers, not feature count | ✓ Good |
+| Keep a modular monolith and strengthen boundaries before considering microservices | Current scale does not justify distributed complexity; internal contracts need cleanup first | ✓ Good |
+| Treat compiler/LSP integration as an adapter seam, not a one-shot rewrite | Improves fidelity for C-like languages without destabilizing the existing fallback path | ✓ Good |
 
 ## Evolution
 
@@ -103,5 +103,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-14 after v1.1 completion audit*
-
+*Last updated: 2026-04-19 after v1.2 planning kickoff*
