@@ -64,11 +64,11 @@ Turn OmniSyntax from a reliable academic prototype into a deployable, secure, ob
 
 | Requirement | Planned Phase | Status |
 |-------------|---------------|--------|
-| SEC-01 | Phase 7 | Planned |
-| SEC-02 | Phase 7 | Planned |
-| API-01 | Phase 7 | Planned |
-| API-02 | Phase 7 | Planned |
-| API-03 | Phase 7 | Planned |
+| SEC-01 | Phase 7 | Complete (2026-04-19) |
+| SEC-02 | Phase 7 | Complete (2026-04-19) |
+| API-01 | Phase 7 | Complete (2026-04-19) |
+| API-02 | Phase 7 | Complete (2026-04-19) |
+| API-03 | Phase 7 | Complete (2026-04-19) |
 | ARCH-01 | Phase 8 | Planned |
 | ARCH-02 | Phase 8 | Planned |
 | ARCH-03 | Phase 8 | Planned |

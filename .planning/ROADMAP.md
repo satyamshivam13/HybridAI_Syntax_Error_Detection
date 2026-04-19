@@ -123,7 +123,7 @@ Success criteria:
 | 4. QA Hardening and Release Readiness | v1.0 | 2/2 | ✅ Complete | 2026-03-27 |
 | 5. Cross-Language Reliability Hardening | v1.0 | 4/4 | ✅ Complete | 2026-03-27 |
 | 6. Python and Java Reliability Refinement | v1.1 | 2/2 | Complete | 2026-04-11 |
-| 7. Security and API Hardening | v1.2 | 0/1 | Planned | - |
+| 7. Security and API Hardening | v1.2 | 1/1 | ✅ Complete | 2026-04-19 |
 | 8. Engine Consolidation and Shared Contracts | v1.2 | 0/1 | Planned | - |
 | 9. Detection Assurance and ML Verification | v1.2 | 0/1 | Planned | - |
 | 10. Delivery, CI, and Observability | v1.2 | 0/1 | Planned | - |
