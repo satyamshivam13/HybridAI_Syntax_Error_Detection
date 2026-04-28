@@ -1,4 +1,4 @@
-"""
+﻿"""
 Comprehensive Unit Tests for OmniSyntax
 Covers: language detection, syntax checker, error engine, auto-fix,
         quality analyzer, multi-error detector, and feature utils.
@@ -73,6 +73,21 @@ class TestLanguageDetectorEdgeCases(unittest.TestCase):
     def test_unknown_language(self):
         code = "42"
         self.assertEqual(detect_language(code), "Unknown")
+
+    def test_comment_noise_is_ignored(self):
+        code = "# printf('hi')\nvalue = 1\n"
+        self.assertEqual(detect_language(code), "Unknown")
+
+    def test_non_string_input_falls_back_to_unknown(self):
+        self.assertEqual(detect_language(None), "Unknown")
+
+
+    def test_inline_comment_noise_is_ignored(self):
+        code = "def hello():\n    value = 1  # printf('hi')\n    return value\n"
+        self.assertEqual(detect_language(code), "Python")
+
+    def test_short_ambiguous_snippet_stays_unknown(self):
+        self.assertEqual(detect_language("print('hello')"), "Unknown")
 
     def test_java_system_out(self):
         code = 'System.out.println("hello");'
@@ -314,7 +329,7 @@ class TestFeatureUtils(unittest.TestCase):
         self.assertEqual(features[0], len(code))  # code_length
 
     def test_bracket_diff_feature(self):
-        code = "print((1+2)"  # 2 opens, 1 close → diff = 1
+        code = "print((1+2)"  # 2 opens, 1 close â†’ diff = 1
         features = extract_numerical_features(code)
         self.assertEqual(features[9], 1)  # bracket_diff
 
