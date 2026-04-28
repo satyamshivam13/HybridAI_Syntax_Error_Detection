@@ -184,3 +184,15 @@ dmypy.json
 *_old.*
 archive/
 backups/
+
+# ============================================================
+# AI Agents and Assistants Context
+# ============================================================
+.agents/
+.cursor/
+.jetro/
+.mcp.json
+.windsurfrules
+.github/copilot-instructions.md
+AGENT.md
+CLAUDE.md

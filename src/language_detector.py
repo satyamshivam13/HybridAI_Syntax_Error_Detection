@@ -1,4 +1,5 @@
 import os
+import re
 
 
 def detect_language(code: str, filename: str | None = None) -> str:
@@ -44,7 +45,6 @@ def detect_language(code: str, filename: str | None = None) -> str:
         scores["C"] += 1
         scores["C++"] += 1
         # C-specific headers tip the balance toward C
-        import re
         if re.search(r'#include\s*<\w+\.h>', code_lower):
             scores["C"] += 1
     if "int main" in code_lower:
@@ -68,7 +68,6 @@ def detect_language(code: str, filename: str | None = None) -> str:
         scores["Java"] += 2
 
     # --- JavaScript indicators ---
-    import re
     if "console.log" in code_lower or "document.getelementbyid" in code_lower:
         scores["JavaScript"] += 2
     if re.search(r'\b(let|const|function|var)\b', code_lower):

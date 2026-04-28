@@ -302,6 +302,9 @@ def _issue(program: IRProgram, kind: str, msg: str, line: int | None, strength: 
 
 
 def _strip_comments(code: str) -> str:
+    # Strip Python-style # comments (but not #include directives)
+    code = re.sub(r"(?<!\w)#(?!include\b).*", lambda m: " " * len(m.group(0)), code)
+    # Strip C/C++/Java/JS single-line comments
     code = re.sub(r"//.*", lambda m: " " * len(m.group(0)), code)
     return re.sub(r"/\*.*?\*/", lambda m: "\n" * m.group(0).count("\n"), code, flags=re.S)
 
@@ -643,7 +646,7 @@ class ExpressionEvaluator:
             return []
         try:
             node = ast.parse(self._normalize(expression), mode="eval").body
-        except SyntaxError:
+        except (SyntaxError, ValueError):
             return []
         states: list[ValueFact] = []
 
@@ -1463,6 +1466,8 @@ class StaticAnalysisEngine:
         self.ranker = Ranker()
 
     def analyze(self, code: str, filename: str | None = None, language_override: str | None = None) -> dict[str, Any]:
+        # C1: Sanitize null bytes to prevent ast.parse ValueError crashes
+        code = code.replace("\x00", "")
         language = language_override or detect_language(code, filename)
         program = self.parser.parse(code, language, filename)
         symbols, symbol_issues = self.symbols.build(program)

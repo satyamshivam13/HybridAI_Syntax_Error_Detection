@@ -123,6 +123,8 @@ class _BaseRateLimiter:
 
 class _MemoryRateLimiter(_BaseRateLimiter):
     backend = "memory"
+    _call_count = 0
+    _EVICT_EVERY = 500  # run eviction every N calls
 
     def enforce(self, request: Request, scope: str) -> None:
         rate_limit = _get_rate_limit_per_minute()
@@ -147,6 +149,14 @@ class _MemoryRateLimiter(_BaseRateLimiter):
                     f"Too many requests. Limit is {rate_limit} per minute.",
                 )
             events.append(now)
+
+            # M3: Periodic eviction of stale keys to prevent memory leak
+            _MemoryRateLimiter._call_count += 1
+            if _MemoryRateLimiter._call_count >= _MemoryRateLimiter._EVICT_EVERY:
+                _MemoryRateLimiter._call_count = 0
+                stale = [k for k, v in _REQUEST_LOG.items() if not v or (now - v[-1]) > 120.0]
+                for k in stale:
+                    del _REQUEST_LOG[k]
 
 
 class _RedisRateLimiter(_BaseRateLimiter):
