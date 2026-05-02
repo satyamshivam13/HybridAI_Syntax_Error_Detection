@@ -1,6 +1,6 @@
 # External Integrations
 
-**Analysis Date:** 2026-03-27
+**Analysis Date:** 2026-05-02
 
 ## APIs & External Services
 
@@ -30,7 +30,7 @@
 
 **Auth Provider:**
 - None
-  - The API is currently open and relies on payload/rate controls rather than user identity
+  - The API is currently open by default, but production-facing deployments should enable explicit access control or a gateway layer
 
 ## Monitoring & Observability
 
@@ -81,7 +81,7 @@
 
 ## Integration Risks
 
-- `scikit-learn==1.1.3` is effectively an integration contract with `models/*.pkl`
+- `scikit-learn==1.7.2` is effectively an integration contract with `models/*.pkl` and `models/bundle_metadata.json`
 - Missing or incompatible model files force degraded mode in `src/ml_engine.py`
 - Evaluation scripts depend on local datasets and artifacts being present in expected directories
 

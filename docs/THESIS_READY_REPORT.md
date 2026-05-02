@@ -282,7 +282,7 @@ The dominant error modes are concentrated around `MissingDelimiter`, `MissingInc
 ### Table 9. Production and regression validation
 | Check | Result |
 |---|---|
-| `python -m pytest tests/ -q` | 179 passed, 1 skipped, 1 xfailed |
+| `python -m pytest tests/ -q` | 193 passed, 1 skipped, 1 xfailed |
 | `python scripts/production_validation.py` | mutation_robustness 1.0; real_world_messy_accuracy 1.0; multi_error_recall 1.0; cross_language_consistency 1.0; confidence_ece 0.0391 |
 | `python scripts/adversarial_validation.py` | mutation_accuracy 97.08; real_world_accuracy 97.3; verdict PRODUCTION_READY |
 | `python scripts/evaluate_exhaustive_accuracy.py ...` | overall_accuracy 0.941832; release recommendation NO-GO |

@@ -1,8 +1,8 @@
 # Comprehensive Test Report
 
-Last updated: 2026-04-11
+Last updated: 2026-05-02
 
-Latest verified local run (`python -m pytest tests/ -q`): 179 passed, 1 skipped, 1 xfailed.
+Latest verified local run (`python -m pytest tests/ -q`): 193 passed, 1 skipped, 1 xfailed.
 
 Latest validation gates:
 - `python scripts/production_validation.py` => mutation_robustness 1.0, real_world_messy_accuracy 1.0, multi_error_recall 1.0, cross_language_consistency 1.0, confidence_ece 0.0391.

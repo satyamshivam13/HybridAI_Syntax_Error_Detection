@@ -30,6 +30,9 @@ Provide consistent code analysis and guidance across API, CLI, and Streamlit ent
 - Preserve and expand regression coverage
 - Maintain safe ML compatibility controls
 
+## Current snapshot
+- Latest verified local run: 193 passed, 1 skipped, 1 xfailed
+
 ## Related docs
 - [Quick Start](QUICKSTART.md)
 - [API Documentation](API_DOCUMENTATION.md)

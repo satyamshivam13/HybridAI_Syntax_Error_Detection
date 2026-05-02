@@ -1,6 +1,6 @@
 # Testing Patterns
 
-**Analysis Date:** 2026-03-27
+**Analysis Date:** 2026-05-02
 
 ## Test Framework
 
@@ -98,6 +98,9 @@ def test_health_reflects_model_state(monkeypatch):
 **Requirements:**
 - No explicit percentage target is documented
 - Practical focus is regression protection for detection, API behavior, and script smoke paths
+
+**Latest verified local run:**
+- `python -m pytest tests/ -q` => 193 passed, 1 skipped, 1 xfailed
 
 **Configuration:**
 - `pytest-cov` is available in dependencies

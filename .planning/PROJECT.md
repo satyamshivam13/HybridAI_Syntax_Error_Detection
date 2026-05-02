@@ -29,6 +29,7 @@ Students should get accurate, actionable code-error feedback even when the ML la
 - Secure public deployment path before any broad external exposure.
 - Make the static pipeline authoritative and reduce legacy engine surface area.
 - Add delivery, observability, and product foundations without weakening degraded-mode correctness.
+- Latest verified local run (2026-05-02): 193 passed, 1 skipped, 1 xfailed.
 
 ## Current Milestone: v1.2 Production Hardening and Product Foundations
 
@@ -55,7 +56,7 @@ OmniSyntax v1.0 shipped a hardened hybrid analysis pipeline for educational use 
 - **ML compatibility**: scikit-learn==1.7.2 bundle with metadata-aware health contract; `/health` reflects true model state.
 - **Rule-based coverage**: 11+ patterns for C/Java/JavaScript covering syntax, semantic, and runtime error classes.
 - **Entry-point parity**: CLI, API, and Streamlit now share warning payloads and consistent label/column output.
-- **Test coverage**: 153 automated tests including API regressions, C/Java/JavaScript-specific regressions, and 13 smoke tests.
+- **Test coverage**: 153 automated tests at v1.0; current regression suite is 193 passed, 1 skipped, 1 xfailed.
 
 v1.1 tightened the remaining Python and Java reliability gaps while preserving entry-point parity.
 
@@ -103,4 +104,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-19 after v1.2 planning kickoff*
+*Last updated: 2026-05-02 after verification refresh*

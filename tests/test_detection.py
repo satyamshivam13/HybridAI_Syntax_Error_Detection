@@ -89,6 +89,10 @@ class TestLanguageDetectorEdgeCases(unittest.TestCase):
     def test_short_ambiguous_snippet_stays_unknown(self):
         self.assertEqual(detect_language("print('hello')"), "Unknown")
 
+    def test_spaced_preprocessor_directive_is_preserved(self):
+        code = "#  include <stdio.h>\nint main() { return 0; }\n"
+        self.assertEqual(detect_language(code), "C")
+
     def test_java_system_out(self):
         code = 'System.out.println("hello");'
         self.assertEqual(detect_language(code), "Java")
@@ -329,7 +333,7 @@ class TestFeatureUtils(unittest.TestCase):
         self.assertEqual(features[0], len(code))  # code_length
 
     def test_bracket_diff_feature(self):
-        code = "print((1+2)"  # 2 opens, 1 close â†’ diff = 1
+        code = "print((1+2)"  # 2 opens, 1 close -> diff = 1
         features = extract_numerical_features(code)
         self.assertEqual(features[9], 1)  # bracket_diff
 

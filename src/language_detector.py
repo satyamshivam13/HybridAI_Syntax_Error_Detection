@@ -104,10 +104,16 @@ def _strip_comment_noise(code: str) -> str:
         stripped = working.lstrip()
         if stripped.startswith('//'):
             continue
-        if stripped.startswith('#') and not stripped.startswith(_PREPROCESSOR_PREFIXES):
-            continue
+        if stripped.startswith('#'):
+            rest = stripped[1:].lstrip()
+            directive = '#' + rest
+            if directive.startswith(_PREPROCESSOR_PREFIXES):
+                allow_hash_comment = False
+            else:
+                continue
+        else:
+            allow_hash_comment = True
 
-        allow_hash_comment = not stripped.startswith(_PREPROCESSOR_PREFIXES)
         cleaned_line = _strip_inline_comments(working, allow_hash_comment=allow_hash_comment)
         if cleaned_line.strip():
             cleaned_lines.append(cleaned_line)
@@ -149,10 +155,10 @@ def detect_language(code: str | None, filename: str | None = None) -> str:
 
     if 'printf(' in code_lower or 'fprintf(' in code_lower or 'scanf(' in code_lower:
         scores['C'] += 2
-    if '#include' in code_lower:
+    if re.search(r'#\s*include\b', code_lower):
         scores['C'] += 1
         scores['C++'] += 1
-        if re.search(r'#include\s*<\w+\.h>', code_lower):
+        if re.search(r'#\s*include\s*<\w+\.h>', code_lower):
             scores['C'] += 1
     if 'int main' in code_lower:
         scores['C'] += 1

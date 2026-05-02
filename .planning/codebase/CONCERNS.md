@@ -1,14 +1,14 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-03-27
+**Analysis Date:** 2026-05-02
 
 ## Tech Debt
 
 **ML artifact compatibility in `src/ml_engine.py`:**
 - Issue: Runtime health depends on serialized pickle artifacts that are version-sensitive
 - Why: The project ships trained artifacts instead of rebuilding or versioning them more robustly
-- Impact: Semantic ML classification may be unavailable even when the rest of the product works
-- Fix approach: Rebuild or migrate artifacts, version the bundle explicitly, and verify healthy-mode loading in CI
+- Impact: Semantic ML classification may be unavailable when the installed environment drifts away from the bundle metadata contract
+- Fix approach: Keep bundle metadata authoritative, verify healthy-mode loading in CI, and treat degraded mode as the safe fallback
 
 **Legacy logic still present in `src/error_engine.py`:**
 - Issue: The file carries legacy/non-authoritative branches and long heuristic sections
@@ -34,9 +34,9 @@
 ## Security Considerations
 
 **Open API deployment:**
-- Risk: Public deployments could be abused because the API has no authentication layer
-- Current mitigation: payload-size checks and in-memory rate limiting
-- Recommendations: Add auth or gateway controls before exposing this service broadly
+- Risk: Public deployments could be abused without an explicit access-control layer
+- Current mitigation: payload-size checks, in-memory rate limiting, and configurable API key mode
+- Recommendations: Keep auth or gateway controls enabled before exposing this service broadly
 
 **User-submitted code handling:**
 - Risk: Future execution-based analysis could become dangerous if code is ever run directly
@@ -81,10 +81,10 @@
 
 ## Dependencies at Risk
 
-**`scikit-learn==1.1.3`:**
-- Risk: Model compatibility is pinned to an older artifact contract
-- Impact: Upgrades or environment drift can silently disable semantic ML behavior
-- Migration plan: Re-export models with a supported toolchain or replace pickled estimators with a safer packaging strategy
+**`scikit-learn==1.7.2`:**
+- Risk: Model compatibility is still tied to a versioned artifact contract
+- Impact: Upgrades or environment drift can silently disable semantic ML behavior if the bundle metadata and runtime diverge
+- Migration plan: Keep re-exporting models with the verified toolchain and preserve the bundle metadata contract
 
 ## Missing Critical Features
 

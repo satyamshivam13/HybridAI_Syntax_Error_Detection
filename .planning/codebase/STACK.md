@@ -1,6 +1,6 @@
 # Technology Stack
 
-**Analysis Date:** 2026-03-27
+**Analysis Date:** 2026-05-02
 
 ## Languages
 
@@ -26,7 +26,7 @@
 **Core:**
 - FastAPI - REST API in `api.py`
 - Streamlit - Interactive UI in `app.py`
-- scikit-learn 1.1.3 - Serialized model compatibility target in `src/ml_engine.py`
+- scikit-learn 1.7.2 - Serialized model compatibility target in `src/ml_engine.py`
 
 **Testing:**
 - pytest - Unit, regression, and smoke tests under `tests/`
@@ -41,7 +41,7 @@
 **Critical:**
 - `fastapi` - API routing, validation, and structured errors
 - `streamlit` - Student-facing web UI
-- `scikit-learn==1.1.3` - Required for current serialized ML artifacts
+- `scikit-learn==1.7.2` - Required for the current serialized ML artifacts and bundle metadata contract
 - `joblib` - Loading model artifacts from `models/`
 - `pydantic` - API request and response models
 

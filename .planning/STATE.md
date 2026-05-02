@@ -4,7 +4,7 @@ milestone: v1.2
 milestone_name: Production Hardening and Product Foundations
 status: ready
 stopped_at: Phase 8 completed
-last_updated: "2026-04-19T15:58:59.2483717+05:30"
+last_updated: "2026-05-02T15:58:59.2483717+05:30"
 last_activity: 2026-04-19 -- Phase 8 completed and verified
 progress:
   total_phases: 7
@@ -18,7 +18,7 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-04-19)
+See: `.planning/PROJECT.md` (updated 2026-05-02)
 
 **Core value:** Students should get accurate, actionable code-error feedback even when the ML layer is unavailable.
 **Current focus:** Phase 8 completed; prepare Phase 9 planning
@@ -100,6 +100,7 @@ Recent decisions affecting current work:
 - Plan-phase refresh (2026-04-19): Phase 07 research and execution plan now specify concrete config knobs, threat model, typed contract targets, and acceptance criteria
 - Execute-phase completion (2026-04-19): Phase 07 shipped auth boundary controls, split health endpoints, strict contracts, and verification-aware fix semantics
 - Execute-phase completion (2026-04-19): Phase 08 shipped the shared static pipeline contract, compatibility-wrapper cleanup, and parity-verified entry-point routing
+- Verification refresh (2026-05-02): `python -m pytest tests/ -q` => 193 passed, 1 skipped, 1 xfailed
 
 ## Session Continuity
 

@@ -3,7 +3,7 @@
 Hybrid syntax and code-quality assistant for Python, Java, C, C++, and JavaScript.
 
 ## Current state
-- Latest local verification (2026-04-11): `python -m pytest tests/ -q` => 179 passed, 1 skipped, 1 xfailed.
+- Latest local verification (2026-05-02): `python -m pytest tests/ -q` => 193 passed, 1 skipped, 1 xfailed.
 - API, CLI, and Streamlit entrypoints are available.
 - ML-backed classification is enabled with metadata-aware model compatibility control.
 - System reports degraded mode explicitly when ML models cannot load or are incompatible.
