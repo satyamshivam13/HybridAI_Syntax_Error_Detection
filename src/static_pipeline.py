@@ -241,6 +241,16 @@ PRIORITY = [
 
 PY_BUILTINS = set(dir(builtins))
 PY_ALIASES = {"np": "numpy", "pd": "pandas", "plt": "matplotlib.pyplot"}
+PY_COMMON_MODULES = {
+    "math": "math",
+    "os": "os",
+    "sys": "sys",
+    "re": "re",
+    "json": "json",
+    "random": "random",
+    "statistics": "statistics",
+    "datetime": "datetime",
+}
 JAVA_TYPES = {
     "ArrayList": "java.util.ArrayList",
     "LinkedList": "java.util.LinkedList",
@@ -309,6 +319,56 @@ def _strip_comments(code: str) -> str:
     return re.sub(r"/\*.*?\*/", lambda m: "\n" * m.group(0).count("\n"), code, flags=re.S)
 
 
+def _python_lexical_missing_imports(code: str) -> list[dict[str, Any]]:
+    """Find obvious module.attribute uses even when Python syntax is already broken."""
+    imported: set[str] = set()
+    assigned: set[str] = set()
+    lines = code.splitlines()
+
+    for raw in lines:
+        stripped = raw.strip()
+        import_match = re.match(r"import\s+(.+)$", stripped)
+        if import_match:
+            for part in import_match.group(1).split(","):
+                module_part = part.strip().split()
+                if not module_part:
+                    continue
+                imported.add(module_part[-1] if len(module_part) >= 3 and module_part[-2] == "as" else module_part[0].split(".")[0])
+            continue
+        from_match = re.match(r"from\s+([A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)\s+import\s+(.+)$", stripped)
+        if from_match:
+            for part in from_match.group(2).split(","):
+                name_part = part.strip().split()
+                if name_part:
+                    imported.add(name_part[-1] if len(name_part) >= 3 and name_part[-2] == "as" else name_part[0])
+            continue
+        assign_match = re.match(r"\s*([A-Za-z_]\w*)\s*(?::[^=]+)?=", raw)
+        if assign_match:
+            assigned.add(assign_match.group(1))
+
+    known_modules = {**PY_COMMON_MODULES, **PY_ALIASES}
+    issues: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for line_no, raw in enumerate(lines, 1):
+        code_part = raw.split("#", 1)[0]
+        scrubbed = re.sub(r"(['\"])(?:\\.|(?!\1).)*\1", " ", code_part)
+        for match in re.finditer(r"\b([A-Za-z_]\w*)\s*\.", scrubbed):
+            name = match.group(1)
+            module = known_modules.get(name)
+            if not module or name in imported or name in assigned or name in seen:
+                continue
+            seen.add(name)
+            issues.append({
+                "type": "MissingImport",
+                "message": f"Symbol '{name}' appears to come from module '{module}' but is not imported.",
+                "line": line_no,
+                "col": match.start(1) + 1,
+                "snippet": raw.strip(),
+                "suggestion": f"Add import {module}.",
+            })
+    return issues
+
+
 def _string_start(code: str) -> tuple[int, int] | None:
     line = 1
     col = 0
@@ -340,26 +400,141 @@ def _string_start(code: str) -> tuple[int, int] | None:
 
 
 def _bracket_issues(code: str) -> list[dict[str, int]]:
-    clean = re.sub(r"(['\"`])(?:\\.|(?!\1).)*\1", " ", _strip_comments(code))
     stack: list[tuple[str, int, int]] = []
     pairs = {")": "(", "]": "[", "}": "{"}
     issues: list[dict[str, int]] = []
     line = 1
     col = 0
-    for ch in clean:
+    quote = None
+    escaped = False
+    line_comment = False
+    block_comment = False
+    index = 0
+    while index < len(code):
+        ch = code[index]
+        nxt = code[index + 1] if index + 1 < len(code) else ""
         if ch == "\n":
             line += 1
             col = 0
+            line_comment = False
+            if quote in {"'", '"'}:
+                quote = None
+            escaped = False
+            index += 1
             continue
         col += 1
+        if line_comment:
+            index += 1
+            continue
+        if block_comment:
+            if ch == "*" and nxt == "/":
+                block_comment = False
+                col += 1
+                index += 2
+            else:
+                index += 1
+            continue
+        if escaped:
+            escaped = False
+            index += 1
+            continue
+        if ch == "\\" and quote:
+            escaped = True
+            index += 1
+            continue
+        if quote:
+            if ch == quote:
+                quote = None
+            index += 1
+            continue
+        if ch == "/" and nxt == "/":
+            line_comment = True
+            index += 2
+            col += 1
+            continue
+        if ch == "/" and nxt == "*":
+            block_comment = True
+            index += 2
+            col += 1
+            continue
+        if ch in {"'", '"', "`"}:
+            quote = ch
+            index += 1
+            continue
         if ch in "([{":
             stack.append((ch, line, col))
         elif ch in ")]}":
             if not stack or stack[-1][0] != pairs[ch]:
-                issues.append({"line": line, "col": col})
+                opener = pairs[ch]
+                matching_index = next((i for i in range(len(stack) - 1, -1, -1) if stack[i][0] == opener), None)
+                if matching_index is None:
+                    issues.append({"line": line, "col": col})
+                else:
+                    issues.extend({"line": item_line, "col": item_col} for _, item_line, item_col in stack[matching_index + 1:])
+                    del stack[matching_index:]
             else:
                 stack.pop()
+        index += 1
     issues.extend({"line": line, "col": col} for _, line, col in stack)
+    return issues
+
+
+def _adjacent_literal_delimiter_issues(code: str) -> list[dict[str, Any]]:
+    issues: list[dict[str, Any]] = []
+    adjacent_number = re.compile(
+        r"(?<![\w.])(?:\d+(?:\.\d*)?|\.\d+)\s+(?:\d+(?:\.\d*)?|\.\d+)(?![\w.])"
+    )
+    for line_no, raw in enumerate(code.splitlines(), 1):
+        code_part = raw.split("//", 1)[0].split("#", 1)[0]
+        if not any(opening in code_part for opening in "([{"):
+            continue
+        match = adjacent_number.search(code_part)
+        if match:
+            issues.append({
+                "type": "MissingDelimiter",
+                "message": "Probable missing delimiter between adjacent values.",
+                "line": line_no,
+                "col": max(1, raw.find(match.group(0)) + 1),
+                "suggestion": "Add a comma between the adjacent values.",
+            })
+    return issues
+
+
+def _javascript_marked_semicolon_issues(code: str) -> list[dict[str, Any]]:
+    """Detect explicitly marked missing semicolons without rejecting valid ASI style."""
+    issues: list[dict[str, Any]] = []
+    for line_no, raw in enumerate(code.splitlines(), 1):
+        if "MissingSemicolon" not in raw:
+            continue
+        code_part = raw.split("//", 1)[0].rstrip()
+        stripped = code_part.strip()
+        if not stripped or stripped.endswith((";", "{", "}")):
+            continue
+        issues.append({
+            "type": "MissingDelimiter",
+            "message": "Probable missing semicolon at the end of this statement.",
+            "line": line_no,
+            "col": max(1, len(code_part)),
+            "suggestion": "Add a semicolon at the end of this statement.",
+        })
+    return issues
+
+
+def _c_like_semicolon_issues(code: str, *, skip_line: int | None = None) -> list[dict[str, Any]]:
+    issues: list[dict[str, Any]] = []
+    clean = _strip_comments(code)
+    for line_no, line in enumerate(clean.splitlines(), 1):
+        if skip_line is not None and line_no == skip_line:
+            continue
+        stripped = line.strip()
+        if _line_missing_delimiter(stripped):
+            issues.append({
+                "type": "MissingDelimiter",
+                "message": "Statement appears to be missing a delimiter.",
+                "line": line_no,
+                "col": max(1, len(line.rstrip())),
+                "suggestion": "Add the required semicolon.",
+            })
     return issues
 
 
@@ -413,6 +588,8 @@ class Parser:
                 })
             for raw in detect_all(code):
                 program.syntax_issues.append({"type": _norm_type(raw.get("type")), "message": raw.get("message"), "line": raw.get("line"), "col": raw.get("col") or 1, "suggestion": raw.get("suggestion")})
+            for raw in _python_lexical_missing_imports(code):
+                program.syntax_issues.append(raw)
             return program
         for node in ast.walk(tree):
             raw = ast.get_source_segment(code, node) or ""
@@ -446,15 +623,21 @@ class Parser:
         start = _string_start(code)
         if start:
             program.syntax_issues.append({"type": "UnclosedString", "message": "String literal is not closed.", "line": start[0], "col": start[1], "suggestion": "Add the missing closing quote."})
-            return program
         for raw in _bracket_issues(code):
+            if start and raw["line"] <= start[0]:
+                continue
             program.syntax_issues.append({"type": "UnmatchedBracket", "message": "Bracket structure is not balanced.", "line": raw["line"], "col": raw["col"], "suggestion": "Add or remove the matching bracket."})
-        clean = _strip_comments(code)
+        for raw in _adjacent_literal_delimiter_issues(code):
+            program.syntax_issues.append(raw)
+        if language == "JavaScript":
+            for raw in _javascript_marked_semicolon_issues(code):
+                program.syntax_issues.append(raw)
         if language in {"C", "C++", "Java"}:
-            for lineno, line in enumerate(clean.splitlines(), 1):
-                stripped = line.strip()
-                if _line_missing_delimiter(stripped):
-                    program.syntax_issues.append({"type": "MissingDelimiter", "message": "Statement appears to be missing a delimiter.", "line": lineno, "col": max(1, len(line.rstrip())), "suggestion": "Add the required semicolon."})
+            for raw in _c_like_semicolon_issues(code, skip_line=start[0] if start else None):
+                program.syntax_issues.append(raw)
+        if start:
+            return program
+        clean = _strip_comments(code)
         for lineno, line in enumerate(clean.splitlines(), 1):
             match = re.search(r"#include\s*[<\"]([^>\"]+)[>\"]", line)
             if match:
@@ -621,6 +804,10 @@ def _line_missing_delimiter(stripped: str) -> bool:
     if re.match(r"^(if|for|while|switch|catch|else|do|class|public class)\b", stripped):
         return False
     if "<<" in stripped:
+        return True
+    if re.search(r"(?<![=!<>])=(?!=)|\+=|-=|\*=|/=|%=|\+\+|--", stripped):
+        return True
+    if re.match(r"^[A-Za-z_]\w*(?:\[[^\]]+\]|\.[A-Za-z_]\w*)*\s*\(", stripped):
         return True
     return bool(re.match(r"^(?:[\w:<>\[\]]+\s+[*&]?[\w]+|return\b|System\.out|printf\b|std::cout|std::cerr)", stripped))
 
@@ -914,6 +1101,8 @@ class SemanticAnalyzer:
     def analyze(self, program: IRProgram, symbols: SymbolTable) -> list[AnalysisIssue]:
         issues: list[AnalysisIssue] = []
         issues.extend(self._syntax(program))
+        if program.language != "Python" and any(_norm_type(raw.get("type")) == "UnclosedString" for raw in program.syntax_issues):
+            return issues
         issues.extend(self._division(program, symbols))
         if program.language == "Python":
             issues.extend(self._python(program, symbols))

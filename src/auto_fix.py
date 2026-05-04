@@ -8,6 +8,15 @@ import re
 from src.config import get_supported_fix_error_types
 
 
+def _normalized_error_type(error_type: str | None) -> str:
+    aliases = {
+        "MissingColon": "MissingDelimiter",
+        "MissingSemicolon": "MissingDelimiter",
+        "UnclosedQuotes": "UnclosedString",
+    }
+    return aliases.get(error_type or "", error_type or "")
+
+
 class AutoFixer:
     """
     Attempts to automatically fix common syntax errors
@@ -20,6 +29,18 @@ class AutoFixer:
     @staticmethod
     def supported_error_types() -> list[str]:
         return get_supported_fix_error_types()
+
+    @staticmethod
+    def line_for_error(issues: list[dict], error_type: str) -> int | None:
+        """Return the 0-indexed line for the matching issue type, if known."""
+        target = _normalized_error_type(error_type)
+        for issue in issues:
+            if _normalized_error_type(issue.get("type")) == target and issue.get("line"):
+                return issue["line"] - 1
+        for issue in issues:
+            if issue.get("line"):
+                return issue["line"] - 1
+        return None
     
     def fix_missing_colon(self, code: str, line_num: int) -> str:
         """
@@ -369,7 +390,7 @@ class AutoFixer:
             return {
                 'fixed_code': fixed_code,
                 'changes': self.fixes_applied,
-                'success': len(self.fixes_applied) > 0
+                'success': fixed_code != code
             }
         
         except Exception as e:

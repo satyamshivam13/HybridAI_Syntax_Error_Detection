@@ -162,6 +162,57 @@ def detect_missing_colon(code: str) -> List[Dict[str, Any]]:
     return issues
 
 
+def detect_missing_commas(code: str) -> List[Dict[str, Any]]:
+    """Detect adjacent literal values that Python reports as a likely missing comma."""
+    issues = []
+    adjacent_number = re.compile(
+        r"(?<![\w.])(?:\d+(?:\.\d*)?|\.\d+)\s+(?:\d+(?:\.\d*)?|\.\d+)(?![\w.])"
+    )
+    for lineno, raw in enumerate(code.splitlines(), start=1):
+        code_part = raw.split('#', 1)[0]
+        if not any(opening in code_part for opening in "([{"):
+            continue
+        if adjacent_number.search(code_part):
+            issues.append({
+                "type": "MissingDelimiter",
+                "message": "Probable missing comma between adjacent values.",
+                "line": lineno,
+                "snippet": raw.strip(),
+                "suggestion": "Add a comma between the adjacent values.",
+            })
+    return issues
+
+
+def detect_block_indentation_errors(code: str) -> List[Dict[str, Any]]:
+    """Detect a likely unindented block after Python block-opening lines."""
+    issues = []
+    header_pattern = re.compile(
+        r"^\s*(if|elif|else|for|while|def|class|try|except|finally|with)\b"
+    )
+    lines = code.splitlines()
+    for index, raw in enumerate(lines):
+        code_part = raw.split('#', 1)[0].rstrip()
+        if not code_part.endswith(":") or not header_pattern.match(code_part):
+            continue
+        parent_indent = len(raw) - len(raw.lstrip(" \t"))
+        for next_index in range(index + 1, len(lines)):
+            next_raw = lines[next_index]
+            next_code = next_raw.split('#', 1)[0]
+            if not next_code.strip():
+                continue
+            child_indent = len(next_raw) - len(next_raw.lstrip(" \t"))
+            if child_indent <= parent_indent:
+                issues.append({
+                    "type": "IndentationError",
+                    "message": "Expected an indented block after this statement.",
+                    "line": next_index + 1,
+                    "snippet": next_raw.strip(),
+                    "suggestion": "Indent this line one level inside the block, usually 4 spaces.",
+                })
+            break
+    return issues
+
+
 def detect_indentation_errors(code: str) -> List[Dict[str, Any]]:
     """Detect indentation problems using compile()."""
     issues = []
@@ -196,6 +247,9 @@ def classify_syntax_error(exc: Exception) -> Dict[str, Any]:
         if 'expected' in text and ':' in text:
             info["type"] = "MissingColon"
             info["suggestion"] = "Check for missing ':' after function/if/for/while/with/try/except/else."
+        elif 'forgot a comma' in text:
+            info["type"] = "MissingDelimiter"
+            info["suggestion"] = "Add the missing comma between adjacent values."
         elif 'eof while scanning string literal' in text or 'unterminated string' in text:
             info["type"] = "UnclosedQuotes"
             info["suggestion"] = "It looks like a string wasn't closed properly."
@@ -213,7 +267,9 @@ def detect_all(code: str) -> List[Dict[str, Any]]:
     issues = []
     issues += detect_unclosed_quotes(code)
     issues += detect_unmatched_brackets(code)
+    issues += detect_missing_commas(code)
     issues += detect_missing_colon(code)
+    issues += detect_block_indentation_errors(code)
     issues += detect_indentation_errors(code)
 
     ok, exc = try_ast_parse(code)

@@ -132,6 +132,72 @@ def test_multi_error_detector_keeps_primary_unclosed_string_without_bracket_nois
     assert "UnmatchedBracket" not in error_types
 
 
+def test_javascript_multi_error_sample_continues_after_unclosed_string():
+    code = """// MissingDelimiter + UnclosedQuotes + UnmatchedBracket + MissingSemicolon
+
+function processData() {
+    let arr = [1, 2 3, 4]; // MissingDelimiter
+
+    let message = "Hello World; // UnclosedQuotes
+
+    if (arr.length > 2 {  // UnmatchedBracket
+        console.log("Valid array")
+    }
+
+    let sum = 0
+    for (let i = 0; i < arr.length; i++) {
+        sum += arr[i]
+    }
+
+    console.log(sum)  // MissingSemicolon
+}
+"""
+    result = detect_all_errors(code, "sample.js")
+    by_type = result["errors_by_type"]
+
+    assert result["language"] == "JavaScript"
+    assert set(by_type) >= {"UnclosedString", "UnmatchedBracket", "MissingDelimiter"}
+    assert by_type["UnclosedString"][0]["line"] == 6
+    assert any(issue["line"] == 4 for issue in by_type["MissingDelimiter"])
+    assert any(issue["line"] == 17 for issue in by_type["MissingDelimiter"])
+    assert any(issue["line"] == 8 for issue in by_type["UnmatchedBracket"])
+
+
+def test_c_multi_error_sample_reports_semicolons_after_unclosed_string():
+    code = """#include <stdio.h>
+
+int main() {
+    int arr[] = {1, 2 3, 4}; // MissingDelimiter
+
+    printf("Starting program\\n)  // UnclosedQuotes
+
+    int sum = 0;
+
+    for(int i = 0; i < 4; i++) {
+        sum += arr[i]
+    } // MissingSemicolon
+
+    if(sum > 10 {  // UnmatchedBracket
+        printf("Large sum\\n");
+    }
+
+    printf("Total: %d\\n", sum);
+
+    return 0
+}
+"""
+    result = detect_all_errors(code, "sample.c")
+    by_type = result["errors_by_type"]
+
+    assert result["language"] == "C"
+    assert set(by_type) >= {"UnclosedString", "UnmatchedBracket", "MissingDelimiter"}
+    assert by_type["UnclosedString"][0]["line"] == 6
+    assert any(issue["line"] == 4 for issue in by_type["MissingDelimiter"])
+    assert any(issue["line"] == 11 for issue in by_type["MissingDelimiter"])
+    assert any(issue["line"] == 20 for issue in by_type["MissingDelimiter"])
+    assert any(issue["line"] == 14 for issue in by_type["UnmatchedBracket"])
+
+
 def test_cpp_pointer_declarations_are_not_undeclared_identifiers():
     code = (
         "#include <iostream>\n"

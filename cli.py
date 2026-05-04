@@ -128,14 +128,7 @@ def main():
         print("=" * 60)
         
         fixer = AutoFixer()
-        line_num = 0
-        
-        # Get line number from issues
-        if issues:
-            for issue in issues:
-                if issue.get('line'):
-                    line_num = issue['line'] - 1
-                    break
+        line_num = AutoFixer.line_for_error(issues, primary_error)
         
         fix_result = fixer.apply_fixes(code, primary_error, line_num, result['language'])
         
@@ -146,6 +139,10 @@ def main():
             print(fix_result['fixed_code'])
             print("-" * 60)
             print("\nChanges Applied:")
+            for change in fix_result['changes']:
+                print(f"  â€¢ {change}")
+        elif fix_result.get('changes'):
+            print("â„¹ï¸ Manual correction recommended. Suggested next steps:")
             for change in fix_result['changes']:
                 print(f"  â€¢ {change}")
         else:

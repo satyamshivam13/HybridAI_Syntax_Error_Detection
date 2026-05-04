@@ -699,12 +699,10 @@ async def check_and_fix(http_request: Request, request: CodeCheckRequest):
         fix_response = None
         if error_result["predicted_error"] != "NoError":
             fixer = AutoFixer()
-            line_num = None
-            if error_result.get("rule_based_issues"):
-                for issue in error_result["rule_based_issues"]:
-                    if issue.get("line"):
-                        line_num = issue["line"] - 1
-                        break
+            line_num = AutoFixer.line_for_error(
+                error_result.get("rule_based_issues", []),
+                error_result["predicted_error"],
+            )
             fix_result = fixer.apply_fixes(
                 request.code,
                 error_result["predicted_error"],

@@ -219,7 +219,9 @@ class TestAutoFixer(unittest.TestCase):
     def test_fix_indentation(self):
         code = "  print('hi')\n    print('bye')"
         result = self.fixer.apply_fixes(code, "IndentationError", None, "Python")
-        self.assertTrue(result['success'])
+        self.assertFalse(result['success'])
+        self.assertEqual(result['fixed_code'], code)
+        self.assertTrue(any("Suggestion-only" in change for change in result['changes']))
 
     def test_fix_unmatched_brackets(self):
         code = "print((1+2)"
@@ -238,7 +240,7 @@ class TestAutoFixer(unittest.TestCase):
     def test_indentation_error_fix_is_suggestion_only_and_location_aware(self):
         code = "def test():\nprint('hi')"
         result = self.fixer.apply_fixes(code, "IndentationError", 1, "Python")
-        self.assertTrue(result['success'])
+        self.assertFalse(result['success'])
         self.assertEqual(result['fixed_code'], code)
         self.assertTrue(any("Suggestion-only" in change for change in result['changes']))
         self.assertTrue(any("line 2" in change for change in result['changes']))
@@ -246,7 +248,7 @@ class TestAutoFixer(unittest.TestCase):
     def test_unclosed_string_fix_is_suggestion_only_and_location_aware(self):
         code = "name = \"Asha\nprint(name)"
         result = self.fixer.apply_fixes(code, "UnclosedString", 0, "Python")
-        self.assertTrue(result['success'])
+        self.assertFalse(result['success'])
         self.assertEqual(result['fixed_code'], code)
         self.assertTrue(any("Suggestion-only" in change for change in result['changes']))
         self.assertTrue(any("line 1" in change for change in result['changes']))

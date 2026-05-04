@@ -152,22 +152,24 @@ if code_input.strip():
             st.subheader("Auto-Fix Suggestion")
             fixer = AutoFixer()
 
-            line_num = 0
-            if result.get("rule_based_issues"):
-                for issue in result["rule_based_issues"]:
-                    if issue.get("line"):
-                        line_num = issue["line"] - 1
-                        break
+            line_num = AutoFixer.line_for_error(
+                result.get("rule_based_issues", []),
+                result["predicted_error"],
+            )
 
             fix_result = fixer.apply_fixes(code_input, result["predicted_error"], line_num, result["language"])
 
             if fix_result["success"]:
-                st.success("Automatic fix applied!")
+                st.success("Automatic fix preview generated.")
                 st.code(fix_result["fixed_code"], language=result["language"].lower())
 
                 with st.expander("View Changes"):
                     for change in fix_result["changes"]:
                         st.write(f"- {change}")
+            elif fix_result.get("changes"):
+                st.info("Manual correction recommended. Suggested next steps:")
+                for change in fix_result["changes"]:
+                    st.write(f"- {change}")
             else:
                 st.info("Manual correction recommended for this error type.")
 
