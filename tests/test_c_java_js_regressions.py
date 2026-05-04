@@ -1,4 +1,5 @@
 from src.error_engine import detect_errors
+from src.auto_fix import AutoFixer
 from src.multi_error_detector import detect_all_errors
 
 
@@ -196,6 +197,41 @@ int main() {
     assert any(issue["line"] == 11 for issue in by_type["MissingDelimiter"])
     assert any(issue["line"] == 20 for issue in by_type["MissingDelimiter"])
     assert any(issue["line"] == 14 for issue in by_type["UnmatchedBracket"])
+
+
+def test_c_multi_error_sample_has_patch_preview():
+    code = """#include <stdio.h>
+
+int main() {
+    int arr[] = {1, 2 3, 4}; // MissingDelimiter
+
+    printf("Starting program\\n)  // UnclosedQuotes
+
+    int sum = 0;
+
+    for(int i = 0; i < 4; i++) {
+        sum += arr[i]
+    } // MissingSemicolon
+
+    if(sum > 10 {  // UnmatchedBracket
+        printf("Large sum\\n");
+    }
+
+    printf("Total: %d\\n", sum);
+
+    return 0
+}
+"""
+    result = detect_all_errors(code, "sample.c")
+    preview = AutoFixer.format_patch_preview(
+        AutoFixer.patch_preview(code, result["rule_based_issues"], "C")
+    )
+
+    assert any("Line 4 ->     int arr[] = {1, 2, 3, 4};" in line for line in preview)
+    assert any('Line 6 ->     printf("Starting program\\n")' in line for line in preview)
+    assert any("Line 11 ->         sum += arr[i];" in line for line in preview)
+    assert any("Line 14 ->     if(sum > 10)" in line for line in preview)
+    assert any("Line 20 ->     return 0;" in line for line in preview)
 
 
 def test_cpp_pointer_declarations_are_not_undeclared_identifiers():

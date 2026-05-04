@@ -128,6 +128,13 @@ def main():
         print("=" * 60)
         
         fixer = AutoFixer()
+        patch_preview = AutoFixer.patch_preview(code, issues, result['language'])
+        if patch_preview:
+            print("Auto-Fix Patch:")
+            for line in AutoFixer.format_patch_preview(patch_preview):
+                print(f"  {line}")
+            print()
+
         line_num = AutoFixer.line_for_error(issues, primary_error)
         
         fix_result = fixer.apply_fixes(code, primary_error, line_num, result['language'])
@@ -141,6 +148,8 @@ def main():
             print("\nChanges Applied:")
             for change in fix_result['changes']:
                 print(f"  â€¢ {change}")
+        elif patch_preview:
+            print("â„¹ï¸ Review and apply the patch lines above; automatic rewriting remains conservative for this error type.")
         elif fix_result.get('changes'):
             print("â„¹ï¸ Manual correction recommended. Suggested next steps:")
             for change in fix_result['changes']:

@@ -65,6 +65,34 @@ def test_python_live_tutor_sample_reports_multiple_localized_issues():
     assert by_type["MissingImport"][0]["line"] == 13
 
 
+def test_python_live_tutor_sample_has_patch_preview():
+    code = '''def calculate():
+    numbers = [1, 2 3, 4]  # MissingDelimiter
+
+    if len(numbers) > 3   # MissingColon
+        print("Valid list")
+
+    total = 0
+    for i in numbers:
+    total += i  # IndentationError
+
+    text = "This is a broken string  # UnclosedString
+
+    print(math.sqrt(total))  # MissingImport
+
+    if (total > 10:  # UnmatchedBracket
+        print("Large")'''
+
+    issues = analyze_source(code, language_override="Python").to_single_result()["rule_based_issues"]
+    preview = AutoFixer.format_patch_preview(AutoFixer.patch_preview(code, issues, "Python"))
+
+    assert "Line 1 + import math" in preview
+    assert any("Line 2 ->     numbers = [1, 2, 3, 4]" in line for line in preview)
+    assert any("Line 4 ->     if len(numbers) > 3:" in line for line in preview)
+    assert any("Line 9 ->         total += i" in line for line in preview)
+    assert any('Line 11 ->     text = "This is a broken string"' in line for line in preview)
+
+
 def test_suggestion_only_fix_targets_primary_issue_line():
     code = '''def calculate():
     numbers = [1, 2 3, 4]
