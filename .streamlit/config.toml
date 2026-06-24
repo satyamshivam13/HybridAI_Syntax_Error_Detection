@@ -1,0 +1,9 @@
+# Streamlit configuration for OmniSyntax (Streamlit Community Cloud)
+# The app requires NO secrets and NO environment variables.
+# Python version is selected in the Cloud deploy UI (Advanced settings) — see docs/DEPLOYMENT_AUDIT.md.
+
+[server]
+headless = true
+
+[theme]
+base = "light"
