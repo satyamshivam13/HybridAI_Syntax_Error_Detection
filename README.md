@@ -52,11 +52,38 @@ A working draft of the accompanying paper is in [`docs/PAPER_ABSTRACT.md`](docs/
 - `docs/`: project and API documentation.
 
 ## Setup
-```bash
-python -m venv .venv
+
+**Requires Python 3.11 or 3.12.** `requirements.txt` pins `numpy<2.0`, which has
+no wheels for Python 3.13 — installing under 3.13 will fail. The serialized models
+also expect `scikit-learn==1.7.2`. Create the environment with an explicit version
+so you don't accidentally pick up 3.13:
+
+```powershell
+# Windows (PowerShell) — use the launcher to pin the version
+py -3.11 -m venv .venv
 .venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
+
+```bash
+# macOS / Linux
+python3.11 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Verify the environment is healthy (ML models load):
+
+```bash
+python -c "import src.ml_engine as m; print(m.get_model_status()['loaded'])"   # -> True
+```
+
+> If `.venv` ever stops working after a Python upgrade/uninstall, a virtualenv is
+> **not** relocatable — its `pyvenv.cfg` hard-codes the base interpreter path.
+> Delete and recreate it: `rm -rf .venv` (PowerShell: `Remove-Item -Recurse -Force .venv`)
+> then repeat the steps above. Use `.venv` only — older `.venvNNN` directories are not used.
 
 ## Run
 

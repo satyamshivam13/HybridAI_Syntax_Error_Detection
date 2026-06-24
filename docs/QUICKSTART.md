@@ -1,9 +1,11 @@
 # Quick Start
 
 ## 1) Setup
-```bash
-python -m venv .venv
-.venv\Scripts\Activate.ps1
+Requires **Python 3.11 or 3.12** (`numpy<2.0` has no 3.13 wheels; models need `scikit-learn==1.7.2`).
+```powershell
+py -3.11 -m venv .venv          # macOS/Linux: python3.11 -m venv .venv
+.venv\Scripts\Activate.ps1      # macOS/Linux: source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
