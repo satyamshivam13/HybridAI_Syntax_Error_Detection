@@ -29,7 +29,7 @@ This stage order is exposed by `StaticAnalysisEngine.analyze()` as `analysis_pip
 2. `SymbolBuilder.build()` creates a `SymbolTable`, collecting declarations, imports, includes, and propagated value facts.
 3. `ExpressionEvaluator` computes value states (`Zero`, `NonZero`, `Unknown`, `MaybeZero`) and denominator states for division safety checks.
 4. `ControlFlowAnalyzer` performs CFG-lite checks (loop truth evaluation + post-jump unreachable detection).
-5. `SemanticAnalyzer` runs language-aware checks (type mismatches, missing imports/includes, undeclared identifiers, dangling pointers, invalid assignments, and parser/syntax carry-forward issues).
+5. `SemanticAnalyzer` runs language-aware checks (type mismatches, missing imports/includes, undeclared identifiers, dangling pointers, invalid assignments, and parser/syntax carry-forward issues). Type-mismatch detection covers both declaration-site assignments (e.g. `int x = "hello"`, `_typed_assignments`) and, for Java, use-site misuse where a `String`-typed variable participates in a relational or arithmetic operation against a numeric literal (e.g. `while (input > 0)`, `_string_numeric_misuse`).
 6. `MultiErrorAggregator.aggregate()` deduplicates and suppresses known cascades/noise.
 7. `Ranker.rank()` applies priority + confidence + line tie-break ordering.
 8. `ConfidenceCalibrator.score()` assigns bounded calibrated confidence per issue; `no_error()` calibrates the no-error path.

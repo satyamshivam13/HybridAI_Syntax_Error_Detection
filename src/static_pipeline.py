@@ -1332,6 +1332,7 @@ class SemanticAnalyzer:
         issues.extend(self._java_imports(program, symbols))
         issues.extend(self._js_asi_ambiguity(program))
         issues.extend(self._typed_assignments(program))
+        issues.extend(self._string_numeric_misuse(program, symbols))
         issues.extend(self._invalid_array_assignment(program))
         issues.extend(self._invalid_final_assignment(program))
         issues.extend(self._dangling_pointer(program))
@@ -1387,6 +1388,34 @@ class SemanticAnalyzer:
                 actual = _literal_type(stmt.expression, program.language)
                 if actual and not _types_compatible(stmt.target_type, actual):
                     issues.append(_issue(program, "TypeMismatch", f"Cannot assign {actual} to {stmt.target_type}.", stmt.line, 0.87, suggestion="Convert the value or change the declaration type.", evidence="typed_assignment"))
+        return issues
+
+    def _string_numeric_misuse(self, program: IRProgram, symbols: SymbolTable) -> list[AnalysisIssue]:
+        """Use-site TypeMismatch: a String-typed variable used in a relational or
+        arithmetic operation against a numeric literal (e.g. `while (input > 0)`),
+        which is a compile error in Java. Declaration-site mismatches are handled
+        by `_typed_assignments`."""
+        if program.language != "Java":
+            return []
+        string_vars = {name for name, sym in symbols.symbols.items() if (sym.type_name or "") == "String"}
+        if not string_vars:
+            return []
+        # `+` is excluded (String concatenation is valid); `==`/`!=` excluded (avoid
+        # the common reference-comparison false positive). The variable must be used
+        # directly — not via `.method()`, `(call)`, or `[index]` — so `s.length() > 0`
+        # is not flagged.
+        op = r"(?:<=|>=|<|>|\*|/|%|-)"
+        issues: list[AnalysisIssue] = []
+        flagged_lines: set[int] = set()
+        for idx, raw_line in enumerate(_strip_comments(program.code).splitlines(), start=1):
+            line = re.sub(r'"(?:\\.|[^"\\])*"', '""', raw_line)  # blank string-literal contents
+            for var in string_vars:
+                v = re.escape(var)
+                p1 = re.compile(rf"\b{v}\b(?!\s*[.\(\[])\s*{op}\s*-?\d")
+                p2 = re.compile(rf"-?\d\s*{op}\s*\b{v}\b(?!\s*[.\(\[])")
+                if (p1.search(line) or p2.search(line)) and idx not in flagged_lines:
+                    flagged_lines.add(idx)
+                    issues.append(_issue(program, "TypeMismatch", f"String variable '{var}' is used in a numeric operation.", idx, 0.85, suggestion="Parse the String first (e.g. Integer.parseInt) or compare against a String value.", evidence="string_numeric_operation"))
         return issues
 
     def _invalid_array_assignment(self, program: IRProgram) -> list[AnalysisIssue]:

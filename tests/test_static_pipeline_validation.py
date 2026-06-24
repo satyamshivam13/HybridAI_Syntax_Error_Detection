@@ -112,10 +112,9 @@ def test_suggestion_only_fix_targets_primary_issue_line():
     assert any("line 4" in change for change in fix_result["changes"])
 
 
-def test_mixed_type_loop_condition_does_not_crash_analyzer():
-    # Regression: a String compared with an int in a loop condition used to raise
-    # `TypeError: '>' not supported between instances of 'str' and 'int'` inside the
-    # CFG loop analysis. The analyzer must return a well-formed result instead.
+def test_mixed_type_loop_condition_detects_type_mismatch():
+    # A String compared with an int in a loop condition used to (a) crash the CFG
+    # loop analysis and later (b) return NoError. It must now report TypeMismatch.
     code = 'String input = "10";\nwhile (input > 0) { input--; }'
 
     result = detect_errors(code, "A.java")
@@ -123,8 +122,33 @@ def test_mixed_type_loop_condition_does_not_crash_analyzer():
     assert isinstance(result, dict)
     assert result["language"] == "Java"
     assert result["degraded_mode"] is False
-    # The exact label is a separate detection concern; the contract here is "no crash".
-    assert "predicted_error" in result
+    assert result["predicted_error"] == "TypeMismatch"
+    assert any(i.get("type") == "TypeMismatch" for i in result["rule_based_issues"])
+
+
+def test_string_numeric_use_site_type_mismatch_variants():
+    flagged = [
+        'public class T { void m(){ String s = "3"; if (s < 5) {} } }',     # relational
+        'public class T { void m(){ String s = "3"; if (0 < s) {} } }',     # literal on left
+        'public class T { void m(){ String s = "3"; int y = s - 1; } }',    # arithmetic
+    ]
+    for code in flagged:
+        res = detect_errors(code, "T.java")
+        assert res["predicted_error"] == "TypeMismatch", code
+
+
+def test_string_numeric_detector_avoids_false_positives():
+    clean = [
+        'public class T { void m(){ String s = "3"; String r = s + 1; } }',       # concatenation
+        'public class T { void m(){ String s = "3"; if (s.length() > 0) {} } }',  # method call, int result
+        'public class T { void m(){ String a = "x"; String b = "y"; if (a == b) {} } }',  # String compare
+        'public class T { void m(){ String input = "input > 0"; } }',            # pattern only inside a literal
+        'public class T { void m(){ int i = 5; if (i > 0) {} } }',               # genuinely numeric variable
+    ]
+    for code in clean:
+        res = detect_errors(code, "T.java")
+        issues = res["rule_based_issues"]
+        assert not any(i.get("type") == "TypeMismatch" for i in issues), code
 
 
 def test_expression_evaluator_guards_unorderable_operands():
