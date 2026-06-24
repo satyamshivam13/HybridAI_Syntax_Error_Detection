@@ -903,6 +903,8 @@ class ExpressionEvaluator:
             if left.constant is None or right.constant is None:
                 return ValueFact(ValueState.UNKNOWN)
             result = self._compare(left.constant, right.constant, node.ops[0])
+            if result is None:
+                return ValueFact(ValueState.UNKNOWN)
             return ValueFact(ValueState.NONZERO if result else ValueState.ZERO, result)
         if isinstance(node, ast.BinOp):
             left = self._eval(node.left, symbols)
@@ -921,19 +923,25 @@ class ExpressionEvaluator:
             return ValueFact(ValueState.MAYBE_ZERO)
         return ValueFact(ValueState.UNKNOWN)
 
-    def _compare(self, left: Any, right: Any, op: ast.cmpop) -> bool:
+    def _compare(self, left: Any, right: Any, op: ast.cmpop) -> bool | None:
         if isinstance(op, ast.Eq):
             return left == right
         if isinstance(op, ast.NotEq):
             return left != right
-        if isinstance(op, ast.Lt):
-            return left < right
-        if isinstance(op, ast.LtE):
-            return left <= right
-        if isinstance(op, ast.Gt):
-            return left > right
-        if isinstance(op, ast.GtE):
-            return left >= right
+        # Ordering comparisons require order-comparable operands. Mixed types
+        # (e.g. str vs int from a type-mismatched expression) are not statically
+        # decidable — signal UNKNOWN rather than raising.
+        try:
+            if isinstance(op, ast.Lt):
+                return left < right
+            if isinstance(op, ast.LtE):
+                return left <= right
+            if isinstance(op, ast.Gt):
+                return left > right
+            if isinstance(op, ast.GtE):
+                return left >= right
+        except TypeError:
+            return None
         return False
 
     def _fold(self, left: float, right: float, op: ast.operator) -> float | None:

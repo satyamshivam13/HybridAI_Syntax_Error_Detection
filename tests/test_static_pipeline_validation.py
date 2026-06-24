@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import ast
+
 from scripts.production_validation import run
 from src.auto_fix import AutoFixer
 from src.error_engine import detect_errors
-from src.static_pipeline import analyze_source
+from src.static_pipeline import ExpressionEvaluator, SymbolTable, analyze_source
 
 
 def test_confidence_outputs_are_calibrated_and_not_constant():
@@ -108,3 +110,33 @@ def test_suggestion_only_fix_targets_primary_issue_line():
     assert fix_result["success"] is False
     assert fix_result["fixed_code"] == code
     assert any("line 4" in change for change in fix_result["changes"])
+
+
+def test_mixed_type_loop_condition_does_not_crash_analyzer():
+    # Regression: a String compared with an int in a loop condition used to raise
+    # `TypeError: '>' not supported between instances of 'str' and 'int'` inside the
+    # CFG loop analysis. The analyzer must return a well-formed result instead.
+    code = 'String input = "10";\nwhile (input > 0) { input--; }'
+
+    result = detect_errors(code, "A.java")
+
+    assert isinstance(result, dict)
+    assert result["language"] == "Java"
+    assert result["degraded_mode"] is False
+    # The exact label is a separate detection concern; the contract here is "no crash".
+    assert "predicted_error" in result
+
+
+def test_expression_evaluator_guards_unorderable_operands():
+    evaluator = ExpressionEvaluator()
+    symbols = SymbolTable("Java")
+
+    # str-vs-int ordering is not statically decidable -> UNKNOWN, never a raise.
+    fact = evaluator.evaluate('"10" > 0', symbols)
+    assert fact.state.name == "UNKNOWN"
+
+    # Direct contract: ordering ops on unorderable operands return None (the sentinel),
+    # while equality stays decidable and numeric ordering still folds.
+    assert evaluator._compare("10", 0, ast.Gt()) is None
+    assert evaluator._compare("10", 0, ast.Eq()) is False
+    assert evaluator._compare(3, 1, ast.Gt()) is True

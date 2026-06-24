@@ -2,6 +2,7 @@
 # Python Virtual Environments
 # ============================================================
 .venv/
+.venv311/
 venv/
 env/
 ENV/
