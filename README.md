@@ -2,12 +2,15 @@
 
 > **94.18% accuracy · Cohen's κ 0.79 · ~1ms median inference · Python · Java · C · C++ · JS · FastAPI + CLI + Streamlit**
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://omnisyntax.streamlit.app/)
 [![Accuracy](https://img.shields.io/badge/Accuracy-94.18%25-brightgreen)](artifacts/accuracy_final/metrics_overall_available.csv)
 [![Cohen's Kappa](https://img.shields.io/badge/Cohen's_%CE%BA-0.79-green)](#metrics-verified)
 [![Latency](https://img.shields.io/badge/Inference-~1ms_median-009688)](#metrics-verified)
 [![Languages](https://img.shields.io/badge/Languages-Py_Java_C_C%2B%2B_JS-informational)]()
-[![Tests](https://img.shields.io/badge/Tests-193_passed-success)]()
+[![Tests](https://img.shields.io/badge/Tests-203_passed-success)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+
+**[🚀 Live Demo → omnisyntax.streamlit.app](https://omnisyntax.streamlit.app/)** — paste code and get instant ML-assisted diagnostics, tutor explanations, and auto-fix suggestions.
 
 Hybrid syntax and code-quality assistant for Python, Java, C, C++, and JavaScript.
 It pairs deterministic rule-based checks with an ML-assisted classifier (TF-IDF +
