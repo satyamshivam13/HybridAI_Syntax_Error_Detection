@@ -148,7 +148,14 @@ Documentation maintenance note:
 - Keep these linked files present and update links if files are moved or renamed.
 
 ## Notes on sample inputs
-The `samples/` directory may be empty in some snapshots. Use `tests/Test.java` or your own snippets with `cli.py`.
+The [`samples/`](samples/) directory contains ready-to-run examples for Python, Java, C, and C++ —
+one clean file plus several that each trigger a specific detector. Every sample's expected
+output is verified against the engine and documented in [`samples/README.md`](samples/README.md).
+
+```bash
+python cli.py samples/java/TypeMismatch.java      # -> Detected: TypeMismatch (Line 3)
+python cli.py samples/python/valid.py             # -> No syntax errors
+```
 
 
 
