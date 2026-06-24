@@ -1,6 +1,39 @@
-﻿# OmniSyntax
+﻿# OmniSyntax — Hybrid Syntax Error Detection
+
+> **94.18% accuracy · Cohen's κ 0.79 · ~1ms median inference · Python · Java · C · C++ · JS · FastAPI + CLI + Streamlit**
+
+[![Accuracy](https://img.shields.io/badge/Accuracy-94.18%25-brightgreen)](artifacts/accuracy_final/metrics_overall_available.csv)
+[![Cohen's Kappa](https://img.shields.io/badge/Cohen's_%CE%BA-0.79-green)](#metrics-verified)
+[![Latency](https://img.shields.io/badge/Inference-~1ms_median-009688)](#metrics-verified)
+[![Languages](https://img.shields.io/badge/Languages-Py_Java_C_C%2B%2B_JS-informational)]()
+[![Tests](https://img.shields.io/badge/Tests-193_passed-success)]()
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 Hybrid syntax and code-quality assistant for Python, Java, C, C++, and JavaScript.
+It pairs deterministic rule-based checks with an ML-assisted classifier (TF-IDF +
+gradient boosting) and degrades gracefully to rule-based analysis when ML models
+are unavailable.
+
+<a id="metrics-verified"></a>
+### Metrics (verified)
+Measured on this repository's own evaluation artifacts and engine — not estimates.
+
+| Metric | Value | How it was measured |
+|---|---|---|
+| Overall accuracy | **94.18%** | 61,580-sample exhaustive corpus ([`metrics_overall_available.csv`](artifacts/accuracy_final/metrics_overall_available.csv)) |
+| Cohen's Kappa | **0.79** | Computed from [`predictions_available.csv`](artifacts/accuracy_final/predictions_available.csv) (expected vs. predicted label) |
+| Per-language accuracy | C 94.4% · C++ 91.7% · Java 94.2% · JS 97.1% · Py 93.6% | [`per_language_metrics_available.csv`](artifacts/accuracy_final/per_language_metrics_available.csv) |
+| Inference latency | **0.99 ms median, 1.46 ms mean, 4.06 ms p95** | 999 real corpus files, all 5 languages, healthy mode (sklearn 1.7.2) |
+| NoError false-positive rate | 0.0% | quality gates ([`quality_gates_available.json`](artifacts/accuracy_final/quality_gates_available.json)) |
+
+**Honest caveats:** the project's own release gate reports `NO-GO` because the
+critical label `MissingDelimiter` has 0.82 recall (below the 0.95 threshold), so
+this is a strong research prototype rather than a production-certified release. A
+small fraction of inputs (~0.1% in the latency sample) can still raise an
+unhandled exception in the static evaluator. Reproduce all numbers with
+`python scripts/evaluate_exhaustive_accuracy.py`.
+
+A working draft of the accompanying paper is in [`docs/PAPER_ABSTRACT.md`](docs/PAPER_ABSTRACT.md) (not yet submitted to a venue).
 
 ## Current state
 - Latest local verification (2026-05-02): `python -m pytest tests/ -q` => 193 passed, 1 skipped, 1 xfailed.
